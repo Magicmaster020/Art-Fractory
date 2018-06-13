@@ -1,0 +1,23 @@
+.button {
+    
+    -fx-background-image: url("icon.png");
+
+    -fx-background-size: 30px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 50%;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+
+.button:hover {
+    -fx-background-image: url("hover.png");
+    -fx-background-color: rgba(0, 72, 255, 0.1);
+    -fx-border-color: rgba(147, 228, 255, 0.9);
+    -fx-border-radius: 2px;
+    -fx-background-radius: 2px;
+}
+
+.button:pressed {
+    -fx-background-image: url("pressed.png");
+}

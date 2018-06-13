@@ -12,7 +12,7 @@ public class InfoIconTest extends Application {
     public void start(Stage primaryStage) {
 
         InfoIcon infoIcon = new InfoIcon();
-        infoIcon.setTipText("Default Tooltip");
+//        infoIcon.setTipText("Default Tooltip");
 
         Scene scene = new Scene(infoIcon);
 
