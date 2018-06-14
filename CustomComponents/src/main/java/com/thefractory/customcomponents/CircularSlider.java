@@ -40,7 +40,7 @@ public class CircularSlider extends Application {
 
     private int _actIndex;
 
-    private int _sliderIndex = 0;
+    private double _sliderIndex = 0;
 
     @Override
     public void start(Stage primaryStage) {
@@ -184,8 +184,8 @@ public class CircularSlider extends Application {
      * @param to2
      * @return 
      */
-    private int remap (int value, double from1, double to1, double from2, double to2) {
+    private double remap (int value, double from1, double to1, double from2, double to2) {
         double tmp = (value - from1) / (to1 - from1) * (to2 - from2) + from2;        
-        return (int)tmp;
+        return tmp;
     }
 }
