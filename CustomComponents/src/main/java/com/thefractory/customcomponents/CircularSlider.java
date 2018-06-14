@@ -1,4 +1,5 @@
 package com.thefractory.customcomponents;
+//https://stackoverflow.com/questions/33961606/javafx-how-to-drag-object-along-given-svg-path-like-a-slider
 
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
