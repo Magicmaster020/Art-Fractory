@@ -2,9 +2,6 @@ package com.thefractory.customcomponents;
 
 import java.io.IOException;
 
-import javafx.beans.NamedArg;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -15,10 +12,7 @@ import javafx.scene.input.MouseEvent;
 
 public class SpringSlider extends Slider{
 	
-	BooleanProperty isHorizontal; 
-	
-	public SpringSlider(@NamedArg("isHorizontal") boolean isHorizontal){
-		this.isHorizontal = new SimpleBooleanProperty(this, "isHorizontal", isHorizontal);
+	public SpringSlider(){
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SpringSlider.fxml"));
         fxmlLoader.setController(this);
