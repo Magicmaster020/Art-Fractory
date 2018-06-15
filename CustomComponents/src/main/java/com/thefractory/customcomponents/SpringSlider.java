@@ -45,7 +45,7 @@ public class SpringSlider extends Slider{
     });
     this.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
         public void handle(MouseEvent event) {
-            System.out.println("Mouse released!");
+            //System.out.println("Mouse released!");
             SpringSlider.this.setValueChanging(false);
             SpringSlider.this.setValue(0);
             //event.consume();
@@ -56,13 +56,13 @@ public class SpringSlider extends Slider{
             System.out.println(newVal);
         }
     });*/
-    System.out.println(this.getOnKeyPressed());
+    
     this.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 		@Override
 		public void handle(KeyEvent event) {
-			System.out.println("Jag åt upp eventet");
+			//System.out.println("Jag åt upp eventet");
 			SpringSlider.this.setValue(0);
-			//event.consume();
+			event.consume();
 		}
     });
     }
