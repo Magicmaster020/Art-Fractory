@@ -31,28 +31,24 @@ public class SpringSlider extends Slider{
             throw new RuntimeException(exception);
         }
 	
-	
-	
-	
-	
-	this.valueProperty().addListener(new ChangeListener<Number>() {
-        public void changed(ObservableValue<? extends Number> o, Number oldVal, Number newVal) {
-            SpringSlider.this.setValueChanging(true);
-        }
-    });
-    this.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
-        public void handle(MouseEvent event) {
-            SpringSlider.this.setValueChanging(false);
-            SpringSlider.this.setValue(0);
-        }	
-    });
-    
-    this.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-		@Override
-		public void handle(KeyEvent event) {
-			SpringSlider.this.setValue(0);
-			event.consume();
-		}
-    });
+		this.valueProperty().addListener(new ChangeListener<Number>() {
+	        public void changed(ObservableValue<? extends Number> o, Number oldVal, Number newVal) {
+	            SpringSlider.this.setValueChanging(true);
+	        }
+	    });
+	    this.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+	        public void handle(MouseEvent event) {
+	            SpringSlider.this.setValueChanging(false);
+	            SpringSlider.this.setValue(0);
+	        }	
+	    });
+	    
+	    this.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				SpringSlider.this.setValue(0);
+				event.consume();
+			}
+	    });
     }
 }
