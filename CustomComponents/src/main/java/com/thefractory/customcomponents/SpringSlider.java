@@ -18,7 +18,6 @@ public class SpringSlider extends Slider{
 	BooleanProperty isHorizontal; 
 	
 	public SpringSlider(@NamedArg("isHorizontal") boolean isHorizontal){
-		//super(-1,1,0);
 		this.isHorizontal = new SimpleBooleanProperty(this, "isHorizontal", isHorizontal);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SpringSlider.fxml"));
@@ -31,8 +30,6 @@ public class SpringSlider extends Slider{
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        
-		//button.getStylesheets().add(getClass().getResource("icons/" + iconLocation + "/style.css").toString());
 	
 	
 	
@@ -45,22 +42,14 @@ public class SpringSlider extends Slider{
     });
     this.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
         public void handle(MouseEvent event) {
-            //System.out.println("Mouse released!");
             SpringSlider.this.setValueChanging(false);
             SpringSlider.this.setValue(0);
-            //event.consume();
         }	
-    });/*
-    this.valueChangingProperty().addListener(new ChangeListener<Boolean>() {
-        public void changed(ObservableValue<? extends Boolean> o, Boolean oldVal, Boolean newVal) {
-            System.out.println(newVal);
-        }
-    });*/
+    });
     
     this.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 		@Override
 		public void handle(KeyEvent event) {
-			//System.out.println("Jag åt upp eventet");
 			SpringSlider.this.setValue(0);
 			event.consume();
 		}
