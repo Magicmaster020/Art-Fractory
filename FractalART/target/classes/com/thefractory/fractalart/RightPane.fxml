@@ -17,6 +17,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Polygon?>
 
 <fx:root type="GridPane" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
   <columnConstraints>
@@ -35,8 +36,18 @@
                   <Image url="@Blue%20Eyes%20White%20Dragon.png" />
                </image>
             </ImageView>
-            <Region fx:id="shadeTop" layoutX="67.0" layoutY="100.0" opacity="0.5" prefHeight="100.0" style="-fx-background-color: black;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <Region fx:id="shadeBottom" opacity="0.5" prefHeight="100.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Polygon id="proportion-dragger" fx:id="proportionDraggerBottom" fill="#00000080" points="204.0, 338.0, 234.0, 338.0, 219.0, 323.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false" />
+                  <Region fx:id="shadeBottom" opacity="0.5" prefHeight="100.0" style="-fx-background-color: black;" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Region fx:id="shadeTop" opacity="0.5" prefHeight="100.0" style="-fx-background-color: black;" />
+                  <Polygon id="proportion-dragger" fx:id="proportionDraggerTop" fill="#00000080" points="204.0, 318.0, 234.0, 318.0, 219.0, 333.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false" />
+               </children>
+            </VBox>
          </children>
       </AnchorPane>
       <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="1">
@@ -131,8 +142,8 @@
       <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.rowIndex="2">
          <children>
             <CheckBox fx:id="showAxes" disable="true" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="Show Axes" />
-            <CheckBox fx:id="enableProportions" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" selected="true" text="Enable Proportions" />
-            <NumberField fx:id="proportionsField" max="1.0" prefWidth="100.0" value="0.5" />
+            <CheckBox fx:id="enableProportions" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="Enable Proportions" />
+            <NumberField fx:id="proportionsField" disable="true" max="1.0" prefWidth="100.0" value="1.0" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" />

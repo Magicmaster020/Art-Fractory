@@ -21,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
+import javafx.scene.shape.Polygon;
 
 public class RightPane extends GridPane {
 
@@ -29,6 +30,8 @@ public class RightPane extends GridPane {
 	@FXML private AnchorPane previewPane;
 	@FXML private Region shadeTop;
 	@FXML private Region shadeBottom;
+	@FXML private Polygon proportionDraggerTop;
+	@FXML private Polygon proportionDraggerBottom;
 	@FXML private NumberField xField;
 	@FXML private NumberField yField;
 	@FXML private NumberField angleField;
@@ -63,14 +66,22 @@ public class RightPane extends GridPane {
             throw new RuntimeException(exception);
         }
         
+        this.getStylesheets().add(getClass().getResource("rightpane.css").toString());
+        
         proportionsProperty = new SimpleDoubleProperty(proportionsField.getValue());
         enableProportions.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if(newValue) {
 					proportionsProperty.bind(proportionsField.valueProperty());
+					proportionsField.setDisable(false);
+					proportionDraggerTop.setVisible(true);
+					proportionDraggerBottom.setVisible(true);
 				} else {
 					proportionsProperty.unbind();
 					proportionsProperty.setValue(1);
+					proportionsField.setDisable(true);
+					proportionDraggerTop.setVisible(false);
+					proportionDraggerBottom.setVisible(false);
 				}
 			}
         });
@@ -135,10 +146,5 @@ public class RightPane extends GridPane {
 		yField.setValue(0);
 		angleField.setValue(0);
 		zoomField.setValue(1);
-	}
-
-	public void killPanners() {
-		xPanner = null;
-		yPanner = null;
 	}
 }
