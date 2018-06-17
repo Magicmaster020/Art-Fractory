@@ -13,7 +13,7 @@ public class SpringSliderTest extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        Slider springSlider = new SpringSlider(true);
+        Slider springSlider = new SpringSlider();
 
         StackPane stack = new StackPane();
         stack.getChildren().add(springSlider);
