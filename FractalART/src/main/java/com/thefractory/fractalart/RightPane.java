@@ -12,12 +12,15 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
@@ -53,6 +56,8 @@ public class RightPane extends GridPane {
 	Panner xPanner;
 	Panner yPanner;
 	
+	//For Drag Events
+	private double[] lastCors = {0, 0};
 	
 	public RightPane() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RightPane.fxml"));
@@ -146,5 +151,14 @@ public class RightPane extends GridPane {
 		yField.setValue(0);
 		angleField.setValue(0);
 		zoomField.setValue(1);
+	}
+
+	@FXML public void proportionDrag(MouseEvent event) {
+		if(enableProportions.isSelected()) {
+			System.out.println(event.getY());
+			
+    		lastCors[0] = event.getX()/previewPane.getPrefHeight();
+    		lastCors[1] = event.getY()/previewPane.getPrefWidth();
+		}
 	}
 }

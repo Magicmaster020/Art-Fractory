@@ -38,7 +38,7 @@
             </ImageView>
             <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <Polygon id="proportion-dragger" fx:id="proportionDraggerBottom" fill="#00000080" points="204.0, 338.0, 234.0, 338.0, 219.0, 323.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false" />
+                  <Polygon id="proportion-dragger" fx:id="proportionDraggerBottom" fill="#00000080" onMouseDragEntered="#proportionDrag" points="204.0, 338.0, 234.0, 338.0, 219.0, 323.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false" />
                   <Region fx:id="shadeBottom" opacity="0.5" prefHeight="100.0" style="-fx-background-color: black;" />
                </children>
             </VBox>
