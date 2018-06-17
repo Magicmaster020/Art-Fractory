@@ -1,6 +1,7 @@
 package com.thefractory.customcomponents;
 
 import java.io.IOException;
+
 import javafx.beans.NamedArg;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -353,13 +354,27 @@ public class NumberField extends StackPane {
 		return value.getValue();
 	}
 	public void setValue(double value) {
-        if(logic.inRange(value)){
-            if(logic instanceof IntLogic){
-                this.value.setValue((int) Math.round(value));
-            } else {
-                this.value.setValue(value);
-            }
-        }
+		if(logic.inRange(value)){
+	        if(logic instanceof IntLogic){
+	            this.value.setValue((int) Math.round(value));
+	        } else {
+	            this.value.setValue(value);
+	        }
+	    } else {
+	    	if(value > logic.getMax()) {
+	            if(logic instanceof IntLogic){
+	                this.value.setValue(logic.getMax());
+	            } else {
+	                this.value.setValue(logic.getMax());
+	            }
+	    	} else {
+	            if(logic instanceof IntLogic){
+	                this.value.setValue(logic.getMin());
+	            } else {
+	                this.value.setValue(logic.getMin());
+	            }
+	    	}
+	    }
 	}
 	public final DoubleProperty valueProperty() {
 		return value;

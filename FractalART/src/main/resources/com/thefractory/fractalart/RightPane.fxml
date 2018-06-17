@@ -2,6 +2,7 @@
 
 <?import com.thefractory.customcomponents.InfoIcon?>
 <?import com.thefractory.customcomponents.NumberField?>
+<?import com.thefractory.customcomponents.SpringSlider?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -13,88 +14,94 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.Rectangle?>
 
-<fx:root spacing="10.0" type="VBox" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="GridPane" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+  </rowConstraints>
    <children>
-      <StackPane alignment="TOP_LEFT">
+      <AnchorPane fx:id="previewPane" style="-fx-border-color: black;">
          <children>
-            <ImageView fx:id="preview" fitHeight="400.0" fitWidth="400.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" rotate="-90.0">
+            <ImageView fx:id="preview" fitHeight="437.0" fitWidth="437.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" rotate="-90.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <image>
                   <Image url="@Blue%20Eyes%20White%20Dragon.png" />
                </image>
             </ImageView>
-            <AnchorPane prefHeight="400.0" prefWidth="400.0">
-               <children>
-                  <Rectangle fx:id="shadeTop" arcHeight="5.0" arcWidth="5.0" fill="#00000080" height="100.0" layoutX="47.0" layoutY="-12.0" stroke="BLACK" strokeType="INSIDE" width="400.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <Rectangle fx:id="shadeBottom" arcHeight="5.0" arcWidth="5.0" fill="#00000080" height="100.0" layoutX="160.0" layoutY="248.0" stroke="BLACK" strokeType="INSIDE" width="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="400.0" stroke="BLACK" strokeType="INSIDE" width="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-               </children>
-            </AnchorPane>
+            <Region fx:id="shadeTop" layoutX="67.0" layoutY="100.0" opacity="0.5" prefHeight="100.0" style="-fx-background-color: black;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Region fx:id="shadeBottom" opacity="0.5" prefHeight="100.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
          </children>
-      </StackPane>
-      <HBox prefHeight="100.0" prefWidth="200.0" spacing="13.0">
+      </AnchorPane>
+      <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="1">
          <children>
-            <GridPane hgap="5.0" vgap="5.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" />
-                <ColumnConstraints hgrow="SOMETIMES" />
-              </columnConstraints>
-              <rowConstraints>
-                  <RowConstraints vgrow="SOMETIMES" />
-                <RowConstraints vgrow="SOMETIMES" />
-              </rowConstraints>
+            <VBox spacing="10.0">
                <children>
-                  <VBox spacing="5.0" GridPane.rowIndex="1">
+                  <GridPane hgap="5.0" vgap="5.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                      <RowConstraints vgrow="SOMETIMES" />
+                    </rowConstraints>
                      <children>
-                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                        <VBox spacing="5.0" GridPane.rowIndex="1">
                            <children>
-                              <Label text="Y Coordinate" />
-                              <InfoIcon fx:id="yInfo" />
+                              <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                 <children>
+                                    <Label text="Y Coordinate" />
+                                    <InfoIcon fx:id="yInfo" />
+                                 </children>
+                              </HBox>
+                              <NumberField fx:id="yField" ghostText="Y Coordinate" max="1000000.0" min="-1000000.0" prefWidth="120.0" />
                            </children>
-                        </HBox>
-                        <NumberField fx:id="yField" ghostText="Y Coordinate" max="1000000.0" min="-1000000.0" prefWidth="120.0" />
-                     </children>
-                  </VBox>
-                  <VBox spacing="5.0">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                        </VBox>
+                        <VBox spacing="5.0">
                            <children>
-                              <Label text="X Coordinate" />
-                              <InfoIcon fx:id="xInfo" />
+                              <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                 <children>
+                                    <Label text="X Coordinate" />
+                                    <InfoIcon fx:id="xInfo" />
+                                 </children>
+                              </HBox>
+                              <NumberField ghostText=" X Coordinate" max="100000.0" min="-1000000.0" prefWidth="120.0" fx:id="xField" />
                            </children>
-                        </HBox>
-                        <NumberField ghostText=" X Coordinate" max="100000.0" min="-1000000.0" prefWidth="120.0" fx:id="xField" />
-                     </children>
-                  </VBox>
-                  <VBox spacing="5.0" GridPane.columnIndex="1">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                        </VBox>
+                        <VBox spacing="5.0" GridPane.columnIndex="1">
                            <children>
-                              <Label text="Angle" />
-                              <InfoIcon fx:id="angleInfo" />
+                              <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                 <children>
+                                    <Label text="Angle" />
+                                    <InfoIcon fx:id="angleInfo" />
+                                 </children>
+                              </HBox>
+                              <NumberField fx:id="angleField" ghostText="Angle" max="360.0" prefWidth="120.0" value="270.0" />
                            </children>
-                        </HBox>
-                        <NumberField fx:id="angleField" ghostText="Angle" max="360.0" prefWidth="120.0" value="270.0" />
-                     </children>
-                  </VBox>
-                  <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                        </VBox>
+                        <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
-                              <Label text="Zoom Level" />
-                              <InfoIcon fx:id="zoomInfo" />
+                              <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                 <children>
+                                    <Label text="Zoom Level" />
+                                    <InfoIcon fx:id="zoomInfo" />
+                                 </children>
+                              </HBox>
+                              <NumberField fx:id="zoomField" ghostText="Zoom Level" max="1.0E20" min="0.001" prefWidth="120.0" value="1.0" />
                            </children>
-                        </HBox>
-                        <NumberField fx:id="zoomField" ghostText="Zoom Level" max="1.0E20" min="0.001" prefWidth="120.0" value="1.0" />
+                        </VBox>
                      </children>
-                  </VBox>
+                  </GridPane>
+                  <Button fx:id="recenter" mnemonicParsing="false" onAction="#recenter" text="Recenter" />
                </children>
-            </GridPane>
+            </VBox>
             <GridPane hgap="5.0" vgap="5.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
@@ -105,29 +112,26 @@
                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Slider blockIncrement="1.0" majorTickUnit="1.0" max="1.0" min="-1.0" minorTickCount="2" prefWidth="80.0" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="xSlider" />
-                  <Slider fx:id="ySlider" majorTickUnit="1.0" max="1.0" min="-1.0" minorTickCount="2" orientation="VERTICAL" prefHeight="80.0" showTickLabels="true" showTickMarks="true" />
+                  <SpringSlider majorTickUnit="0.5" minorTickCount="4" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="xSlider" />
+                  <SpringSlider fx:id="ySlider" majorTickUnit="0.5" minorTickCount="4" nodeOrientation="RIGHT_TO_LEFT" orientation="VERTICAL" prefWidth="14.0" />
                   <AnchorPane GridPane.columnIndex="1">
                      <children>
-                        <Circle fx:id="angleWheel" fill="#dddddd" radius="40.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                        <Circle fill="#e1e1e1" layoutX="40.0" layoutY="14.0" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Slider fx:id="angleSlider" layoutX="92.0" max="360.0" orientation="VERTICAL" prefHeight="110.0" AnchorPane.topAnchor="0.0" />
+                        <Slider fx:id="zoomSlider" layoutX="99.0" max="1.0E20" min="0.001" orientation="VERTICAL" prefHeight="110.0" value="1.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <Label layoutX="7.0" layoutY="14.0" prefHeight="120.0" prefWidth="87.0" text="!TEMPORARY! WE WANT CIRCULAR SLIDERS JONAS!!!" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </children>
             </GridPane>
          </children>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
          <padding>
             <Insets left="10.0" right="10.0" />
          </padding>
       </HBox>
-      <HBox alignment="CENTER_LEFT" minWidth="400.0" spacing="5.0">
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.rowIndex="2">
          <children>
-            <Button fx:id="recenter" mnemonicParsing="false" onAction="#recenter" text="Recenter" />
-            <CheckBox fx:id="showAxes" mnemonicParsing="false" text="Show Axes" />
-            <CheckBox fx:id="enableProportions" mnemonicParsing="false" selected="true" text="Enable Proportions" />
+            <CheckBox fx:id="showAxes" disable="true" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="Show Axes" />
+            <CheckBox fx:id="enableProportions" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" selected="true" text="Enable Proportions" />
             <NumberField fx:id="proportionsField" max="1.0" prefWidth="100.0" value="0.5" />
          </children>
          <padding>
