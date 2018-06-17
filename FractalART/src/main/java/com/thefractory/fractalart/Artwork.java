@@ -1,8 +1,12 @@
 package com.thefractory.fractalart;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import javafx.scene.control.Tab;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.SplitPane;
 
 public abstract class Artwork {
 	
@@ -24,12 +28,30 @@ public abstract class Artwork {
 	private int previewResolution = previewResolutionDefault;
 	
 	private double proportions = proportionsDefault;
-		
+	
+	private Tab tab;
+    @FXML private SplitPane splitPane;
+	
+	public Artwork(String name) {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Artwork.fxml"));
+		fxmlLoader.setController(this);
+        fxmlLoader.setClassLoader(getClass().getClassLoader());
+        
+        try {
+            fxmlLoader.load();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+        
+        System.out.println(splitPane);
+        double[] ds = splitPane.getDividerPositions();
+        System.out.println(ds[0]);
+		this.tab = new Tab(name, splitPane);
+	}
+	
 	public void initialize() {
 		
 	}
-	
-	
 	
 	public boolean resetDefaults() {
 		this.coordinates = coordinatesDefault.clone();
@@ -66,9 +88,9 @@ public abstract class Artwork {
 	
 	
 	
-	
-	
-	
+	public Tab getTab() {
+		return tab;
+	}
 	public String getName() {
 		return name;
 	}
