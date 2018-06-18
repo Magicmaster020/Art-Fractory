@@ -41,7 +41,7 @@ public class GradientMaker extends StackPane {
 		fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         fxmlLoader.setClassLoader(getClass().getClassLoader());
-
+        
         try {
             fxmlLoader.load();
         } catch (IOException exception) {
