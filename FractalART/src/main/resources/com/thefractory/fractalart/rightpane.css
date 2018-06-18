@@ -1,3 +1,8 @@
 #proportion-dragger:hover {
-    -fx-fill: rgba(0, 0, 0, 0.75);
+	-fx-fill: rgba(0, 0, 0, 0.75);
+}
+
+#shade {
+	-fx-background-color: rgba(0, 0, 0, 0.5);
+	-fx-border-color: rgba(0, 0, 0, 0.75);
 }

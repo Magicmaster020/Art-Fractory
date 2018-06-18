@@ -12,14 +12,12 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -50,14 +48,14 @@ public class RightPane extends GridPane {
 	@FXML private Button recenter;
 	@FXML private CheckBox showAxes;
 	@FXML private CheckBox enableProportions;
-	@FXML private NumberField proportionsField;
+	@FXML private NumberField proportionField;
 	
-	private DoubleProperty proportionsProperty;
+	private DoubleProperty proportionProperty;
 	Panner xPanner;
 	Panner yPanner;
 	
 	//For Drag Events
-	private double[] lastCors = {0, 0};
+	private double proportionDragY;
 	
 	public RightPane() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RightPane.fxml"));
@@ -73,18 +71,18 @@ public class RightPane extends GridPane {
         
         this.getStylesheets().add(getClass().getResource("rightpane.css").toString());
         
-        proportionsProperty = new SimpleDoubleProperty(proportionsField.getValue());
+        proportionProperty = new SimpleDoubleProperty(proportionField.getValue());
         enableProportions.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if(newValue) {
-					proportionsProperty.bind(proportionsField.valueProperty());
-					proportionsField.setDisable(false);
+					proportionProperty.bind(proportionField.valueProperty());
+					proportionField.setDisable(false);
 					proportionDraggerTop.setVisible(true);
 					proportionDraggerBottom.setVisible(true);
 				} else {
-					proportionsProperty.unbind();
-					proportionsProperty.setValue(1);
-					proportionsField.setDisable(true);
+					proportionProperty.unbind();
+					proportionProperty.setValue(1);
+					proportionField.setDisable(true);
 					proportionDraggerTop.setVisible(false);
 					proportionDraggerBottom.setVisible(false);
 				}
@@ -94,8 +92,9 @@ public class RightPane extends GridPane {
         preview.fitWidthProperty().bind(this.widthProperty());
         preview.fitHeightProperty().bind(this.widthProperty());
         previewPane.maxHeightProperty().bind(this.widthProperty());
+        previewPane.maxWidthProperty().bind(this.widthProperty());
         shadeTop.prefHeightProperty().bind(
-        		previewPane.heightProperty().multiply(proportionsProperty.subtract(1)).multiply(-0.5));
+        		previewPane.heightProperty().multiply(proportionProperty.subtract(1)).multiply(-0.5));
         shadeBottom.prefHeightProperty().bind(shadeTop.prefHeightProperty());
         
         angleSlider.valueProperty().bindBidirectional(angleField.valueProperty());
@@ -153,12 +152,25 @@ public class RightPane extends GridPane {
 		zoomField.setValue(1);
 	}
 
-	@FXML public void proportionDrag(MouseEvent event) {
+	@FXML public void proportionDragStart(MouseEvent event) {
+		proportionDragY = event.getSceneY();
+	}
+	
+	@FXML public void proportionDragTop(MouseEvent event) {
 		if(enableProportions.isSelected()) {
-			System.out.println(event.getY());
-			
-    		lastCors[0] = event.getX()/previewPane.getPrefHeight();
-    		lastCors[1] = event.getY()/previewPane.getPrefWidth();
+			double y = event.getSceneY();
+			proportionField.setValue(proportionField.getValue() - 2*((double) y - proportionDragY)/previewPane.getHeight());
+	
+			proportionDragY = y;
+		}
+	}
+	
+	@FXML public void proportionDragBottom(MouseEvent event) {
+		if(enableProportions.isSelected()) {
+			double y = event.getSceneY();
+			proportionField.setValue(proportionField.getValue() - 2*((double) proportionDragY - y)/previewPane.getHeight());
+	
+			proportionDragY = y;
 		}
 	}
 }
