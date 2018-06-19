@@ -1,26 +1,29 @@
 package com.thefractory.fractalart.test;
 
-import com.thefractory.fractalart.RightPane;
+import com.thefractory.fractalart.MandelbrotSet;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-public class RightPaneTest extends Application {
+public class ArtworkTest extends Application {
 
     @Override
     public void start(Stage primaryStage) {
 
-        RightPane rightPane = new RightPane();
 
-        Scene scene = new Scene(rightPane);
-        primaryStage.setWidth(450);
+		MandelbrotSet test = new MandelbrotSet();
+		TabPane tabPane = new TabPane(test.getTab());
+		
+        Scene scene = new Scene(tabPane);
+        primaryStage.setWidth(1400);
         primaryStage.setHeight(800);
 
-        primaryStage.setTitle("Right Pane Test");
+        primaryStage.setTitle("InfoIcon Test");
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {

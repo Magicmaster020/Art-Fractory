@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.thefractory.customcomponents.SpringSlider?>
 <?import com.thefractory.fractalart.RightPane?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 
-<SplitPane fx:id="splitPane" dividerPositions="0.63" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<SplitPane fx:id="splitPane" dividerPositions="0.5" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <items>
-      <StackPane>
+      <StackPane fx:id="mainStackPane" />
+      <StackPane fx:id="rightStackPane">
          <children>
-            <SpringSlider />
+            <RightPane />
          </children>
       </StackPane>
-      <Pane>
-         <children>
-            <RightPane layoutX="-892.0" layoutY="-918.0" />
-         </children>
-      </Pane>
    </items>
 </SplitPane>

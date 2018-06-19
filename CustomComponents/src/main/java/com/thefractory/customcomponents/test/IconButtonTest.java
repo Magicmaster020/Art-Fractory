@@ -13,7 +13,7 @@ public class IconButtonTest extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        Button iconButton = new IconButton("New");
+        Button iconButton = new IconButton("fullScreen");
 
         StackPane stack = new StackPane();
         stack.getChildren().add(iconButton);

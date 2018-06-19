@@ -19,7 +19,7 @@ public class IconButton extends Button {
 	@FXML public Button button;
 	@FXML private Tooltip tip;
 	
-	public IconButton(@NamedArg(value="iconLocation" , defaultValue="New") String iconLocation){
+	public IconButton(@NamedArg(value="iconLocation" , defaultValue="new") String iconLocation){
 		this.iconLocation = new SimpleStringProperty(this, "iconLocation", iconLocation);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("IconButton.fxml"));

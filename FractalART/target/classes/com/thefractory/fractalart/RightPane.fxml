@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.thefractory.customcomponents.IconButton?>
 <?import com.thefractory.customcomponents.InfoIcon?>
 <?import com.thefractory.customcomponents.NumberField?>
 <?import com.thefractory.customcomponents.SpringSlider?>
@@ -32,7 +33,7 @@
    <children>
       <AnchorPane fx:id="previewPane">
          <children>
-            <ImageView fx:id="preview" fitHeight="437.0" fitWidth="437.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" rotate="-90.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <ImageView fx:id="preview" fitHeight="450.0" fitWidth="450.0" nodeOrientation="INHERIT" onMouseDragged="#pan" onMousePressed="#panStart" onScroll="#zoom" pickOnBounds="true" preserveRatio="true" rotate="-90.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <image>
                   <Image url="@Blue%20Eyes%20White%20Dragon.png" />
                </image>
@@ -59,6 +60,7 @@
                   <Region id="shade" fx:id="shadeBottom" mouseTransparent="true" pickOnBounds="false" prefHeight="100.0" />
                </children>
             </VBox>
+            <IconButton fx:id="fullScreen" iconLocation="fullScreen" onAction="#fullScreen" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
          </children>
       </AnchorPane>
       <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="1">

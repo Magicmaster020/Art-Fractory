@@ -1,11 +1,10 @@
 package com.thefractory.fractalart;
 
-import java.io.IOException;
-
 import com.thefractory.customcomponents.InfoIcon;
 import com.thefractory.customcomponents.NumberField;
 import com.thefractory.customcomponents.SpringSlider;
 
+import java.io.IOException;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -17,8 +16,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
@@ -56,6 +57,7 @@ public class RightPane extends GridPane {
 	
 	//For Drag Events
 	private double proportionDragY;
+	private double[] lastCors = {0, 0};
 	
 	public RightPane() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RightPane.fxml"));
@@ -89,10 +91,10 @@ public class RightPane extends GridPane {
 			}
         });
 
-        preview.fitWidthProperty().bind(this.widthProperty());
-        preview.fitHeightProperty().bind(this.widthProperty());
         previewPane.maxHeightProperty().bind(this.widthProperty());
         previewPane.maxWidthProperty().bind(this.widthProperty());
+        preview.fitWidthProperty().bind(previewPane.maxWidthProperty());
+        preview.fitHeightProperty().bind(previewPane.maxWidthProperty());
         shadeTop.prefHeightProperty().bind(
         		previewPane.heightProperty().multiply(proportionProperty.subtract(1)).multiply(-0.5));
         shadeBottom.prefHeightProperty().bind(shadeTop.prefHeightProperty());
@@ -114,6 +116,10 @@ public class RightPane extends GridPane {
         });
 		new Thread(xPanner.task).start();
 		new Thread(yPanner.task).start();
+	}
+	
+	public void setImage(Image image) {
+		preview.setImage(image);
 	}
 	
 	private class Panner {
@@ -172,5 +178,35 @@ public class RightPane extends GridPane {
 	
 			proportionDragY = y;
 		}
+	}
+
+	@FXML public void panStart(MouseEvent event) {
+		lastCors[0] = event.getX()/preview.getFitWidth();
+		lastCors[1] = event.getY()/preview.getFitHeight();
+	}
+    
+	@FXML public void pan(MouseEvent event) {
+		double scale = 1.0/zoomField.getValue();
+		xField.setValue(xField.getValue() + scale * (lastCors[0] - event.getX()/preview.getFitHeight()));
+		yField.setValue(yField.getValue() + scale * (event.getY()/preview.getFitWidth() - lastCors[1]));
+		lastCors[0] = event.getX()/preview.getFitHeight();
+		lastCors[1] = event.getY()/preview.getFitWidth();
+	}
+	
+	@FXML public void zoom(ScrollEvent event) {
+    	double scale = 1.1;
+    	if(event.getDeltaY() > 0) {
+    		scale = 1/scale;
+    	}
+    	
+    	xField.setValue(xField.getValue() + scale * (1 - scale) * (event.getX()/preview.getFitWidth() - 0.5));
+    	yField.setValue(yField.getValue() + scale * (1 - scale) * (0.5 - event.getY()/preview.getFitHeight()));
+		zoomField.setValue(zoomField.getValue() / scale);
+		lastCors[0] = event.getX()/preview.getFitHeight();
+		lastCors[1] = event.getY()/preview.getFitWidth();
+	}
+
+	@FXML public void fullScreen() {
+		System.out.println("Open full screen.");
 	}
 }
