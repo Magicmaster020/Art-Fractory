@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="CustomComponents/src/main/java"/>
+	<classpathentry kind="src" path="FractalART/src/main/java"/>
+	<classpathentry kind="lib" path="CustomComponents/src/main/resources/com/thefractory/customcomponents/batik-all-1.7.jar"/>
+	<classpathentry kind="lib" path="CustomComponents/target/CustomComponents-0.0.1-SNAPSHOT-shaded.jar"/>
+	<classpathentry kind="lib" path="CustomComponents/target/CustomComponents-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="output" path="CustomComponents/target/classes"/>
+</classpath>

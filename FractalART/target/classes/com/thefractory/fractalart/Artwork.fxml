@@ -2,15 +2,16 @@
 
 <?import com.thefractory.fractalart.RightPane?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<SplitPane fx:id="splitPane" dividerPositions="0.5" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<SplitPane fx:id="splitPane" dividerPositions="0.5" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <items>
       <StackPane fx:id="mainStackPane" />
-      <StackPane fx:id="rightStackPane">
+      <AnchorPane fx:id="rightAnchorPane" prefWidth="450.0">
          <children>
-            <RightPane />
+            <RightPane fx:id="rightPane" prefHeight="674.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
-      </StackPane>
+      </AnchorPane>
    </items>
 </SplitPane>

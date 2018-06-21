@@ -20,8 +20,6 @@ public class ArtworkTest extends Application {
 		TabPane tabPane = new TabPane(test.getTab());
 		
         Scene scene = new Scene(tabPane);
-        primaryStage.setWidth(1400);
-        primaryStage.setHeight(800);
 
         primaryStage.setTitle("InfoIcon Test");
         primaryStage.setScene(scene);

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,10 +31,10 @@ public abstract class Artwork {
 	private double proportions = proportionsDefault;
 	
 	private Tab tab;
-	protected RightPane rightPane = new RightPane();
+	@FXML protected RightPane rightPane;
     @FXML private SplitPane splitPane;
     @FXML private StackPane mainStackPane;
-    @FXML private StackPane rightStackPane;
+    @FXML private AnchorPane rightAnchorPane;
 	
 	public Artwork(String name) {
 		this.name = name; 

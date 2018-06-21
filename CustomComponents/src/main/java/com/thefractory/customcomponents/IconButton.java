@@ -57,5 +57,5 @@ public class IconButton extends Button {
 	}
 	public final StringProperty tipProperty() {
         return tip.textProperty();
-}
+	}
 }

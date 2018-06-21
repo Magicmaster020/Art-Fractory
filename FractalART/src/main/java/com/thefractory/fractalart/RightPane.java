@@ -6,6 +6,7 @@ import com.thefractory.customcomponents.SpringSlider;
 
 import java.io.IOException;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -91,10 +92,10 @@ public class RightPane extends GridPane {
 			}
         });
 
-        previewPane.maxHeightProperty().bind(this.widthProperty());
-        previewPane.maxWidthProperty().bind(this.widthProperty());
+        previewPane.maxHeightProperty().bind(Bindings.min(this.heightProperty().subtract(224), this.widthProperty()));
+        previewPane.maxWidthProperty().bind(previewPane.heightProperty());
         preview.fitWidthProperty().bind(previewPane.maxWidthProperty());
-        preview.fitHeightProperty().bind(previewPane.maxWidthProperty());
+        preview.fitHeightProperty().bind(previewPane.maxHeightProperty());
         shadeTop.prefHeightProperty().bind(
         		previewPane.heightProperty().multiply(proportionProperty.subtract(1)).multiply(-0.5));
         shadeBottom.prefHeightProperty().bind(shadeTop.prefHeightProperty());
