@@ -8,14 +8,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.StackPane;
 
-public class MandelbrotSet extends Artwork {
+public class MandelbrotSet extends AbstractMandelbrotSet {
 	
-	private final static String DEFAULT_NAME= "Mandelbrot Set";
-	
+	private static String DEFAULT_NAME= "Mandelbrot Set";	
 	
 	@FXML private StackPane controlPanel;
-	@FXML private NumberSlider iterations;
-	@FXML private NumberSlider power;
+	@FXML private NumberSlider iterationSlider;
+	@FXML private NumberSlider powerSlider;
 
 	public MandelbrotSet() {
 		super(DEFAULT_NAME);
@@ -31,8 +30,6 @@ public class MandelbrotSet extends Artwork {
         }
 		
 		addMainPane(controlPanel);
-		
-		
 	}
 	
 	public void updateImage() {

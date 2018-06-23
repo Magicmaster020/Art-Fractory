@@ -35,10 +35,10 @@ public class RightPane extends GridPane {
 	@FXML private Region shadeBottom;
 	@FXML private Polygon proportionDraggerTop;
 	@FXML private Polygon proportionDraggerBottom;
-	@FXML private NumberField xField;
-	@FXML private NumberField yField;
-	@FXML private NumberField angleField;
-	@FXML private NumberField zoomField;
+	@FXML protected NumberField xField;
+	@FXML protected NumberField yField;
+	@FXML protected NumberField angleField;
+	@FXML protected NumberField zoomField;
 	@FXML private InfoIcon xInfo;
 	@FXML private InfoIcon yInfo;
 	@FXML private InfoIcon angleInfo;
@@ -50,9 +50,10 @@ public class RightPane extends GridPane {
 	@FXML private Button recenter;
 	@FXML private CheckBox showAxes;
 	@FXML private CheckBox enableProportions;
-	@FXML private NumberField proportionField;
+	@FXML NumberField proportionField;
+	@FXML NumberField resolutionField;
 	
-	private DoubleProperty proportionProperty;
+	protected DoubleProperty proportionProperty;
 	Panner xPanner;
 	Panner yPanner;
 	
@@ -188,23 +189,31 @@ public class RightPane extends GridPane {
     
 	@FXML public void pan(MouseEvent event) {
 		double scale = 1.0/zoomField.getValue();
-		xField.setValue(xField.getValue() + scale * (lastCors[0] - event.getX()/preview.getFitHeight()));
-		yField.setValue(yField.getValue() + scale * (event.getY()/preview.getFitWidth() - lastCors[1]));
+		double angle = Math.toRadians(angleField.getValue());
+		xField.setValue(xField.getValue() 
+				+ Math.cos(angle) * scale * (lastCors[0] - event.getX()/preview.getFitHeight())
+				- Math.sin(angle) * scale * (event.getY()/preview.getFitHeight() - lastCors[1]));
+		yField.setValue(yField.getValue() 
+				+ Math.sin(angle) * scale * (lastCors[0] - event.getX()/preview.getFitHeight())
+				+ Math.cos(angle) * scale * (event.getY()/preview.getFitHeight() - lastCors[1]));
 		lastCors[0] = event.getX()/preview.getFitHeight();
 		lastCors[1] = event.getY()/preview.getFitWidth();
 	}
 	
 	@FXML public void zoom(ScrollEvent event) {
     	double scale = 1.1;
+    	double angle = Math.toRadians(angleField.getValue());
     	if(event.getDeltaY() > 0) {
     		scale = 1/scale;
     	}
     	
-    	xField.setValue(xField.getValue() + scale * (1 - scale) * (event.getX()/preview.getFitWidth() - 0.5));
-    	yField.setValue(yField.getValue() + scale * (1 - scale) * (0.5 - event.getY()/preview.getFitHeight()));
+    	xField.setValue(xField.getValue() 
+    			+ Math.cos(angle) * scale * (1 - scale) * (event.getX()/preview.getFitWidth() - 0.5) / zoomField.getValue()
+    			- Math.sin(angle) * scale * (1 - scale) * (0.5 - event.getY()/preview.getFitHeight()) / zoomField.getValue());
+    	yField.setValue(yField.getValue() 
+    			+ Math.cos(angle) * scale * (1 - scale) * (0.5 - event.getY()/preview.getFitHeight()) / zoomField.getValue()
+    			+ Math.sin(angle) * scale * (1 - scale) * (event.getX()/preview.getFitWidth() - 0.5) / zoomField.getValue());
 		zoomField.setValue(zoomField.getValue() / scale);
-		lastCors[0] = event.getX()/preview.getFitHeight();
-		lastCors[1] = event.getY()/preview.getFitWidth();
 	}
 
 	@FXML public void fullScreen() {

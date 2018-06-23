@@ -1,9 +1,8 @@
 package com.thefractory.customcomponents;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 import javafx.beans.NamedArg;
@@ -17,14 +16,17 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 public class Gradient extends ImageView {
+	
+	private ArrayList<Color> colors;
+	
 	//Properties
     private final StringProperty gradientLocation;
+	private WritableImage image;
 	
 	@FXML public ImageView gradient;
 	
-	private WritableImage image;
 	
-	public Gradient(@NamedArg(value="gradientLocation" , defaultValue="pink") String gradientLocation){
+	public Gradient(@NamedArg(value="gradientLocation", defaultValue="pink") String gradientLocation){
 		this.gradientLocation = new SimpleStringProperty(this, "gradientLocation", gradientLocation);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Gradient.fxml"));
@@ -37,46 +39,41 @@ public class Gradient extends ImageView {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        
-        Scanner sc = null;
-		try {
-			new FileReader("gradients/" + gradientLocation + ".txt");
-			sc = new Scanner(new BufferedReader(new FileReader("gradients/" + gradientLocation + ".txt")));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-        ArrayList<double[]> colors = new ArrayList<double[]>();
+
+        Scanner sc = new Scanner(new BufferedReader(new InputStreamReader(
+		        this.getClass().getResourceAsStream("gradients/" + gradientLocation + ".txt"))));
+        colors = new ArrayList<Color>();
         while(sc.hasNextLine()) {
-        	colors.add(new double[3]);
+        	colors.add(Color.BLACK);
             String[] line = sc.nextLine().trim().split(" ");
-            for (int i=0; i < line.length; i++) {
-                colors.get(colors.size())[i] = Double.parseDouble(line[i]);
-            }
+            colors.set(colors.size() - 1, Color.color(Double.parseDouble(line[0]),
+            		Double.parseDouble(line[1]),
+            		Double.parseDouble(line[2])));
         }
+        sc.close();
                 
         this.image = new WritableImage(500, 30);
         PixelWriter writer = image.getPixelWriter();
         for(int x = 0; x < image.getWidth(); x++) {
         	for(int y = 0; y < image.getHeight(); y++) {
-        		double[] c = colors.get((int) Math.round(x/image.getWidth()));
-        		Color color = Color.color(c[0], c[1], c[2]);
+        		Color color = colors.get((int) Math.round(x * (colors.size() - 1)/image.getWidth()));
             	writer.setColor(x, y, color);
         	}
         }
         gradient.setImage(image);
 	}
 	
-	public void function(){
-		System.out.println("Hej");
+	public Color getColor(double index) {
+		return colors.get((int) Math.round(index * (colors.size() - 1))); 
 	}
 	
-	public final String getIconLocation(){
+	public final String getGradientLocation(){
 		return gradientLocation.getValue();
 	}
-	public final void setIconLocation(String value){
+	public final void setGradientLocation(String value){
 		gradientLocation.setValue(value);
 	}
-	public final StringProperty iconLocationProperty(){
+	public final StringProperty gradientLocationProperty(){
 		return gradientLocation;
 	}
 }

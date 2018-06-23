@@ -3,11 +3,10 @@
 <?import com.thefractory.fractalart.RightPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.StackPane?>
 
-<SplitPane fx:id="splitPane" dividerPositions="0.5" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<SplitPane fx:id="splitPane" dividerPositions="1.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <items>
-      <StackPane fx:id="mainStackPane" />
+      <AnchorPane fx:id="mainAnchorPane" prefHeight="200.0" prefWidth="200.0" />
       <AnchorPane fx:id="rightAnchorPane" prefWidth="450.0">
          <children>
             <RightPane fx:id="rightPane" prefHeight="674.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />

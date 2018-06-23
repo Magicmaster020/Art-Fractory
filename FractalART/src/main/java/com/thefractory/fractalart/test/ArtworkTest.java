@@ -1,6 +1,7 @@
 package com.thefractory.fractalart.test;
 
 import com.thefractory.fractalart.MandelbrotSet;
+import com.thefractory.fractalart.SimpleMandelbrotSet;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -16,7 +17,7 @@ public class ArtworkTest extends Application {
     public void start(Stage primaryStage) {
 
 
-		MandelbrotSet test = new MandelbrotSet();
+		SimpleMandelbrotSet test = new SimpleMandelbrotSet();
 		TabPane tabPane = new TabPane(test.getTab());
 		
         Scene scene = new Scene(tabPane);

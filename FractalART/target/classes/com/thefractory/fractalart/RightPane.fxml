@@ -33,7 +33,7 @@
    <children>
       <AnchorPane fx:id="previewPane" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <children>
-            <ImageView fx:id="preview" fitHeight="450.0" fitWidth="450.0" nodeOrientation="INHERIT" onMouseDragged="#pan" onMousePressed="#panStart" onScroll="#zoom" pickOnBounds="true" preserveRatio="true" rotate="-90.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <ImageView fx:id="preview" fitHeight="450.0" fitWidth="450.0" nodeOrientation="INHERIT" onMouseDragged="#pan" onMousePressed="#panStart" onScroll="#zoom" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <image>
                   <Image url="@Blue%20Eyes%20White%20Dragon.png" />
                </image>
@@ -75,6 +75,7 @@
                     <rowConstraints>
                         <RowConstraints vgrow="SOMETIMES" />
                       <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <VBox spacing="5.0" GridPane.rowIndex="1">
@@ -107,7 +108,7 @@
                                     <InfoIcon fx:id="angleInfo" />
                                  </children>
                               </HBox>
-                              <NumberField fx:id="angleField" ghostText="Angle" max="360.0" prefWidth="120.0" value="270.0" />
+                              <NumberField fx:id="angleField" ghostText="Angle" max="360.0" prefWidth="120.0" />
                            </children>
                         </VBox>
                         <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -121,9 +122,20 @@
                               <NumberField fx:id="zoomField" ghostText="Zoom Level" max="1.0E20" min="0.001" prefWidth="120.0" value="1.0" />
                            </children>
                         </VBox>
+                        <Button fx:id="recenter" mnemonicParsing="false" onAction="#recenter" text="Recenter" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                        <VBox spacing="5.0" GridPane.rowIndex="2">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                 <children>
+                                    <Label text="Preview Resolution" />
+                                    <InfoIcon fx:id="resolutionInfo" />
+                                 </children>
+                              </HBox>
+                              <NumberField fx:id="resolutionField" ghostText="Preview Resolution" intField="true" max="1000.0" min="10.0" prefWidth="120.0" value="100.0" />
+                           </children>
+                        </VBox>
                      </children>
                   </GridPane>
-                  <Button fx:id="recenter" mnemonicParsing="false" onAction="#recenter" text="Recenter" />
                </children>
             </VBox>
             <GridPane hgap="5.0" vgap="5.0">
