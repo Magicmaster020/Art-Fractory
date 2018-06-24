@@ -54,8 +54,7 @@ public class RightPane extends GridPane {
 	@FXML NumberField resolutionField;
 	
 	protected DoubleProperty proportionProperty;
-	Panner xPanner;
-	Panner yPanner;
+	Panner panner = new Panner();
 	
 	//For Drag Events
 	private double proportionDragY;
@@ -104,30 +103,29 @@ public class RightPane extends GridPane {
         angleSlider.valueProperty().bindBidirectional(angleField.valueProperty());
         zoomSlider.valueProperty().bindBidirectional(zoomField.valueProperty());
         
-        xPanner = new Panner(xField.valueProperty());
-        yPanner = new Panner(yField.valueProperty());        
+              
         xSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				xPanner.setSpeed(newValue.doubleValue());
+				panner.setXSpeed(newValue.doubleValue());
 			}
         });
         ySlider.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				yPanner.setSpeed(newValue.doubleValue());
+				panner.setYSpeed(newValue.doubleValue());
 			}
         });
-		new Thread(xPanner.task).start();
-		new Thread(yPanner.task).start();
+		new Thread(panner.task).start();
 	}
 	
 	public void setImage(Image image) {
 		preview.setImage(image);
 	}
 	
+
 	private class Panner {
 		
-		private DoubleProperty property;
-		private double speed = 0;
+		private double xSpeed = 0;
+		private double ySpeed = 0;
 		Task<Void> task = new Task<Void>() {
 			@Override
 			public Void call() {
@@ -135,7 +133,15 @@ public class RightPane extends GridPane {
 					try {
 						Thread.sleep(10);
 						Platform.runLater(() -> {
-							property.setValue(property.getValue() + speed/zoomField.getValue());
+							System.out.println();
+								xField.setValue(xField.getValue()
+				                		+ (Math.cos(Math.toRadians(angleField.getValue())) 
+				                				* xSpeed - Math.sin(Math.toRadians(angleField.getValue())) 
+				                				* ySpeed) / zoomField.getValue());
+								yField.setValue(yField.getValue()
+										+ (Math.sin(Math.toRadians(angleField.getValue())) 
+				                				* xSpeed + Math.cos(Math.toRadians(angleField.getValue())) 
+				                				* ySpeed) / zoomField.getValue());
 						});
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -144,12 +150,12 @@ public class RightPane extends GridPane {
 			}
 		};
 		
-		private Panner(DoubleProperty property) {
-			this.property = property;
+		private void setXSpeed(double speed) {
+			this.xSpeed = speed/50;
 		}
 		
-		private void setSpeed(double speed) {
-			this.speed = speed/50;
+		private void setYSpeed(double speed) {
+			this.ySpeed = speed/50;
 		}
 	}
 	
