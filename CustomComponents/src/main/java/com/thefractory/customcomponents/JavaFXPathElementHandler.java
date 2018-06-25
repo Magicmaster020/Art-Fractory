@@ -7,6 +7,9 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 
+import javax.xml.ws.spi.http.HttpExchange;
+import javax.xml.ws.spi.http.HttpHandler;
+
 import org.apache.batik.parser.ParseException;
 import org.apache.batik.parser.PathHandler;
 
@@ -178,5 +181,34 @@ public class JavaFXPathElementHandler implements PathHandler {
     public Path getPath() {
         return path;
     }
+    
+    public PathHandler addExactPath(String path, HttpHandler handler){
+    	return null;
+    }
+    
+    public PathHandler addPath(String path, HttpHandler handler) {
+    	return null;
+    }
+    
+    public PathHandler addPrefixPath(String path, HttpHandler handler) {
+    	return null;
+    }
+    
+    public PathHandler clearPaths() {
+    	return null;
+    }
+    
+    public void handleRequest(HttpExchange exchange) {}
 
+    public PathHandler removeExactPath(String path) {
+    	return null;
+    }
+    
+    public PathHandler removePath(String path) {
+    	return null;
+    }
+    
+    public PathHandler removePrefixPath(String path) {
+    	return null;
+    }
 }
