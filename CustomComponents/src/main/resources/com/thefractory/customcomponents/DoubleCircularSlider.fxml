@@ -2,6 +2,7 @@
 
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.ArcTo?>
 <?import javafx.scene.shape.Circle?>
@@ -9,7 +10,7 @@
 <?import javafx.scene.shape.MoveTo?>
 <?import javafx.scene.shape.Path?>
 
-<fx:root prefHeight="119.0" prefWidth="121.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Path fx:id="path" stroke="BLACK" strokeType="INSIDE">
           <elements>
@@ -19,7 +20,7 @@
             <ArcTo radiusX="50.0" radiusY="50.0" x="60.0" y="10.0" />
               <ClosePath />
           </elements>
-          <fill>
+         <fill>
             <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
                <stops>
                   <Stop color="#838c94" />
@@ -29,6 +30,33 @@
          </fill>
       </Path>
       <Circle fx:id="_circle" radius="8.0" stroke="BLACK" strokeType="INSIDE">
+      	<fill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="#393939" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Circle>
+      <Path fx:id="path2" stroke="BLACK" strokeType="INSIDE">
+         <elements>
+            <MoveTo x="60.0" y="60.0" />
+            <MoveTo x="60.0" y="30.0" />
+            <ArcTo radiusX="30.0" radiusY="30.0" x="60.0" y="90.0" />
+            <ArcTo radiusX="30.0" radiusY="30.0" x="60.0" y="30.0" />
+            <ClosePath />
+         </elements>
+         <fill>
+            <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+               <stops>
+                  <Stop color="#838c94" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </fill>
+      </Path>
+      <Circle fx:id="_circle2" radius="8.0" stroke="BLACK" strokeType="INSIDE">
          <fill>
             <LinearGradient endX="1.0" endY="1.0">
                <stops>
@@ -36,6 +64,7 @@
                   <Stop color="WHITE" offset="1.0" />
                </stops>
             </LinearGradient>
-         </fill></Circle>
+         </fill>
+      </Circle>
    </children>
 </fx:root>
