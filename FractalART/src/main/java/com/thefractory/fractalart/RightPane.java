@@ -132,8 +132,9 @@ public class RightPane extends GridPane {
 				while(true) {
 					try {
 						Thread.sleep(10);
-						Platform.runLater(() -> {
-							System.out.println();
+						if(xSpeed != 0 || ySpeed != 0) {
+							Platform.runLater(() -> {
+								System.out.println();
 								xField.setValue(xField.getValue()
 				                		+ (Math.cos(Math.toRadians(angleField.getValue())) 
 				                				* xSpeed - Math.sin(Math.toRadians(angleField.getValue())) 
@@ -142,7 +143,9 @@ public class RightPane extends GridPane {
 										+ (Math.sin(Math.toRadians(angleField.getValue())) 
 				                				* xSpeed + Math.cos(Math.toRadians(angleField.getValue())) 
 				                				* ySpeed) / zoomField.getValue());
-						});
+							});
+						}
+						
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

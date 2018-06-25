@@ -7,6 +7,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 
+/**
+ * DEPRECATED
+ * @author ivarc
+ *
+ */
 public class InfoIcon extends StackPane {
 
     @FXML private Tooltip tip;

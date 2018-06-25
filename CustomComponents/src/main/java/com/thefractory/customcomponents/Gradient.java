@@ -15,6 +15,14 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
+/**
+ * Shows a gradient read from a text-file in 
+ * resources>com>thefractory>customcomponents>gradients. The text file must
+ * specify the colours line by line and with rgb-values between 0 and 1. 
+ * Each value should be separated by spaces. 
+ * @author Ivar Eriksson
+ *
+ */
 public class Gradient extends ImageView {
 	
 	private ArrayList<Color> colors;

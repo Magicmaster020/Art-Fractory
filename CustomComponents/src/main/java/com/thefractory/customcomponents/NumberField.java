@@ -1,7 +1,6 @@
 package com.thefractory.customcomponents;
 
 import java.io.IOException;
-
 import javafx.beans.NamedArg;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -10,27 +9,57 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 
+/**
+ * A {@code TextField} that will only let you write numbers in it. 
+ * The {@code NumberField} can be configured to only take {@code int}s 
+ * or also allow {@code double}s. Default, max and min values can also 
+ * be set. 
+ * 
+ * @author Ivar Eriksson
+ *
+ */
 public class NumberField extends StackPane {
 	
-	//Properties 
+	/**
+	 * Keeps track of if the current {@code NumberField} only takes {@code int}s or not.
+	 */
 	private final BooleanProperty intField;
+	/**
+	 * Current value of the {@code NumberField}.
+	 */
 	private final DoubleProperty value;
+	/**
+	 * Current min of the {@code NumberField}.
+	 */
 	private final DoubleProperty min;
+	/**
+	 * Current max of the {@code NumberField}.
+	 */
 	private final DoubleProperty max;
 	
-	//Variables
+	/**
+	 * The logic of the {@code NumberField}.
+	 */
 	public Logic logic;
 	 
-	//Structural Elements
+	/**
+	 * The displayed {@code TextField}.
+	 */
 	@FXML private TextField field;
 	        
+	/**
+	 * Creates a {@code NumberField} with the specified parameters.
+	 * 
+	 * @param intField
+	 * @param value
+	 * @param min
+	 * @param max
+	 */
 	public NumberField(@NamedArg("intField") boolean intField, @NamedArg("value") double value, @NamedArg("min") double min, 
 			@NamedArg("max") double max) {
             this.intField = new SimpleBooleanProperty(this, "intField", intField);
@@ -54,8 +83,6 @@ public class NumberField extends StackPane {
 	public void reconfigureLogic(double defaultValue, double min, double max, boolean intLogic) {
 		if(logic != null) {
 			field.textProperty().removeListener(logic.fieldListener);
-			//TODO DEPRECATED. NOT NEEDED.
-//			removeEventHandler(KeyEvent.KEY_PRESSED, logic.keyHandler);
 		}		
 		
 		if(intLogic) {
@@ -70,9 +97,10 @@ public class NumberField extends StackPane {
 		setValue(defaultValue);
 	}
  
-    /*
-    The logic for the RestrictedField.
-    */
+    /**
+     * The logic for the RestrictedField. Can be of type {@code IntLogic}
+     * or {@code DoubleLogic}. 
+     */
 	public abstract class Logic {
             public abstract double getMin();
             public abstract double getMax();
@@ -87,17 +115,7 @@ public class NumberField extends StackPane {
                     logic.setLogicValue(newValue.doubleValue());
     			}
             };
-            //TODO DEPRECATED. PREVIOUSLY ADDED AS EVENT FILTER IN LOGIC CONSTRUCTOR.
-            EventHandler<KeyEvent> keyHandler = new EventHandler<KeyEvent>() {
-            	@Override
-            	public void handle(KeyEvent event) {
-	                if (!isValid(field.getText())) {
-	                    event.consume();
-	                }
-	        	}  
-			};
-            
-            
+       
             protected void resetColor() { 
                     field.setStyle("-fx-text-fill: #000000;"
                                     + "-fx-control-inner-background: #ffffff");	
@@ -109,6 +127,10 @@ public class NumberField extends StackPane {
 		}
 	}
 	
+	/**
+	 * Configures the logic for the {@code NumberField} if it is a 
+	 * {@code double} field.
+	 */
 	public class DoubleLogic extends Logic {
 		
         private double[] range;
@@ -259,7 +281,11 @@ public class NumberField extends StackPane {
             return false;
         }
 	}
-        
+	
+	/**
+	 * Configures the logic for the {@code NumberField} if it is a 
+	 * {@code int} field.
+	 */    
 	public class IntLogic extends Logic {
 		
         private int[] range;
@@ -347,9 +373,6 @@ public class NumberField extends StackPane {
 	    }
 	}
 	        
-    /*
-    Setting up all properties.
-    */
 	public double getValue() {
 		return value.getValue();
 	}

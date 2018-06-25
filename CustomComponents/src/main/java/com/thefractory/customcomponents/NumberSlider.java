@@ -14,22 +14,60 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.StackPane;
 
+/**
+ * A {@code Slider} combined with a {@code NumberField} to enhance the usability.
+ * The {@code Slider} can also be set to a logarithmic {@code Slider}. Make sure
+ * there are no negative or 0 values allowed in the range for this. 
+ * 
+ * @author Ivar Eriksson
+ *
+ */
 public class NumberSlider extends StackPane {
 
-    //Properties
+    /**
+     * Keeps track of if the {@code NumberSlider} is logarithmic.
+     */
     private final BooleanProperty logarithmic;
+    /**
+     * Keeps track of if the {@code NumberSlider} should show tick marks.
+     * Only supported for non-logarithmic sliders.
+     */
     private final BooleanProperty ticks;
 
     //Variables
     @SuppressWarnings("unused")
     private boolean lock = false;
-
-    //Structural Elements
+    
+    /**
+     * The title of the {@code NumberLsider}.
+     */
     @FXML private Label label;
+    /**
+     * The slider of the {@code NumberLsider}.
+     */
     @FXML private Slider slider;
+    /**
+     * The {@code NumberField} of the {@code NumberLsider}.
+     */
     @FXML public NumberField field;
+    /**
+     * The {@code InfoIcon} of the {@code NumberLsider}.
+     * !!!Will be updated to an IconButton!!!
+     */
     @FXML private InfoIcon info;
 
+    /**
+     * Creates a {@code NumberSlider} with the given parameters.
+     * Note that ticks can only be shown for non-logarithmic {@code Sliders}
+     * and that logarithmic {@code sliders} should only allow positive values.
+     * 
+     * @param logarithmic
+     * @param ticks
+     * @param intSlider
+     * @param value
+     * @param min
+     * @param max
+     */
     public NumberSlider(@NamedArg(value="logarithmic", defaultValue="false") boolean logarithmic, 
     		@NamedArg(value="ticks", defaultValue="false") boolean ticks, 
     		@NamedArg(value="intSlider", defaultValue="false") boolean intSlider, 

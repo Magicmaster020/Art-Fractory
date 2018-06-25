@@ -11,14 +11,35 @@ import javafx.scene.control.Tooltip;
 
 //https://stackoverflow.com/questions/43956201/javafx-how-to-remove-the-borders-from-button
 
+/**
+ * A button with an Icon instead of a {@code Label}. All icon-packs
+ * can be found in resources>com>thefractory>customcomponents>icons.
+ * @author Ivar Eriksson
+ *
+ */
 public class IconButton extends Button {
 	
-    //Properties
+    /**
+     * The folder with the icons for this {@code IconButton}.
+     * Must be one of the predefined folder names. 
+     */
     private final StringProperty iconLocation;
 	
+    /**
+     * The {@code Button}.
+     */
 	@FXML public Button button;
+	/**
+     * The {@code Tooltip} shown on hover.
+     */
 	@FXML private Tooltip tip;
 	
+	/**
+	 * The variable {@code iconLocation} must be one of the predefined folder
+	 * names that can be found in 
+	 * resources>com>thefractory>customcomponents>icons. 
+	 * @param iconLocation
+	 */
 	public IconButton(@NamedArg(value="iconLocation" , defaultValue="new") String iconLocation){
 		this.iconLocation = new SimpleStringProperty(this, "iconLocation", iconLocation);
 
@@ -35,11 +56,7 @@ public class IconButton extends Button {
         
 		button.getStylesheets().add(getClass().getResource("icons/" + iconLocation + "/style.css").toString());
 	}
-	
-	public void function(){
-		System.out.println("Hej");
-	}
-	
+		
 	public final String getIconLocation(){
 		return iconLocation.getValue();
 	}
