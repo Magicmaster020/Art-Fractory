@@ -27,13 +27,24 @@ public class Gradient extends ImageView {
 	
 	private ArrayList<Color> colors;
 	
-	//Properties
+	/**
+	 * The location of the text file containing the gradient.
+	 */
     private final StringProperty gradientLocation;
+    /**
+     * The {@code Image} on which the gradient is drawn.
+     */
 	private WritableImage image;
 	
+	/**
+	 * The {@code ImageView} displaying the gradient.
+	 */
 	@FXML public ImageView gradient;
 	
-	
+	/**
+	 * Returns the gradient based on the location given.
+	 * @param gradientLocation
+	 */
 	public Gradient(@NamedArg(value="gradientLocation", defaultValue="pink") String gradientLocation){
 		this.gradientLocation = new SimpleStringProperty(this, "gradientLocation", gradientLocation);
 
@@ -71,6 +82,11 @@ public class Gradient extends ImageView {
         gradient.setImage(image);
 	}
 	
+	/**
+	 * Returns the colour at the specified location in the gradient.
+	 * @param index Takes values between 0 and 1.
+	 * @return
+	 */
 	public Color getColor(double index) {
 		return colors.get((int) Math.round(index * (colors.size() - 1))); 
 	}

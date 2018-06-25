@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 public class SimpleMandelbrotSet extends AbstractMandelbrotSet {
 
 	private static String DEFAULT_NAME = "Simple Mandelbrot Set";	
-
+	
 	@FXML private StackPane controlPanel;
 	@FXML private VBox gradients;
 	
