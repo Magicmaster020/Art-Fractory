@@ -1,31 +1,32 @@
 package com.thefractory.customcomponents;
 //https://stackoverflow.com/questions/33961606/javafx-how-to-drag-object-along-given-svg-path-like-a-slider
 
-import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.PathTransition;
 import javafx.beans.NamedArg;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
 import java.io.IOException;
 
-import org.apache.batik.parser.PathParser;
+//import org.apache.batik.parser.PathParser;
 
 
-public class CircularSlider2 extends Slider {
+public class CircularSlider2 extends AnchorPane {
 
-    private final IntegerProperty sliderMin;
-    private final IntegerProperty sliderMax;
+    private final DoubleProperty sliderMin;
+    private final DoubleProperty sliderMax;
     @FXML Path path;
     @FXML private Circle _circle;
     
@@ -44,11 +45,11 @@ public class CircularSlider2 extends Slider {
 
     private double _sliderIndex = 0;
     
-    public CircularSlider2(@NamedArg(value="sliderMin", defaultValue="0") int sliderMin,
-    		@NamedArg(value="sliderMax", defaultValue="360") int SliderMax) {
+    public CircularSlider2(@NamedArg(value="sliderMin", defaultValue="360") double sliderMin,
+    		@NamedArg(value="sliderMax", defaultValue="0") double sliderMax) {
     	
-    	this.sliderMin = new SimpleIntegerProperty(this, "sliderMin", getSliderMin());
-    	this.sliderMax = new SimpleIntegerProperty(this, "sliderMax", getSliderMax());
+    	this.sliderMin = new SimpleDoubleProperty(this, "sliderMin", sliderMin);
+    	this.sliderMax = new SimpleDoubleProperty(this, "sliderMax", sliderMax);
     	
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CircularSlider.fxml"));
 		fxmlLoader.setRoot(this);
@@ -63,14 +64,14 @@ public class CircularSlider2 extends Slider {
         
 
 	    // Parse the SVG Path with Apache Batik and create a Path
-	    PathParser parser = new PathParser();
-	    JavaFXPathElementHandler handler = new JavaFXPathElementHandler("track");
-	    parser.setPathHandler(handler);
+	    //PathParser parser = new PathParser();
+	    //JavaFXPathElementHandler handler = new JavaFXPathElementHandler("track");
+	    //parser.setPathHandler(handler);
 	
 	    // SVG Path for circle
-	    parser.parse("M60,60 M60,10 A50,50 1 0,1 60,110 A50,50 1 0,1 60,10 z");
+	    //parser.parse("M60,60 M60,10 A50,50 1 0,1 60,110 A50,50 1 0,1 60,10 z");
 	
-	    path = handler.getPath();
+	    //path = handler.getPath();
 	
 	    // Moving image
 	    //_circle = new Circle(8);
@@ -86,7 +87,7 @@ public class CircularSlider2 extends Slider {
 	    _pathTransition.playFromStart();
 	    _pathTransition.pause();
 	    _pathTransition.jumpTo("end");
-	
+
 	    // Save the circle positions on the path
 	    _pathPointList = new ArrayList<>();
 	    savePositions();
@@ -127,22 +128,22 @@ public class CircularSlider2 extends Slider {
     }
 
     //Getters and setters
-    public final int getSliderMin(){
+    public final double getSliderMin(){
 		return sliderMin.getValue();
 	}
 	public final void setSliderMin(int value){
 		sliderMin.setValue(value);
 	}
-	public final IntegerProperty sliderMinProperty(){
+	public final DoubleProperty sliderMinProperty(){
 		return sliderMin;
 	}
-	public final int getSliderMax(){
+	public final double getSliderMax(){
 		return sliderMax.getValue();
 	}
 	public final void setSliderMax(int value){
 		sliderMax.setValue(value);
 	}
-	public final IntegerProperty sliderMaxProperty(){
+	public final DoubleProperty sliderMaxProperty(){
 		return sliderMax;
 	}
     
