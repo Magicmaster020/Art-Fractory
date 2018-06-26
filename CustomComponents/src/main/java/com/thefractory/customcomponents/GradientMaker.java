@@ -23,17 +23,40 @@ import javafx.scene.paint.Color;
 
 public class GradientMaker extends StackPane {
 
+	/**
+	 * The gradient property.
+	 */
 	private final ObjectProperty<ArrayList<Color>> gradient;
 	
+	/**
+	 * Start colour.
+	 */
 	@FXML private ColorPicker start = new ColorPicker();
+	/**
+	 * Stop colour.
+	 */
 	@FXML private ColorPicker stop = new ColorPicker();
+	/**
+	 * The length of the gradient.
+	 */
 	@FXML private NumberField depth;
+	/**
+	 * The mixing function.
+	 */
 	@FXML private ComboBox<String> function;
 	Map<String, Function> functions = new HashMap<String, Function>();
 	
+	/**
+	 * Makes a {@code GradientMaker} with the given parameters.
+	 * @param start
+	 * @param stop
+	 * @param depth
+	 * @param min
+	 * @param max
+	 * @param function
+	 */
 	public GradientMaker(@NamedArg("start") Color start, @NamedArg("stop") Color stop, 
-			@NamedArg("depth") int depth, @NamedArg("min") int min, 
-			@NamedArg("max") int max, @NamedArg("function") String function) {
+			@NamedArg("depth") int depth, @NamedArg("function") String function) {
 				
 		this.gradient = new SimpleObjectProperty<ArrayList<Color>>(this, "gradient", null);
 		
@@ -55,23 +78,26 @@ public class GradientMaker extends StackPane {
 		this.setup();
 	}
 	
+	/**
+	 * Makes a default {@code GradientMaker}.
+	 */
 	public GradientMaker() {
-		this(Color.BLACK, Color.WHITE, 50, 1, 500, "Linear");
+		this(Color.BLACK, Color.WHITE, 50, "Linear");
 	}
 	
+	/**
+	 * Makes a reversed {@code GradientMaker} from the given {@code GradientMaker}. 
+	 * @param gradientMaker
+	 */
 	public GradientMaker(GradientMaker gradientMaker) {
 		this(gradientMaker.stop.getValue(), gradientMaker.start.getValue(), 
-				gradientMaker.getDepth(), gradientMaker.getMin(), gradientMaker.getMax(), 
+				gradientMaker.getDepth(), 
 				gradientMaker.function.getSelectionModel().getSelectedItem());
 	}
 	
-	public int getMin() {
-		return 5;
-	}
-	public int getMax() {
-		return 5;
-	}
-	
+	/**
+	 * Takes care of further setup.
+	 */
 	private void setup() {
 		
 		//Lambdas
@@ -122,6 +148,8 @@ public class GradientMaker extends StackPane {
 				updateGradient();	
 			}
 		});
+	
+		updateGradient();
 	}
 	
 	public void updateGradient(){

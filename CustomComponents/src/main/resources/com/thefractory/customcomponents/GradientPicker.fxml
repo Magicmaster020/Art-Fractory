@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.thefractory.customcomponents.Gradient?>
+<?import com.thefractory.customcomponents.IconButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="VBox" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollPane>
+         <content>
+            <VBox fx:id="gradientBox" />
+         </content>
+      </ScrollPane>
+      <Gradient fx:id="gradient" />
+      <IconButton fx:id="addGradient" iconLocation="new" onAction="#addNewGradient" />
+   </children>
+</fx:root>

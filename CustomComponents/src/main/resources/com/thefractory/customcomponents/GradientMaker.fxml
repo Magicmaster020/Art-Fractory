@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.thefractory.NumberField?>
+<?import com.thefractory.customcomponents.NumberField?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -23,8 +23,8 @@
          <children>
             <ColorPicker fx:id="start" />
             <ColorPicker fx:id="stop" GridPane.columnIndex="1" />
-            <NumberField fx:id="depth" ghostText="Color Depth" intField="true" max="500.0" min="1.0" value="10.0" GridPane.columnIndex="2" />
-            <ComboBox fx:id="function" prefWidth="160.0" GridPane.columnIndex="3" />
+            <NumberField fx:id="depth" ghostText="Color Depth" intField="true" max="1000.0" min="1.0" prefWidth="100.0" value="10.0" GridPane.columnIndex="2" />
+            <ComboBox fx:id="function" prefWidth="125.0" GridPane.columnIndex="3" />
          </children>
       </GridPane>
    </children>

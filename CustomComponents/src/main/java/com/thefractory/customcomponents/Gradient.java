@@ -6,8 +6,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 import javafx.beans.NamedArg;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.ImageView;
@@ -20,12 +24,17 @@ import javafx.scene.paint.Color;
  * resources>com>thefractory>customcomponents>gradients. The text file must
  * specify the colours line by line and with rgb-values between 0 and 1. 
  * Each value should be separated by spaces. 
+ * 
+ * Alternatively the gradient can be set after initialisation.
  * @author Ivar Eriksson
  *
  */
 public class Gradient extends ImageView {
-	
-	private ArrayList<Color> colors;
+
+	/**
+	 * The gradient property.
+	 */
+	public final ObjectProperty<ArrayList<Color>> colors;
 	
 	/**
 	 * The location of the text file containing the gradient.
@@ -47,7 +56,8 @@ public class Gradient extends ImageView {
 	 */
 	public Gradient(@NamedArg(value="gradientLocation", defaultValue="pink") String gradientLocation){
 		this.gradientLocation = new SimpleStringProperty(this, "gradientLocation", gradientLocation);
-
+		this.colors = new SimpleObjectProperty<ArrayList<Color>>();
+		
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Gradient.fxml"));
         fxmlLoader.setController(this);
         fxmlLoader.setRoot(this);
@@ -61,11 +71,11 @@ public class Gradient extends ImageView {
 
         Scanner sc = new Scanner(new BufferedReader(new InputStreamReader(
 		        this.getClass().getResourceAsStream("gradients/" + gradientLocation + ".txt"))));
-        colors = new ArrayList<Color>();
+        colors.set(new ArrayList<Color>());
         while(sc.hasNextLine()) {
-        	colors.add(Color.BLACK);
+        	colors.getValue().add(Color.BLACK);
             String[] line = sc.nextLine().trim().split(" ");
-            colors.set(colors.size() - 1, Color.color(Double.parseDouble(line[0]),
+            colors.getValue().set(colors.getValue().size() - 1, Color.color(Double.parseDouble(line[0]),
             		Double.parseDouble(line[1]),
             		Double.parseDouble(line[2])));
         }
@@ -75,11 +85,39 @@ public class Gradient extends ImageView {
         PixelWriter writer = image.getPixelWriter();
         for(int x = 0; x < image.getWidth(); x++) {
         	for(int y = 0; y < image.getHeight(); y++) {
-        		Color color = colors.get((int) Math.round(x * (colors.size() - 1)/image.getWidth()));
+        		Color color = colors.getValue().get(
+        				(int) Math.round(x * (colors.getValue().size() - 1)/image.getWidth()));
             	writer.setColor(x, y, color);
         	}
         }
         gradient.setImage(image);
+	}
+	
+	/**
+	 * Creates an empty {@code Gradient}.
+	 */
+	public Gradient() {
+		this.gradientLocation = new SimpleStringProperty(this, null, null);
+		this.colors = new SimpleObjectProperty<ArrayList<Color>>();
+		
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Gradient.fxml"));
+        fxmlLoader.setController(this);
+        fxmlLoader.setRoot(this);
+        fxmlLoader.setClassLoader(getClass().getClassLoader());
+        
+        try {
+            fxmlLoader.load();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+
+        colors.addListener(new ChangeListener<ArrayList<Color>>() {
+			@Override
+			public void changed(ObservableValue<? extends ArrayList<Color>> arg0, 
+					ArrayList<Color> oldValue, ArrayList<Color> newValue) {
+				update();
+			}
+		});
 	}
 	
 	/**
@@ -88,7 +126,27 @@ public class Gradient extends ImageView {
 	 * @return
 	 */
 	public Color getColor(double index) {
-		return colors.get((int) Math.round(index * (colors.size() - 1))); 
+		return colors.getValue().get((int) Math.round(index * (colors.getValue().size() - 1))); 
+	}
+	
+	/**
+	 * Updates the shown gradient.
+	 * Is called when {@code colours} changes.
+	 */
+	public void update() {
+		System.out.println(colors.getValue().size());
+		if(colors.getValue().size() != 0) {
+			this.image = new WritableImage(500, 30);
+	        PixelWriter writer = image.getPixelWriter();
+	        for(int x = 0; x < image.getWidth(); x++) {
+	        	for(int y = 0; y < image.getHeight(); y++) {
+	        		Color color = colors.getValue().get(
+	        				(int) Math.round(x * (colors.getValue().size() - 1)/image.getWidth()));
+	            	writer.setColor(x, y, color);
+	        	}
+	        }
+	        gradient.setImage(image);
+		}
 	}
 	
 	public final String getGradientLocation(){
