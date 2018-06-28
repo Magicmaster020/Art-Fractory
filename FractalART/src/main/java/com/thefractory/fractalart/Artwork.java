@@ -81,9 +81,12 @@ public abstract class Artwork {
 		rightPane.setImage(this.image);
 	}
 	
-	public abstract void updateImage(int resolution);
+	public void updateImage(int resolution) {
+		setImage(getImage(resolution, resolution));
+		setImage();
+	}
 	
-	
+	public abstract void init();
 	
 	public Tab getTab() {
 		return tab;
@@ -97,6 +100,9 @@ public abstract class Artwork {
 	public WritableImage getImage() {
 		return image;
 	}
+	
+	public abstract WritableImage getImage(int height, int length);
+	
 	public void setImage(WritableImage image) {
 		this.image = image;
 	}

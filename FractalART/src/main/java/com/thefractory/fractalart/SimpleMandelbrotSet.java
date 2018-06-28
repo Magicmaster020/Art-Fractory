@@ -50,4 +50,7 @@ public class SimpleMandelbrotSet extends AbstractMandelbrotSet {
 		gradient = new Gradient(((Gradient) event.getSource()).getGradientLocation());
 		update();
 	}
+	@FXML public void export() {
+		Model.getInstance().exportAs(this);
+	}
 }

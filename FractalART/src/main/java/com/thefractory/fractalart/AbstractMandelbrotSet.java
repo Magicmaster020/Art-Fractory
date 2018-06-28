@@ -16,6 +16,7 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 	
 	public AbstractMandelbrotSet(String name) {
 		super(name);
+		init();
 	}
 	
 	private int iterate(ComplexNumber c) {
@@ -29,30 +30,44 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 		}
 		return i;
 	}
+	@Override
+    public void init() {
+		updateImage((int) rightPane.resolutionField.getValue());
+		setImage();
+	}
+	
+	//this function is now concrete in artwork
+	//@Override
+	//public void updateImage(int resolution) {
+	//	setImage(getImage(resolution, resolution));
+	//	setImage();
+	//}
+	
 	
 	@Override
-	public void updateImage(int resolution) {
+	public WritableImage getImage(int height, int width) {
 		double xLength = 1/rightPane.zoomField.getValue();
 		double[] center = {rightPane.xField.getValue(), rightPane.yField.getValue()};
 		double angle = -Math.toRadians(rightPane.angleField.getValue());
 		
-		image = new WritableImage(resolution, resolution);
+		WritableImage image = new WritableImage(height, width);
 		PixelWriter writer = image.getPixelWriter();
-		
-		for(int i = 0; i < resolution; i++) {
-			for(int j = 0; j < resolution; j++) {
+		for(int i = 0; i < height; i++) {
+			for(int j = 0; j < width; j++) {
 				
 				ComplexNumber z = new ComplexNumber(
-						center[0] + xLength * (-Math.cos(angle) * (0.5 - ((double) i)/resolution) 
-								+ Math.sin(angle) * (0.5 - ((double) j)/resolution)), 
-						- center[1] + xLength * (-Math.sin(angle) * (0.5 - ((double) i)/resolution) 
-								- Math.cos(angle) * (0.5 - ((double) j)/resolution)));
+						center[0] + xLength * (-Math.cos(angle) * (0.5 - ((double) i)/width) 
+								+ Math.sin(angle) * (0.5 - ((double) j)/width)), 
+						- center[1] + xLength * (-Math.sin(angle) * (0.5 - ((double) i)/width) 
+								- Math.cos(angle) * (0.5 - ((double) j)/width)));
+				
+
+				
 				
 				Color color = gradient.getColor(((double) iterate(z))/iterations);
-				
 				writer.setColor(i, j, color);
 			}
 		}
-		setImage();
+		return(image);
 	}
 }

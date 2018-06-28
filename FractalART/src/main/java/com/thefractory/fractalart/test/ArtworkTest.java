@@ -14,17 +14,20 @@ import javafx.stage.WindowEvent;
 
 public class ArtworkTest extends Application {
 
+	public static Stage primaryStage;
+	
     @Override
     public void start(Stage primaryStage) {
 
-
+    	ArtworkTest.primaryStage = primaryStage;
+    	
 		SimpleMandelbrotSet test = new SimpleMandelbrotSet();
 		HofstadtersButterfly test2 = new HofstadtersButterfly();
 		TabPane tabPane = new TabPane(test.getTab());
 		tabPane.getTabs().add(test2.getTab());
 		
         Scene scene = new Scene(tabPane);
-
+        
         primaryStage.setTitle("InfoIcon Test");
         primaryStage.setScene(scene);
         primaryStage.show();
