@@ -1,5 +1,6 @@
 package com.thefractory.fractalart.test;
 
+import com.thefractory.fractalart.HofstadtersButterfly;
 import com.thefractory.fractalart.MandelbrotSet;
 import com.thefractory.fractalart.SimpleMandelbrotSet;
 
@@ -18,7 +19,9 @@ public class ArtworkTest extends Application {
 
 
 		SimpleMandelbrotSet test = new SimpleMandelbrotSet();
+		HofstadtersButterfly test2 = new HofstadtersButterfly();
 		TabPane tabPane = new TabPane(test.getTab());
+		tabPane.getTabs().add(test2.getTab());
 		
         Scene scene = new Scene(tabPane);
 
