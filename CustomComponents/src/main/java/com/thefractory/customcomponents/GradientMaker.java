@@ -21,13 +21,19 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
+/**
+ * A GUI interface for making simple gradients.
+ * Best used in larger groups.
+ * 
+ * @author Ivar Eriksson
+ *
+ */
 public class GradientMaker extends StackPane {
 
 	/**
 	 * The gradient property.
 	 */
-	private final ObjectProperty<ArrayList<Color>> gradient;
-	
+	private final ObjectProperty<ArrayList<Color>> palette;	
 	/**
 	 * Start colour.
 	 */
@@ -58,8 +64,31 @@ public class GradientMaker extends StackPane {
 	public GradientMaker(@NamedArg("start") Color start, @NamedArg("stop") Color stop, 
 			@NamedArg("depth") int depth, @NamedArg("function") String function) {
 				
-		this.gradient = new SimpleObjectProperty<ArrayList<Color>>(this, "gradient", null);
-		
+		this.palette = new SimpleObjectProperty<ArrayList<Color>>();
+		setup(start, stop, depth, function);
+	}
+	
+	/**
+	 * Makes a reversed {@code GradientMaker} from the given {@code GradientMaker}. 
+	 * @param gradientMaker
+	 */
+	public GradientMaker(GradientMaker gradientMaker) {
+		this(gradientMaker.stop.getValue(), gradientMaker.start.getValue(), 
+				gradientMaker.getDepth(), 
+				gradientMaker.function.getSelectionModel().getSelectedItem());
+	}
+	
+	/**
+	 * Makes a default {@code GradientMaker}.
+	 */
+	public GradientMaker() {
+		this(Color.BLACK, Color.WHITE, 50, "Linear");
+	}
+	
+	/**
+	 * Fixes some general setup for the constructors.
+	 */
+	private void setup(Color start, Color stop, int depth, String function) {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GradientMaker.fxml"));
 		fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -75,30 +104,6 @@ public class GradientMaker extends StackPane {
         setStop(stop);
         setDepth(depth);
         setFunction(function);
-		this.setup();
-	}
-	
-	/**
-	 * Makes a default {@code GradientMaker}.
-	 */
-	public GradientMaker() {
-		this(Color.BLACK, Color.WHITE, 50, "Linear");
-	}
-	
-	/**
-	 * Makes a reversed {@code GradientMaker} from the given {@code GradientMaker}. 
-	 * @param gradientMaker
-	 */
-	public GradientMaker(GradientMaker gradientMaker) {
-		this(gradientMaker.stop.getValue(), gradientMaker.start.getValue(), 
-				gradientMaker.getDepth(), 
-				gradientMaker.function.getSelectionModel().getSelectedItem());
-	}
-	
-	/**
-	 * Takes care of further setup.
-	 */
-	private void setup() {
 		
 		//Lambdas
 		Function linear = (x) -> x;
@@ -111,27 +116,27 @@ public class GradientMaker extends StackPane {
 		for(int i = 0; i < exponentials.length; i++) {
 			int j = i;
 			exponentials[i] = (x) -> (1-Math.exp(constants[j]*x))/(1-Math.exp(constants[j]));
-			functions.put("Exponential " + Integer.toString(constants[i]), exponentials[i]);
+			functions.put("Exponential" + Integer.toString(constants[i]), exponentials[i]);
 		}
 			
 		ObjectProperty<Color> colorPropertyStart = this.start.valueProperty();
 		colorPropertyStart.addListener(new ChangeListener<Color>() {
 			@Override
 			public void changed(ObservableValue<? extends Color> arg0, Color oldValue, Color newValue) {
-				updateGradient();	
+				updatePalette();	
 			}
 		});
 		ObjectProperty<Color> colorPropertyStop = this.stop.valueProperty();
 		colorPropertyStop.addListener(new ChangeListener<Color>() {
 			@Override
 			public void changed(ObservableValue<? extends Color> arg0, Color oldValue, Color newValue) {
-				updateGradient();	
+				updatePalette();	
 			}
 		});
 		this.depth.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-				updateGradient();	
+				updatePalette();	
 			}
 		});
 		
@@ -139,20 +144,23 @@ public class GradientMaker extends StackPane {
 	    options.sort(null);
 	    Collections.reverse(options);
 	    this.function.setItems(options);
-	    this.function.getSelectionModel().selectFirst();
+	    this.function.getSelectionModel().select(getFunction());;
 		this.function.setPromptText("Function");
 		ObjectProperty<String> functionProperty = this.function.valueProperty();
 		functionProperty.addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> arg0, String oldValue, String newValue) {
-				updateGradient();	
+				updatePalette();	
 			}
 		});
 	
-		updateGradient();
+		updatePalette();
 	}
 	
-	public void updateGradient(){
+	/**
+	 * Updates the {@code palette based on the current list of {@code GradientMakers}.
+	 */
+	public void updatePalette(){
 		ArrayList<Color> palette = new ArrayList<Color>();
 		
 		double startRed = start.getValue().getRed();
@@ -175,93 +183,70 @@ public class GradientMaker extends StackPane {
 				palette.add(Color.color(red, green, blue));
 			}
 		}	
-		setGradient(palette);
+		this.palette.set(palette);
 	}
-	
-	public int[] getStartRGB() {
-		int[] color = new int[3];
-		color[0] = (int) (255*start.getValue().getRed()); 
-		color[1] = (int) (255*start.getValue().getGreen()); 
-		color[2] = (int) (255*start.getValue().getBlue());
-		
-		return color;
-	}
-	
-	public int[] getStopRGB() {
-		int[] color = new int[3];
-		color[0] = (int) (255*stop.getValue().getRed()); 
-		color[1] = (int) (255*stop.getValue().getGreen()); 
-		color[2] = (int) (255*stop.getValue().getBlue());
-		
-		return color;
-	}
-	
-	public Function getFunctionLambda() {
+
+	/**
+	 * Returns the current {@code lambda} to calculate the gradient.
+	 * @return
+	 */
+	private Function getFunctionLambda() {
 		return functions.get(function.getSelectionModel().getSelectedItem());
 	}
 	
-	public interface Function {
+	/**
+	 * The used {@code lambda} function {@code interface}.
+	 * @author Ivar Eriksson
+	 *
+	 */
+	private interface Function {
 		public double operation(double x);
 	}
 
-	public final ArrayList<Color> getGradient(){
-		return gradient.getValue();
+	/**
+	 * The getters and setters for various properties.
+	 */
+	public final ArrayList<Color> getPalette(){
+		return palette.getValue();
 	}
-	
-	public final void setGradient(ArrayList<Color> value) {
-		gradient.setValue(value);
+	public final ObjectProperty<ArrayList<Color>> paletteProperty() {
+		return palette;
 	}
-	
-	public final ObjectProperty<ArrayList<Color>> gradientProperty() {
-		return gradient;
-	}
-
 	public final Color getStart() {
 		return start.getValue();
 	}
-	
 	public final void setStart(Color value) {
 		start.setValue(value);
 	}
-	
 	public final ObjectProperty<Color> startProperty() {
 		return start.valueProperty();
 	}
-	
 	public final Color getStop() {
 		return stop.getValue();
 	}
-	
 	public final void setStop(Color value) {
 		stop.setValue(value);
 	}
-	
 	public final ObjectProperty<Color> stopProperty() {
 		return stop.valueProperty();
 	}
-	
 	public final int getDepth() {
 		return (int) Math.round(depth.getValue());
 	}
-	
 	public final void setDepth(int value) {
 		depth.setValue((double) value); 
 	}
-	
 	public final IntegerProperty depthProperty() {
 		IntegerProperty i = new SimpleIntegerProperty();
 		i.bind(depth.valueProperty());
 		return i;
 	}
-	
 	public final String getFunction() {
 		return function.getValue();
 	}
-	
 	public final void setFunction(String value) {
 		function.setValue(value);
 	}
-	
 	public final ObjectProperty<String> functionProperty() {
 		return function.valueProperty();
 	}

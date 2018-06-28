@@ -10,7 +10,7 @@ public class GradientPickerTest extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		
+
 		GradientPicker gradientPicker = new GradientPicker();
 		
 		Scene scene = new Scene(gradientPicker);
@@ -21,8 +21,7 @@ public class GradientPickerTest extends Application {
 	}
 
 	public static void main(String[] args) {
+		System.out.println(System.getProperty("user.dir"));
 		launch(args);
 	}
-
-	
 }

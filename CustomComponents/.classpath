@@ -27,6 +27,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Isak/git/Art-Fractory/CustomComponents/src/main/resources/com/thefractory/customcomponents/batik-all-1.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ivarc/git/Art-Fractory/CustomComponents/src/main/resources/com/thefractory/customcomponents/batik-all-1.7.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

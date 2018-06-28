@@ -12,7 +12,7 @@ public class GradientTest extends Application {
     @Override
     public void start(Stage primaryStage) {
     	
-		Gradient gradient = new Gradient("sea");
+		Gradient gradient = new Gradient();
 		StackPane stack = new StackPane(gradient);
 		gradient.fitWidthProperty().bind(primaryStage.widthProperty());
 		

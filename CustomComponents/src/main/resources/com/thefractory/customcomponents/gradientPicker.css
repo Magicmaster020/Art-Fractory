@@ -1,0 +1,29 @@
+
+.image-view:hover {
+    -fx-scale-y: 1.2;
+    -fx-scale-z: 1.2;
+}
+
+.image-view:pressed {
+    -fx-scale-y: 1.0;
+    -fx-scale-z: 1.0;
+}
+
+#gradient:hover {
+    -fx-border-width: 0px, 2px, 0px, 2px; 
+    -fx-background-color: #e8e8e8;
+    -fx-border-color: transparent;
+    -fx-view-order: -1;
+}
+
+#selected {
+    -fx-background-color: #e8e8e8;
+    -fx-border-color: #b7b7b7;
+    -fx-border-width: 1px;
+    -fx-padding: -1px;
+}
+
+#gradient:hover {
+    -fx-border-width: 0px, 2px, 0px, 2px;
+    -fx-view-order: -1;
+}

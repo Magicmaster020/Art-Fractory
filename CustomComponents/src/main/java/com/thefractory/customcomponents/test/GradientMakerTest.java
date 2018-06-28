@@ -24,7 +24,15 @@ public class GradientMakerTest extends Application {
 		VBox box = new VBox();
 		box.getChildren().addAll(gradientMaker, gradient);
 		
-		gradient.colors.bind(gradientMaker.gradientProperty());
+		gradientMaker.paletteProperty().addListener(new ChangeListener<ArrayList<Color>>() {
+			@Override
+			public void changed(ObservableValue<? extends ArrayList<Color>> arg0, ArrayList<Color> arg1,
+					ArrayList<Color> arg2) {
+				ArrayList<GradientMaker> gradientMakerList = new ArrayList<GradientMaker>();
+				gradientMakerList.add(gradientMaker);
+				gradient.setGradientMakerList(gradientMakerList);
+			}
+		});
 		
 		Scene scene = new Scene(box);
 		
