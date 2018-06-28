@@ -6,7 +6,7 @@ public class FractalART extends Application {
 
 	@Override
     public void start(Stage primaryStage) throws Exception {
-		Model m = new Model();
+		Model m = Model.getInstance();
 		View v = new View(m);
 		@SuppressWarnings("unused")
 		Controller c = new Controller(m, v);
