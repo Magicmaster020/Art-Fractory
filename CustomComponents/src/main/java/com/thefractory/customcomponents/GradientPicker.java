@@ -47,7 +47,7 @@ public class GradientPicker extends StackPane {
 	/**
 	 * The current combined gradient.
 	 */
-	private final ObjectProperty<ArrayList<Color>> palette = new SimpleObjectProperty<ArrayList<Color>>();
+	private final ObjectProperty<Gradient> palette = new SimpleObjectProperty<Gradient>();
 	/**
 	 * The currently selectedSaveGradient.
 	 */
@@ -92,8 +92,7 @@ public class GradientPicker extends StackPane {
         	addGradient(new Gradient(getGradientMakersFromFile(fileEntry)), fileEntry.getAbsolutePath());
         }
         try {
-            selectedGradient = savedGradientList.get(0);
-            selectedGradient.setSelected(true);
+            selectGradient(savedGradientList.get(0));
         } catch(Exception e) {
         	e.printStackTrace();
         }
@@ -116,7 +115,6 @@ public class GradientPicker extends StackPane {
 	private ArrayList<GradientMaker> getGradientMakersFromFile(File file) {
 		try {
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-	        palette.set(new ArrayList<Color>());
 	        ArrayList<String[]> lines = new ArrayList<String[]>();
 	        while(true) {
 	        	String line = bufferedReader.readLine();
@@ -253,13 +251,6 @@ public class GradientPicker extends StackPane {
 		} else if(gradientMakerList.size() == 2) {
 			gradientMakerList.get(0).remove.setDisable(false);
 		}
-//		enhancedGradientMaker.gradientMaker.paletteProperty().addListener(new ChangeListener<ArrayList<Color>>() {
-// 			@Override
-// 			public void changed(ObservableValue<? extends ArrayList<Color>> arg0, 
-// 					ArrayList<Color> oldValue, ArrayList<Color> newValue) {
-// 				updatePalette();
-// 			}
-// 		});
 	}
 	
 	/**
@@ -283,14 +274,16 @@ public class GradientPicker extends StackPane {
 			if(selectedGradient != null) {
 				gradientMakerList.clear();
 				gradientMakerBox.getChildren().clear();
+				ArrayList<GradientMaker> gradientMakers = new ArrayList<GradientMaker>();
 				for(GradientMaker gradientMaker : selectedGradient.gradient.getGradientMakerList()) {
 					EnhancedGradientMaker enhancedGradientMaker = new EnhancedGradientMaker(gradientMaker);
 					addGradientMaker(enhancedGradientMaker);
+					gradientMakers.add(gradientMaker);
 				}
 				selectGradient(null);
+	        	palette.set(customGradient.clone());
 			}
         	customGradient.setFitWidth(innerCustomPane.getWidth());
-        	palette.set(customGradient.getPalette());
 		}
 	}
 
@@ -338,18 +331,15 @@ public class GradientPicker extends StackPane {
 		}
 	}
 	
-	
 	/**
 	 * Makes a new {@code Color} list for the custom {@code Gradient}.
 	 */
 	public void updatePalette(){
 		ArrayList<GradientMaker> gradientMakerList = new ArrayList<GradientMaker>();		
-		ArrayList<Color> palette = new ArrayList<Color>();
 		for(EnhancedGradientMaker enhancedGradientMaker : this.gradientMakerList) {
-			palette.addAll(enhancedGradientMaker.gradientMaker.getPalette());
         	gradientMakerList.add(enhancedGradientMaker.gradientMaker);
 		}
-		this.palette.set(palette);
+		this.palette.set(new Gradient(gradientMakerList));
         customGradient.setGradientMakerList(gradientMakerList);
 	}
 	
@@ -373,30 +363,29 @@ public class GradientPicker extends StackPane {
 	 * @param enhancedGradient
 	 * @return
 	 */
-	
 	public boolean removeSavedGradient(EnhancedGradient enhancedGradient) {
 		try {
-			System.out.println(enhancedGradient.location);
 			Files.delete(Paths.get(enhancedGradient.location));
 			savedGradientBox.getChildren().remove(enhancedGradient.box);
 			savedGradientList.remove(enhancedGradient);
 			if(enhancedGradient.equals(selectedGradient)) {
-				selectedGradient = savedGradientList.get(0);
+				selectGradient(savedGradientList.get(0));
 			}
 			
+			if(savedGradientList.size() == 1) {
+				savedGradientList.get(0).remove.setDisable(true);
+			}
 			return true;
 		} catch(Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-		
 	}
 	
 	/**
-	 * Marks the givesn saved {@code EnhancedGradient} as selected.
+	 * Marks the given saved {@code EnhancedGradient} as selected.
 	 * @param enhancedGradient
 	 */
-	
 	public void selectGradient(EnhancedGradient enhancedGradient) {
 		if(enhancedGradient == null) {
 			selectedGradient.setSelected(false);
@@ -406,8 +395,15 @@ public class GradientPicker extends StackPane {
 				selectedGradient.setSelected(false);
 			}
 			selectedGradient = enhancedGradient;
-			palette.set(selectedGradient.gradient.getPalette());
+			palette.set(enhancedGradient.gradient.clone());
 			selectedGradient.setSelected(true);
 		}
+	}
+
+	public Gradient getPalette() {
+		return palette.get();
+	}
+	public ObjectProperty<Gradient> paletteProperty() {
+		return palette;
 	}
 }

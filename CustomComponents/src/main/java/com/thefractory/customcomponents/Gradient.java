@@ -153,4 +153,15 @@ public class Gradient extends ImageView {
 	public ArrayList<Color> getPalette(){
 		return palette.get();
 	}
+
+	/**
+	 * Returns a clone of this {@code Gradient}.
+	 */
+	public Gradient clone() {
+		ArrayList<GradientMaker> gradientMakers = new ArrayList<GradientMaker>();
+		for(GradientMaker gradientMaker : gradientMakerList) {
+			gradientMakers.add(gradientMaker);
+		}
+		return new Gradient(gradientMakers);
+	}
 }
