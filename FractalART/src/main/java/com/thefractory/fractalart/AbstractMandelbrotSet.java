@@ -12,7 +12,7 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 	protected int iterations = 50;
 	protected int power = 2;
 	protected ComplexNumber seed = new ComplexNumber(0,0);
-	protected Gradient gradient = new Gradient("pink");
+	
 	
 	public AbstractMandelbrotSet(String name) {
 		super(name);
