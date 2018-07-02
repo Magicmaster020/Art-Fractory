@@ -57,7 +57,7 @@ public abstract class Artwork {
 		}
 	}
 	
-	protected void addMainPane(StackPane mainPane) {
+	protected void setMainPane(StackPane mainPane) {
         this.mainAnchorPane.getChildren().add(mainPane);
         AnchorPane.setTopAnchor(mainPane, 0.0);
         AnchorPane.setRightAnchor(mainPane, 0.0);

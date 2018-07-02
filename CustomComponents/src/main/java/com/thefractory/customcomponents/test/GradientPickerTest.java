@@ -37,3 +37,4 @@ public class GradientPickerTest extends Application {
 		launch(args);
 	}
 }
+

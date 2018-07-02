@@ -1,13 +1,29 @@
 package com.thefractory.customcomponents;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Writer;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.security.CodeSource;
 import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+import org.apache.batik.css.parser.DefaultLangCondition;
+
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -53,6 +69,7 @@ public class GradientPicker extends StackPane {
 	 */
 	private EnhancedGradient selectedGradient;
 	private boolean customVisible = true;
+	private static String pathToGradients = "C:/Users/ivarc/Documents/savedGradients.txt";
 	
 	/**
 	 * The container for all gradientMakers.
@@ -69,7 +86,6 @@ public class GradientPicker extends StackPane {
 	 * The container for all saved {@code Gradient}s.
 	 */
 	@FXML private VBox savedGradientBox;
-	@FXML private TextField nameField;
 
 	/**
 	 * Creates a {@code GradientPicker}.
@@ -85,19 +101,33 @@ public class GradientPicker extends StackPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+        
 
-        //Reads in all saved gradients.
-        for (File fileEntry : new File(System.getProperty("user.dir") 
-				+ "/src/main/resources/com/thefractory/customcomponents/gradients/").listFiles()) {
-        	addGradient(new Gradient(getGradientMakersFromFile(fileEntry)), fileEntry.getAbsolutePath());
-        }
+		
+        
+
+        //Reads in all default gradients.
         try {
+        	InputStream stream = getClass().getClassLoader().getResourceAsStream(
+				"com/thefractory/customcomponents/defaultGradients.txt");
+	        addGradientsFromFile(stream, true);		
+	        //Reads in all by the user saved gradients.
+	        stream = new FileInputStream(pathToGradients);
+	        addGradientsFromFile(stream, false);
+	        stream.close();
+        } catch(Exception e){
+        	e.printStackTrace();
+        }
+		
+        
+		//Selects the first Gradient as default.
+		try {
             selectGradient(savedGradientList.get(0));
         } catch(Exception e) {
         	e.printStackTrace();
         }
+		
         savedGradientBox.getStylesheets().add(getClass().getResource("gradientPicker.css").toString());
-              
         gradientMakerList.addListener(new ListChangeListener() {
 			@Override
 			public void onChanged(Change arg0) {
@@ -112,41 +142,41 @@ public class GradientPicker extends StackPane {
 	 * @param file
 	 * @return
 	 */
-	private ArrayList<GradientMaker> getGradientMakersFromFile(File file) {
+	private void addGradientsFromFile(InputStream stream, boolean defaultGradient) {
 		try {
-			BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-	        ArrayList<String[]> lines = new ArrayList<String[]>();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+			ArrayList<String> lines = new ArrayList<String>();
 	        while(true) {
 	        	String line = bufferedReader.readLine();
 	        	if(line == null) {
 	        		break;
 	        	}
-	            lines.add(line.trim().split(" "));
+	        	lines.add(line);
 	        }
-	        
 	        bufferedReader.close();
-	        
-	        ArrayList<GradientMaker> gradientMakerList = new ArrayList<GradientMaker>();
-	        for(int i = 0; i < lines.size(); i+=4) {
-	        	GradientMaker gradientMaker = new GradientMaker(
-	        			Color.color(Double.parseDouble(lines.get(i)[0]),
-			            		Double.parseDouble(lines.get(i)[1]),
-			            		Double.parseDouble(lines.get(i)[2])),
-	        			Color.color(Double.parseDouble(lines.get(i+1)[0]),
-	    	            		Double.parseDouble(lines.get(i+1)[1]),
-	    	            		Double.parseDouble(lines.get(i+1)[2])),
-	        			Integer.parseInt(lines.get(i+2)[0]),
-	        			lines.get(i+3)[0]);
+			
+			for(String line : lines) {
+				String[] args = line.split(", ");
+				
+				ArrayList<GradientMaker> gradientMakerList = new ArrayList<GradientMaker>();
+		        for(int i = 0; i < args.length; i+=4) {
+		        	GradientMaker gradientMaker = new GradientMaker(
+		        			Color.color(Double.parseDouble(args[i].split(" ")[0]),
+				            		Double.parseDouble(args[i].split(" ")[1]),
+				            		Double.parseDouble(args[i].split(" ")[2])),
+		        			Color.color(Double.parseDouble(args[i+1].split(" ")[0]),
+		    	            		Double.parseDouble(args[i+1].split(" ")[1]),
+		    	            		Double.parseDouble(args[i+1].split(" ")[2])),
+		        			Integer.parseInt(args[i+2]),
+		        			args[i+3]);
 
-	            gradientMakerList.add(gradientMaker);
-	        }
-	        
-	        return gradientMakerList;
-		} catch (IOException e) {
+		            gradientMakerList.add(gradientMaker);
+		        }
+		        addGradient(new Gradient(gradientMakerList), defaultGradient);
+			}
+		} catch(Exception e) {
 			e.printStackTrace();
-			return null;
 		}
-		
 	}
 	
 	/**
@@ -160,20 +190,20 @@ public class GradientPicker extends StackPane {
 		private HBox box = new HBox();
 		//private DragIcon drag;
 		private IconButton remove = new IconButton("close");
-		private String location;
+		private boolean defaultGradient;
 		
-		private EnhancedGradient(Gradient gradient, String location) {
+		private EnhancedGradient(Gradient gradient, boolean defaultGradient) {
 			this.gradient = gradient;
-			setup(location);
+			setup(defaultGradient);
 		}
 		
-		private EnhancedGradient(ArrayList<GradientMaker> gradientMakers, String location) {
+		private EnhancedGradient(ArrayList<GradientMaker> gradientMakers, boolean defaultGradient) {
 			this.gradient = new Gradient(gradientMakers);
-			setup(location);
+			setup(defaultGradient);
 		}
 		
-		private void setup(String location) {
-			this.location = location;
+		private void setup(boolean defaultGradient) {
+			this.defaultGradient = defaultGradient;
 			
 			box.getChildren().addAll(gradient, remove);
 			box.setId("gradient");
@@ -189,6 +219,9 @@ public class GradientPicker extends StackPane {
 					removeSavedGradient(EnhancedGradient.this);
 				}
 			});
+			if(defaultGradient) {
+				remove.setDisable(true);
+			}
 		}
 		
 		private void setSelected(boolean selected) {
@@ -293,30 +326,31 @@ public class GradientPicker extends StackPane {
 	 * @return
 	 */
 	@FXML public boolean saveGradient() {
-		try {
-			String location = System.getProperty("user.dir") 
-					+ "/src/main/resources/com/thefractory/customcomponents/gradients/"
-					+ nameField.getText() + ".txt";
-			PrintWriter writer = new PrintWriter(location, "UTF-8");
-			
-			for(EnhancedGradientMaker gradientMaker : gradientMakerList) {
-				writer.println(gradientMaker.gradientMaker.getStart().getRed() + " "
-						+ gradientMaker.gradientMaker.getStart().getGreen() + " "
-						+ gradientMaker.gradientMaker.getStart().getBlue() + " ");
-				writer.println(gradientMaker.gradientMaker.getStop().getRed() + " "
-						+ gradientMaker.gradientMaker.getStop().getGreen() + " "
-						+ gradientMaker.gradientMaker.getStop().getBlue() + " ");
-				writer.println(gradientMaker.gradientMaker.getDepth());
-				writer.println(gradientMaker.gradientMaker.getFunction());
-			}
-			writer.close();
-
-			addGradient(customGradient, location);
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
+				
+		boolean successful = false;
+		String lineToAdd = "";
+		for(GradientMaker gradientMaker: customGradient.gradientMakerList) {
+			lineToAdd += gradientMaker.getStart().getRed() + " "
+					+ gradientMaker.getStart().getGreen() + " "
+					+ gradientMaker.getStart().getBlue() + ", "
+					+ gradientMaker.getStop().getRed() + " "
+					+ gradientMaker.getStop().getGreen() + " "
+					+ gradientMaker.getStop().getBlue() + ", "
+					+ gradientMaker.getDepth() + ", "
+					+ gradientMaker.getFunction() + ", ";
 		}
+		lineToAdd += "\n";
+		
+		try {
+			Writer writer = new BufferedWriter(new FileWriter(pathToGradients, true));
+			writer.append(lineToAdd);
+			writer.close();
+		    addGradient(customGradient.clone(), false);
+		    successful = true;
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+		return successful;
 	}
 	
 	/**
@@ -348,12 +382,12 @@ public class GradientPicker extends StackPane {
 	 * @param gradient
 	 */
 	
-	public void addGradient(Gradient gradient, String location) {
+	public void addGradient(Gradient gradient, Boolean defaultGradient) {
 		ArrayList<GradientMaker> gradientMakers = new ArrayList<GradientMaker>();
 		for(GradientMaker gradientMaker : gradient.getGradientMakerList()) {
 			gradientMakers.add(gradientMaker);
 		}
-		EnhancedGradient enhancedGradient = new EnhancedGradient(gradientMakers, location);
+		EnhancedGradient enhancedGradient = new EnhancedGradient(gradientMakers, defaultGradient);
 		savedGradientList.add(enhancedGradient);
     	savedGradientBox.getChildren().add(enhancedGradient.box);
 	}
@@ -364,22 +398,55 @@ public class GradientPicker extends StackPane {
 	 * @return
 	 */
 	public boolean removeSavedGradient(EnhancedGradient enhancedGradient) {
-		try {
-			Files.delete(Paths.get(enhancedGradient.location));
-			savedGradientBox.getChildren().remove(enhancedGradient.box);
-			savedGradientList.remove(enhancedGradient);
-			if(enhancedGradient.equals(selectedGradient)) {
-				selectGradient(savedGradientList.get(0));
-			}
+		boolean successful = false;
+		if(!enhancedGradient.defaultGradient) {
+			try {
+				File file = new File(pathToGradients);
+				BufferedReader reader = new BufferedReader(new FileReader(file));
+
+				String lineToRemove = "";
+				for(GradientMaker gradientMaker: enhancedGradient.gradient.gradientMakerList) {
+					lineToRemove += gradientMaker.getStart().getRed() + " "
+							+ gradientMaker.getStart().getGreen() + " "
+							+ gradientMaker.getStart().getBlue() + ", "
+							+ gradientMaker.getStop().getRed() + " "
+							+ gradientMaker.getStop().getGreen() + " "
+							+ gradientMaker.getStop().getBlue() + ", "
+							+ gradientMaker.getDepth() + ", "
+							+ gradientMaker.getFunction() + ", ";
+				}
+				
+				String currentLine;
+				String output = "";
+				boolean found = false;
+				
+				while((currentLine = reader.readLine()) != null) {
+				    if(currentLine.equals(lineToRemove) && !found) {
+				    	found = true;
+				    	continue;
+				    }
+				    output += currentLine;
+				}
+				reader.close(); 
+				
+				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+				writer.write(output);
+				writer.close();
 			
-			if(savedGradientList.size() == 1) {
-				savedGradientList.get(0).remove.setDisable(true);
+				savedGradientBox.getChildren().remove(enhancedGradient.box);
+				savedGradientList.remove(enhancedGradient);
+				if(enhancedGradient.equals(selectedGradient)) {
+					selectGradient(savedGradientList.get(0));
+				}
+				
+				if(savedGradientList.size() == 1) {
+					savedGradientList.get(0).remove.setDisable(true);
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
 			}
-			return true;
-		} catch(Exception e) {
-			e.printStackTrace();
-			return false;
 		}
+		return successful;
 	}
 	
 	/**

@@ -1,23 +1,18 @@
 package com.thefractory.fractalart;
 
+import com.thefractory.customcomponents.GradientPicker;
+
 import java.io.IOException;
-
-import com.thefractory.customcomponents.Gradient;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 public class SimpleMandelbrotSet extends AbstractMandelbrotSet {
 
 	private static String DEFAULT_NAME = "Simple Mandelbrot Set";	
 	
 	@FXML private StackPane controlPanel;
-	@FXML private VBox gradients;
+	@FXML private GradientPicker gradientPicker;
 	
 	public SimpleMandelbrotSet() {
 		super(DEFAULT_NAME);
@@ -32,24 +27,25 @@ public class SimpleMandelbrotSet extends AbstractMandelbrotSet {
             throw new RuntimeException(exception);
         }
 		
-		addMainPane(controlPanel);
+		setMainPane(controlPanel);
 		setControlPanelPrefWidth(800);
-		gradients.maxWidthProperty().bind(controlPanel.widthProperty());
-		for(Node gradient : gradients.getChildren()) {
-			((ImageView) gradient).fitWidthProperty().bind(gradients.maxWidthProperty());
-		}
-
+		System.out.println(controlPanel);
+		setGradientPicker(gradientPicker);
 		controlPanel.getStylesheets().add(getClass().getResource("gradient.css").toString());
+		
+		init();
 	}
+	
+	public void initialize() {	}
 	
 	@FXML public void update() {
 		updateImage((int) rightPane.resolutionField.getValue());
 	}
 
-	@FXML public void changeGradient(MouseEvent event) {
-		gradient = new Gradient(((Gradient) event.getSource()).getGradientLocation());
-		update();
-	}
+//	@FXML public void changeGradient(MouseEvent event) {
+//		gradient = new Gradient(((Gradient) event.getSource()).getGradientLocation());
+//		update();
+//	}
 	@FXML public void export() {
 		Model.getInstance().exportAs(this);
 	}

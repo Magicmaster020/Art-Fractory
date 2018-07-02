@@ -22,9 +22,9 @@ public class ArtworkTest extends Application {
     	ArtworkTest.primaryStage = primaryStage;
     	
 		SimpleMandelbrotSet test = new SimpleMandelbrotSet();
-		HofstadtersButterfly test2 = new HofstadtersButterfly();
+//		HofstadtersButterfly test2 = new HofstadtersButterfly();
 		TabPane tabPane = new TabPane(test.getTab());
-		tabPane.getTabs().add(test2.getTab());
+//		tabPane.getTabs().add(test2.getTab());
 		
         Scene scene = new Scene(tabPane);
         

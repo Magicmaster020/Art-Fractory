@@ -28,7 +28,7 @@
                             <transformers>
                                 <transformer implementation=
                                   "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.thefractory.customcomponents.test.GradientTest</mainClass>
+                                    <mainClass>com.thefractory.customcomponents.test.GradientPickerTest</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
