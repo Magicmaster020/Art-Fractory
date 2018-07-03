@@ -29,14 +29,10 @@ public class SimpleMandelbrotSet extends AbstractMandelbrotSet {
 		
 		setMainPane(controlPanel);
 		setControlPanelPrefWidth(800);
-		System.out.println(controlPanel);
 		setGradientPicker(gradientPicker);
-		controlPanel.getStylesheets().add(getClass().getResource("gradient.css").toString());
 		
 		init();
 	}
-	
-	public void initialize() {	}
 	
 	@FXML public void update() {
 		updateImage((int) rightPane.resolutionField.getValue());

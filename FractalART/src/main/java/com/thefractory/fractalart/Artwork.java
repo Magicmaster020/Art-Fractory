@@ -30,6 +30,14 @@ public abstract class Artwork {
     @FXML private SplitPane splitPane;
     @FXML private AnchorPane mainAnchorPane;
     @FXML private AnchorPane rightAnchorPane;
+    
+    
+    protected ChangeListener<Object> updateListener = new ChangeListener<Object>() {
+        @Override
+        public void changed(ObservableValue<?> o, Object oldVal, Object newVal) {
+            updateImage((int) rightPane.resolutionField.getValue());
+        }
+    };
 	
 	public Artwork(String name) {
 		this.name = name; 
@@ -43,13 +51,6 @@ public abstract class Artwork {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        
-        ChangeListener updateListener = new ChangeListener<Object>() {
-            @Override
-            public void changed(ObservableValue<?> o, Object oldVal, Object newVal) {
-                updateImage((int) rightPane.resolutionField.getValue());
-            }
-        };
         
 		this.tab = new Tab(name, splitPane);
 		for(Node child : JavaFXUtils.getNodesFromType(rightPane, NumberField.class)) {

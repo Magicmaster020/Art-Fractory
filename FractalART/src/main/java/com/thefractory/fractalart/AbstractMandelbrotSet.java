@@ -3,6 +3,10 @@ import com.thefractory.customcomponents.Gradient;
 import com.thefractory.customcomponents.GradientPicker;
 import com.thefractory.fractalart.utils.ComplexNumber;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -12,20 +16,25 @@ import javafx.scene.paint.Color;
 
 public abstract class AbstractMandelbrotSet extends Artwork {
 
-	protected int iterations = 50;
-	protected int power = 2;
-	protected ComplexNumber seed = new ComplexNumber(0,0);
-	private GradientPicker gradientPicker; 
+	protected IntegerProperty iterations = new SimpleIntegerProperty(50);
+	protected IntegerProperty power = new SimpleIntegerProperty(2);
+	protected DoubleProperty realStart = new SimpleDoubleProperty(0.0);
+	protected DoubleProperty imaginaryStart = new SimpleDoubleProperty(0.0);
+	private GradientPicker gradientPicker;
 	
 	public AbstractMandelbrotSet(String name) {
 		super(name);
+		iterations.addListener(updateListener);
+		power.addListener(updateListener);
+		realStart.addListener(updateListener);
+		imaginaryStart.addListener(updateListener);
 	}
 	
 	private int iterate(ComplexNumber c) {
-		ComplexNumber z = seed;
+		ComplexNumber z = new ComplexNumber(realStart.get() , imaginaryStart.get());
 		int i = 0;
-		for(; i < iterations; i++) {
-			z = ComplexNumber.add(ComplexNumber.pow(z, power), c);
+		for(; i < iterations.get(); i++) {
+			z = ComplexNumber.add(ComplexNumber.pow(z, power.get()), c);
 			if(Math.pow(z.getRe(), 2) + Math.pow(z.getIm(), 2) > 4) {
 				break;
 			}
@@ -34,24 +43,10 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 	}
 	@Override
     public void init() {
-		gradientPicker.paletteProperty().addListener(new ChangeListener<Gradient>() {
-			@Override
-			public void changed(ObservableValue<? extends Gradient> arg0, Gradient arg1, Gradient arg2) {
-				updateImage((int) rightPane.resolutionField.getValue());
-			}
-			
-		});
+		gradientPicker.paletteProperty().addListener(updateListener);
 		updateImage((int) rightPane.resolutionField.getValue());
 		setImage();
 	}
-	
-	//this function is now concrete in artwork
-	//@Override
-	//public void updateImage(int resolution) {
-	//	setImage(getImage(resolution, resolution));
-	//	setImage();
-	//}
-	
 	
 	@Override
 	public WritableImage getImage(int height, int width) {
@@ -70,7 +65,7 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 						- center[1] + xLength * (-Math.sin(angle) * (0.5 - ((double) i)/width) 
 								- Math.cos(angle) * (0.5 - ((double) j)/width)));
 				
-				Color color = gradientPicker.getPalette().getColor(((double) iterate(z))/iterations);
+				Color color = gradientPicker.getPalette().getColor(((double) iterate(z))/iterations.get());
 				writer.setColor(i, j, color);
 			}
 		}

@@ -181,13 +181,13 @@ public class NumberSlider extends StackPane {
     Setting up all properties.
     */
     public final double getValue() {
-		return slider.getValue();
+		return field.getValue();
 	}
 	public void setValue(double value) {
-        slider.setValue(value);
+        field.setValue(value);
 	}
 	public final DoubleProperty valueProperty() {
-		return slider.valueProperty();
+		return field.valueProperty();
 	}
 	public final boolean getIntSlider() {
 		return field.getIntField();
