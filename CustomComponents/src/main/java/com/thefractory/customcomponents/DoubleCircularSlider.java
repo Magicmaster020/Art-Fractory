@@ -35,6 +35,8 @@ public class DoubleCircularSlider extends AnchorPane {
     @FXML private Circle _circle2;
     
     private final static double ANIMATION_DURATION = 500.0d;
+    
+    private SliderListener listener;
 
     private double _initX;
     private double _initY;
@@ -53,12 +55,12 @@ public class DoubleCircularSlider extends AnchorPane {
     private int _actIndex2;
 
     private double _sliderIndex = 0;
-    private double _sliderIndex2 = 0;
+    private double _sliderIndex2 = 1;
     
-    public DoubleCircularSlider(@NamedArg(value="sliderMin", defaultValue="360") double sliderMin,
-    		@NamedArg(value="sliderMax", defaultValue="0") double sliderMax, 
-    		@NamedArg(value="sliderMin2", defaultValue="2") double sliderMin2,
-    		@NamedArg(value="sliderMax2", defaultValue="0") double sliderMax2) {
+    public DoubleCircularSlider(@NamedArg(value="sliderMin", defaultValue="0") double sliderMin,
+    		@NamedArg(value="sliderMax", defaultValue="360") double sliderMax, 
+    		@NamedArg(value="sliderMin2", defaultValue="1") double sliderMin2,
+    		@NamedArg(value="sliderMax2", defaultValue="5") double sliderMax2) {
     	
     	this.sliderMin = new SimpleDoubleProperty(this, "sliderMin", sliderMin);
     	this.sliderMax = new SimpleDoubleProperty(this, "sliderMax", sliderMax);
@@ -156,6 +158,7 @@ public class DoubleCircularSlider extends AnchorPane {
 	
 	            // Get slider index
 	            _sliderIndex = remap(_actIndex, ANIMATION_DURATION, 0, getSliderMin(), getSliderMax());
+	            update();
 	            System.out.println(_sliderIndex);
 	        }
 	    });
@@ -177,6 +180,7 @@ public class DoubleCircularSlider extends AnchorPane {
 	
 	            // Get slider index
 	            _sliderIndex2 = remap(_actIndex2, ANIMATION_DURATION, 0, getSliderMin2(), getSliderMax2());
+	            update();
 	            System.out.println(_sliderIndex2);
 	        }
 	    });
@@ -285,5 +289,32 @@ public class DoubleCircularSlider extends AnchorPane {
     private double remap (int value, double from1, double to1, double from2, double to2) {
         double tmp = (value - from1) / (to1 - from1) * (to2 - from2) + from2;        
         return tmp;
+    }
+    
+    public double getAngle() {
+    	return _sliderIndex;
+    }
+    
+    public void setAngle(double number) {
+    	_sliderIndex = number;
+    }
+    
+    public double getZoom() {
+    	return _sliderIndex2;
+    }
+    
+    public void setZoom(double number) {
+    	_sliderIndex2 = number;
+    }
+    
+    public void setSliderListener(SliderListener listener) {
+    	this.listener = listener;
+    }
+    
+    public void update() {
+        // change happened
+        if (listener != null) {
+            listener.onChangeHappened();
+        }
     }
 }
