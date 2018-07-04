@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.thefractory.customcomponents.DoubleCircularSlider?>
+<?import com.thefractory.customcomponents.IconButton?>
+<?import com.thefractory.customcomponents.InfoIcon?>
+<?import com.thefractory.customcomponents.NumberField?>
+<?import com.thefractory.customcomponents.SpringSlider?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Polygon?>
+
+<fx:root type="GridPane" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="450.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="450.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <AnchorPane fx:id="previewPane" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <children>
+            <ImageView fx:id="preview" fitHeight="450.0" fitWidth="450.0" nodeOrientation="INHERIT" onMouseDragged="#pan" onMousePressed="#panStart" onScroll="#zoom" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <image>
+                  <Image url="@Blue%20Eyes%20White%20Dragon.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="OPEN_HAND" />
+               </cursor>
+            </ImageView>
+            <VBox alignment="CENTER" pickOnBounds="false" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Region id="shade" fx:id="shadeTop" mouseTransparent="true" pickOnBounds="false" prefHeight="100.0" />
+                  <Polygon id="proportion-dragger" fx:id="proportionDraggerTop" fill="#00000080" onMouseDragged="#proportionDragTop" onMousePressed="#proportionDragStart" points="204.0, 318.0, 234.0, 318.0, 219.0, 333.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false">
+                     <cursor>
+                        <Cursor fx:constant="OPEN_HAND" />
+                     </cursor></Polygon>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" pickOnBounds="false" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Polygon id="proportion-dragger" fx:id="proportionDraggerBottom" fill="#00000080" onMouseDragged="#proportionDragBottom" onMousePressed="#proportionDragStart" points="204.0, 338.0, 234.0, 338.0, 219.0, 323.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false">
+                     <cursor>
+                        <Cursor fx:constant="OPEN_HAND" />
+                     </cursor>
+                  </Polygon>
+                  <Region id="shade" fx:id="shadeBottom" mouseTransparent="true" pickOnBounds="false" prefHeight="100.0" />
+               </children>
+            </VBox>
+            <IconButton fx:id="fullScreen" iconLocation="fullScreen" onAction="#fullScreen" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+         </children>
+      </AnchorPane>
+      <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="1">
+         <children>
+            <VBox spacing="10.0">
+               <children>
+                  <GridPane hgap="5.0" vgap="5.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                      <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <VBox spacing="5.0" GridPane.rowIndex="1">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                 <children>
+                                    <Label text="Y Coordinate" />
+                                    <InfoIcon fx:id="yInfo" />
+                                 </children>
+                              </HBox>
+                              <NumberField fx:id="yField" ghostText="Y Coordinate" max="1000000.0" min="-1000000.0" prefWidth="120.0" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="5.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                 <children>
+                                    <Label text="X Coordinate" />
+                                    <InfoIcon fx:id="xInfo" />
+                                 </children>
+                              </HBox>
+                              <NumberField ghostText=" X Coordinate" max="100000.0" min="-1000000.0" prefWidth="120.0" fx:id="xField" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="5.0" GridPane.columnIndex="1">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                 <children>
+                                    <Label text="Angle" />
+                                    <InfoIcon fx:id="angleInfo" />
+                                 </children>
+                              </HBox>
+                              <NumberField fx:id="angleField" ghostText="Angle" max="360.0" prefWidth="120.0" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                 <children>
+                                    <Label text="Zoom Level" />
+                                    <InfoIcon fx:id="zoomInfo" />
+                                 </children>
+                              </HBox>
+                              <NumberField fx:id="zoomField" ghostText="Zoom Level" max="1.0E20" min="0.001" prefWidth="120.0" value="1.0" />
+                           </children>
+                        </VBox>
+                        <Button fx:id="recenter" mnemonicParsing="false" onAction="#recenter" text="Recenter" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                        <VBox spacing="5.0" GridPane.rowIndex="2">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                 <children>
+                                    <Label text="Preview Resolution" />
+                                    <InfoIcon fx:id="resolutionInfo" />
+                                 </children>
+                              </HBox>
+                              <NumberField fx:id="resolutionField" ghostText="Preview Resolution" intField="true" max="1000.0" min="10.0" prefWidth="120.0" value="100.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </GridPane>
+               </children>
+            </VBox>
+            <GridPane hgap="5.0" vgap="5.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <SpringSlider majorTickUnit="0.5" minorTickCount="4" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="xSlider" />
+                  <SpringSlider fx:id="ySlider" majorTickUnit="0.5" minorTickCount="4" nodeOrientation="RIGHT_TO_LEFT" orientation="VERTICAL" prefWidth="14.0" />
+                  <AnchorPane GridPane.columnIndex="1">
+                     <children>
+                        <DoubleCircularSlider fx:id="angleandzoomSlider" layoutX="17.0" layoutY="15.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </GridPane>
+         </children>
+         <padding>
+            <Insets left="10.0" right="10.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.rowIndex="2">
+         <children>
+            <CheckBox fx:id="showAxes" disable="true" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="Show Axes" />
+            <CheckBox fx:id="enableProportions" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="Enable Proportions" />
+            <NumberField fx:id="proportionField" disable="true" max="1.0" prefWidth="100.0" value="1.0" />
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" />
+         </padding>
+      </HBox>
+   </children>
+</fx:root>
