@@ -38,11 +38,4 @@ public class SimpleMandelbrotSet extends AbstractMandelbrotSet {
 		updateImage((int) rightPane.resolutionField.getValue());
 	}
 
-//	@FXML public void changeGradient(MouseEvent event) {
-//		gradient = new Gradient(((Gradient) event.getSource()).getGradientLocation());
-//		update();
-//	}
-	@FXML public void export() {
-		Model.getInstance().exportAs(this);
-	}
 }

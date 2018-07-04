@@ -24,9 +24,9 @@ public class ArtworkTest extends Application {
 		SimpleMandelbrotSet simpleMandelbrot = new SimpleMandelbrotSet();
 		MandelbrotSet mandelbrot = new MandelbrotSet();
 //		HofstadtersButterfly hofstadter = new HofstadtersButterfly();
-		TabPane tabPane = new TabPane(simpleMandelbrot.getTab());
+		TabPane tabPane = new TabPane(simpleMandelbrot);
 //		tabPane.getTabs().add(hofstadter.getTab());
-		tabPane.getTabs().add(mandelbrot.getTab());
+		tabPane.getTabs().add(mandelbrot);
 		
         Scene scene = new Scene(tabPane);
         

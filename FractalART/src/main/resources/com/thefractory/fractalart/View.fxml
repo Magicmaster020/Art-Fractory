@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Save" />
+                        <MenuItem mnemonicParsing="false" text="Save As..." />
+                        <MenuItem mnemonicParsing="false" text="Export" />
+                        <MenuItem mnemonicParsing="false" onAction="#exportAs" text="Export As..." />
+                        <MenuItem mnemonicParsing="false" text="Open" />
+                        <MenuItem mnemonicParsing="false" text="Open Recent" />
+                        <Menu mnemonicParsing="false" text="New Artwork">
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#newMandelbrotSet" text="Mandelbrot Set" />
+                              <MenuItem mnemonicParsing="false" onAction="#newSimpleMandelbrotSet" text="Simple Mandelbrot Set" />
+                              <MenuItem mnemonicParsing="false" onAction="#newHofstadtersButterfly" text="Hofstadter's Butterfly" />
+                          </items>
+                        </Menu>
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                        <MenuItem mnemonicParsing="false" text="Undo" />
+                        <MenuItem mnemonicParsing="false" text="Redo" />
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                        <MenuItem mnemonicParsing="false" text="Check for Update" />
+                    <MenuItem mnemonicParsing="false" text="About" />
+                        <MenuItem mnemonicParsing="false" text="Help" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <ToolBar prefHeight="40.0" prefWidth="200.0">
+              <items>
+                <Button mnemonicParsing="false" text="ExampleButton" />
+              </items>
+            </ToolBar>
+         </children>
+      </VBox>
+   </top>
+   <bottom>
+      <HBox fx:id="progressBox" spacing="5.0" style="-fx-background-color: #dddddd;" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Where the progress bars go." />
+            <ProgressBar prefWidth="200.0" progress="0.4" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </HBox>
+   </bottom>
+   <center>
+      <TabPane fx:id="tabPane" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
+   </center>
+</fx:root>

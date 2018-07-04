@@ -2,7 +2,6 @@
 
 <?import com.thefractory.customcomponents.GradientPicker?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -15,7 +14,6 @@
          <Label prefWidth="500.0" text="When you have found a region of the Mandelbrot Set that you like go to File&gt;Export to save your new image." wrapText="true" />
          <Label prefWidth="500.0" text="Have fun and try out as many different types of fractals as you like. More can be found in File&gt;New  Artwork." wrapText="true" />
          <GradientPicker fx:id="gradientPicker" />
-         <Button fx:id="exportButton" mnemonicParsing="false" onAction="#export" text="Export" />
       </VBox>
    </children>
    <padding>

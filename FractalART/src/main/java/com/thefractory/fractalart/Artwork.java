@@ -17,15 +17,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.SplitPane;
 
-public abstract class Artwork {
-		
-	private String name;
+public abstract class Artwork extends Tab {
 	
 	protected WritableImage image;
 	private Image fullScreenImage;
 	private int lowResolution = 30;
 	
-	private Tab tab;
 	@FXML protected RightPane rightPane;
     @FXML private SplitPane splitPane;
     @FXML private AnchorPane mainAnchorPane;
@@ -40,7 +37,6 @@ public abstract class Artwork {
     };
 	
 	public Artwork(String name) {
-		this.name = name; 
 		
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Artwork.fxml"));
 		fxmlLoader.setController(this);
@@ -52,7 +48,8 @@ public abstract class Artwork {
             throw new RuntimeException(exception);
         }
         
-		this.tab = new Tab(name, splitPane);
+		this.setText(name);
+		this.setContent(splitPane);
 		for(Node child : JavaFXUtils.getNodesFromType(rightPane, NumberField.class)) {
 			((NumberField) child).valueProperty().addListener(updateListener);
 		}
@@ -89,15 +86,6 @@ public abstract class Artwork {
 	
 	public abstract void init();
 	
-	public Tab getTab() {
-		return tab;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
 	public WritableImage getImage() {
 		return image;
 	}

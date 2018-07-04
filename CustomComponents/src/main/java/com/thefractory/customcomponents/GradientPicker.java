@@ -425,7 +425,7 @@ public class GradientPicker extends StackPane {
 				    	found = true;
 				    	continue;
 				    }
-				    output += currentLine;
+				    output += currentLine + "\n";
 				}
 				reader.close(); 
 				

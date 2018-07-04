@@ -3,6 +3,7 @@ package com.thefractory.fractalart;
 import java.io.IOException;
 
 import com.thefractory.customcomponents.Gradient;
+import com.thefractory.customcomponents.GradientPicker;
 import com.thefractory.customcomponents.NumberField;
 
 import javafx.fxml.FXML;
@@ -23,9 +24,8 @@ public class HofstadtersButterfly extends Artwork{
 	private static String DEFAULT_NAME = "Simple Hofstadters Butterfly";	
 	
 	@FXML private StackPane controlPanel;
-	@FXML private VBox gradients;
 	@FXML private NumberField latticePoints;
-	protected Gradient gradient = new Gradient("pink");
+	@FXML protected GradientPicker gradientPicker;
 	
 	
 	public HofstadtersButterfly() {
@@ -40,13 +40,8 @@ public class HofstadtersButterfly extends Artwork{
             throw new RuntimeException(exception);
         }
         
-        addMainPane(controlPanel);
+        setMainPane(controlPanel);
 		setControlPanelPrefWidth(800);
-		gradients.maxWidthProperty().bind(controlPanel.widthProperty());
-		for(Node gradient : gradients.getChildren()) {
-			((ImageView) gradient).fitWidthProperty().bind(gradients.maxWidthProperty());
-		}
-
 		controlPanel.getStylesheets().add(getClass().getResource("gradient.css").toString());
 
 		init();
@@ -100,7 +95,7 @@ public class HofstadtersButterfly extends Artwork{
 		PixelWriter writer = image.getPixelWriter();
 		for(int i = 0; i < height; i++) {
 			for(int j = 0; j < length; j++) {
-				Color color = gradient.getColor((pixels[i][j] - minValue) / (maxValue - minValue));
+				Color color = gradientPicker.getPalette().getColor((pixels[i][j] - minValue) / (maxValue - minValue));
 				writer.setColor(i, j, color);
 			}
 		}
@@ -119,11 +114,6 @@ public class HofstadtersButterfly extends Artwork{
 	
 	@FXML public void update() {
 		updateImage((int) rightPane.resolutionField.getValue());
-	}
-	
-	@FXML public void changeGradient(MouseEvent event) {
-		gradient = new Gradient(((Gradient) event.getSource()).getGradientLocation());
-		update();
 	}
 	
 	@FXML public void changeNumberOfLatP(KeyEvent event) {
