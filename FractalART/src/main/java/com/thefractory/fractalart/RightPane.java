@@ -2,15 +2,18 @@ package com.thefractory.fractalart;
 
 import com.thefractory.customcomponents.InfoIcon;
 import com.thefractory.customcomponents.NumberField;
+import com.thefractory.customcomponents.SliderListener;
 import com.thefractory.customcomponents.SpringSlider;
+import com.thefractory.customcomponents.DoubleCircularSlider;
 
 import java.io.IOException;
+
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,7 +29,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Polygon;
 
-public class RightPane extends GridPane {
+public class RightPane extends GridPane implements SliderListener {
 
 	//FXML injected elements.
 	@FXML private ImageView preview;
@@ -45,8 +48,7 @@ public class RightPane extends GridPane {
 	@FXML private InfoIcon zoomInfo;
 	@FXML private SpringSlider xSlider;
 	@FXML private SpringSlider ySlider;
-	@FXML private Slider angleSlider;
-	@FXML private Slider zoomSlider;
+	@FXML private DoubleCircularSlider angleandzoomSlider;
 	@FXML private Button recenter;
 	@FXML private CheckBox showAxes;
 	@FXML private CheckBox enableProportions;
@@ -100,8 +102,21 @@ public class RightPane extends GridPane {
         		previewPane.heightProperty().multiply(proportionProperty.subtract(1)).multiply(-0.5));
         shadeBottom.prefHeightProperty().bind(shadeTop.prefHeightProperty());
         
-        angleSlider.valueProperty().bindBidirectional(angleField.valueProperty());
-        zoomSlider.valueProperty().bindBidirectional(zoomField.valueProperty());
+        //angleandzoomSlider.valueProperty().bindBidirectional(angleField.valueProperty());
+        //angleandzoomSlider.valueProperty().bindBidirectional(zoomField.valueProperty());
+        
+        angleField.valueProperty().addListener(new ChangeListener<Number>() {
+        	public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+        		angleandzoomSlider.setAngle(newValue.doubleValue());
+        	}
+        });
+        zoomField.valueProperty().addListener(new ChangeListener<Number>() {
+        	public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+        		angleandzoomSlider.setZoom(newValue.doubleValue());
+        	}
+        });
+        angleandzoomSlider.setSliderListener(this);
+        
         
               
         xSlider.valueProperty().addListener(new ChangeListener<Number>() {
@@ -227,5 +242,11 @@ public class RightPane extends GridPane {
 
 	@FXML public void fullScreen() {
 		System.out.println("Open full screen.");
+	}
+
+	@Override
+	public void onChangeHappened() {
+		angleField.setValue(angleandzoomSlider.getAngle());
+		zoomField.setValue(angleandzoomSlider.getZoom());
 	}
 }
