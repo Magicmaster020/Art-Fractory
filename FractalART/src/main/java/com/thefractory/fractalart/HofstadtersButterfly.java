@@ -108,6 +108,8 @@ public class HofstadtersButterfly extends Artwork{
 	@Override
     public void init() {
 		updateImage((int) rightPane.resolutionField.getValue());
+		rightPane.setDefaults(0.5, 0, 0, 1);
+		rightPane.reset();
 		setImage();
 	}
 	

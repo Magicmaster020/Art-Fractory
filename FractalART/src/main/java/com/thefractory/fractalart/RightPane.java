@@ -29,6 +29,12 @@ import javafx.scene.layout.Region;
 import javafx.scene.shape.Polygon;
 
 public class RightPane extends GridPane {
+	
+	//Default values.
+	private double defaultX = 0;
+	private double defaultY = 0;
+	private double defaultAngle = 0;
+	private double defaultZoom = 1;
 
 	//FXML injected elements.
 	@FXML private ImageView preview;
@@ -49,7 +55,6 @@ public class RightPane extends GridPane {
 	@FXML private SpringSlider ySlider;
 	@FXML private CircularSlider angleSlider;
 	@FXML private CircularSlider zoomSlider;
-	@FXML private Button recenter;
 	@FXML private CheckBox showAxes;
 	@FXML private CheckBox enableProportions;
 	@FXML NumberField proportionField;
@@ -61,6 +66,7 @@ public class RightPane extends GridPane {
 	//For Drag Events
 	private double proportionDragY;
 	private double[] lastCors = {0, 0};
+	private boolean lock = false;
 	
 	public RightPane() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RightPane.fxml"));
@@ -104,8 +110,27 @@ public class RightPane extends GridPane {
 
         
         angleSlider.valueProperty().bindBidirectional(angleField.valueProperty());
-        zoomSlider.valueProperty().bindBidirectional(zoomField.valueProperty());
-              
+        zoomSlider.valueProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+				if(!lock) {
+					lock = true;
+					zoomField.setValue(Math.pow(2, arg2.doubleValue()));
+					lock = false;
+				}
+			}
+        });
+        zoomField.valueProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+				if(!lock) {
+					lock = true;
+					zoomSlider.setValue(Math.log(arg2.doubleValue())/Math.log(2));
+					lock = false;
+				}
+			}
+        });
+                      
         xSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				panner.setXSpeed(newValue.doubleValue());
@@ -123,7 +148,6 @@ public class RightPane extends GridPane {
 		preview.setImage(image);
 	}
 	
-
 	private class Panner {
 		
 		private double xSpeed = 0;
@@ -164,11 +188,18 @@ public class RightPane extends GridPane {
 		}
 	}
 	
-	@FXML public void recenter() {
-		xField.setValue(0);
-		yField.setValue(0);
-		angleField.setValue(0);
-		zoomField.setValue(1);
+	public void setDefaults(double x, double y, double angle, double zoom) {
+		defaultX = x;
+		defaultY = y;
+		defaultAngle = angle;
+		defaultZoom = zoom;
+	}
+	
+	@FXML public void reset() {
+		xField.setValue(defaultX);
+		yField.setValue(defaultY);
+		angleField.setValue(defaultAngle);
+		zoomField.setValue(defaultZoom);
 	}
 
 	@FXML public void proportionDragStart(MouseEvent event) {

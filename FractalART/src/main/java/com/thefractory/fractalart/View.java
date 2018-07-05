@@ -34,6 +34,7 @@ public class View extends BorderPane {
 	
 	private void newArtwork(Artwork artwork) {
 		tabPane.getTabs().add(artwork);
+		tabPane.getSelectionModel().select(artwork);
 	}
 	
 	@FXML private void newSimpleMandelbrotSet() {

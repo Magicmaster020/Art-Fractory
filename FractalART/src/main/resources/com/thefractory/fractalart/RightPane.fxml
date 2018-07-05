@@ -119,10 +119,10 @@
                                     <InfoIcon fx:id="zoomInfo" />
                                  </children>
                               </HBox>
-                              <NumberField fx:id="zoomField" ghostText="Zoom Level" max="1.0E20" prefWidth="120.0" value="1.0" />
+                              <NumberField fx:id="zoomField" ghostText="Zoom Level" max="1.0E20" min="-1.0E20" prefWidth="120.0" value="1.0" />
                            </children>
                         </VBox>
-                        <Button fx:id="recenter" mnemonicParsing="false" onAction="#recenter" text="Recenter" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                        <Button mnemonicParsing="false" onAction="#reset" text="Reset Defaults" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                         <VBox spacing="5.0" GridPane.rowIndex="2">
                            <children>
                               <HBox alignment="CENTER_LEFT" spacing="5.0">

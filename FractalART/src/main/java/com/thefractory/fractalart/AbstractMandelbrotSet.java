@@ -40,6 +40,8 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 	@Override
     public void init() {
 		gradientPicker.paletteProperty().addListener(updateListener);
+		rightPane.setDefaults(0, 0, 0, 0.25);
+		rightPane.reset();
 		updateImage((int) rightPane.resolutionField.getValue());
 		setImage();
 	}
