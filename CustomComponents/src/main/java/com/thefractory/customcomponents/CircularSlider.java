@@ -39,39 +39,41 @@ public class CircularSlider extends AnchorPane {
     private final DoubleProperty value;
     
     private final IntegerProperty revs;
-    private final DoubleProperty _sliderIndex;
+    private final DoubleProperty sliderIndex;
     
     @FXML private SVGPath path;
-    @FXML private Circle _circle;
+    @FXML private Circle circle;
+    
+    private boolean lock = false;
     
     private final static double ANIMATION_DURATION = 500.0d;
 
-    private double _initX;
-    private double _initY;
+    private double initX;
+    private double initY;
     
-    private Point2D _dragAnchor;
+    private Point2D dragAnchor;
 
-    private PathTransition _pathTransition;
+    private PathTransition pathTransition;
     
-    private List<Point2D> _pathPointList;
+    private List<Point2D> pathPointList;
 
-    private int _actIndex;
+    private int actIndex;
 	
     
     public CircularSlider(@NamedArg(value="sliderMin", defaultValue="0") double sliderMin,
     		@NamedArg(value="sliderMax", defaultValue="360") double sliderMax,
-    		@NamedArg(value="path", defaultValue="M50,50 M50,0 A50,50 1 0,0 50,100 A50,50 1 0,0 50,0 z") String svgPath,
+    		@NamedArg(value="svgPath", defaultValue="M50,0 A50,50 0 0 0 50,100 A50,50 0 0 0 50,0 z") String svgPath,
     		@NamedArg(value="countRevs", defaultValue="true") boolean countRevs,
-    		@NamedArg(value="value", defaultValue="0") double value2) {
+    		@NamedArg(value="value", defaultValue="0") double value) {
     	
     	this.sliderMin = new SimpleDoubleProperty(this, "sliderMin", sliderMin);
     	this.sliderMax = new SimpleDoubleProperty(this, "sliderMax", sliderMax);
     	this.svgPath = new SimpleStringProperty(this, "path", svgPath);
     	this.countRevs = new SimpleBooleanProperty(this, "countRevs", countRevs);
-    	this.value = new SimpleDoubleProperty(this, "value", value2);
+    	this.value = new SimpleDoubleProperty(this, "value", value);
     	
-        revs = new SimpleIntegerProperty((int)((value2-value2%sliderMax)/sliderMax));
-    	_sliderIndex = new SimpleDoubleProperty(this, "_sliderIndex", value2%sliderMax);
+        revs = new SimpleIntegerProperty((int)((value-value%sliderMax)/sliderMax));
+    	sliderIndex = new SimpleDoubleProperty(this, "sliderIndex", value%sliderMax);
         
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CircularSlider.fxml"));
 		fxmlLoader.setRoot(this);
@@ -84,74 +86,87 @@ public class CircularSlider extends AnchorPane {
             throw new RuntimeException(exception);
         }
         
+        
         path.setContent(svgPath);
-        this.value.addListener(new ChangeListener<Number>() {
-        	public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-        		revs.setValue(((value.getValue()-value.getValue()%getSliderMax())/getSliderMax()));
-        		_sliderIndex.setValue(value.getValue()%getSliderMax());
-        	}
-        });
-        this.value.bind(this.revs.multiply(getSliderMax()).add(this._sliderIndex.getValue()));
+        
 
-	    // Parse the SVG Path with Apache Batik and create a Path
-	    //PathParser parser = new PathParser();
-	    //JavaFXPathElementHandler handler = new JavaFXPathElementHandler("track");
-	    //parser.setPathHandler(handler);
-	
-	    // SVG Path for circle
-	    //parser.parse("M60,60 M60,10 A50,50 1 0,1 60,110 A50,50 1 0,1 60,10 z");
-	
-	    //path = handler.getPath();
-	
-	    // Moving image
-	    //_circle = new Circle(8);
-	    //_circle.setFill(Color.GRAY);
-	
-	    // Path Transition        
-	    _pathTransition = new PathTransition();
-	    _pathTransition.setDuration(Duration.seconds(ANIMATION_DURATION));
-	    _pathTransition.setPath(path);
-	    _pathTransition.setNode(_circle);
-	    _pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-	    _pathTransition.setCycleCount(1);
-	    _pathTransition.playFromStart();
-	    _pathTransition.pause();
-	    _pathTransition.jumpTo("end");
+      //Listeners binding value and index  
+      
+      //TODO Think of better solution.
+        this.value.addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if(!lock) {
+                    double sliderMax = getSliderMax();
+
+                    int newRevs = (int) ((newValue.doubleValue()-newValue.doubleValue()%sliderMax)/sliderMax);
+                    double newIndex = newValue.doubleValue()%sliderMax;
+
+                    revs.setValue(newRevs);
+                    sliderIndex.setValue(newIndex);
+                }
+
+            }
+        });
+        sliderIndex.addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+
+                lock = true;
+                CircularSlider.this.value.setValue(newValue.doubleValue() + revs.getValue() * getSliderMax());
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                //System.out.println(revs.getValue());
+                lock = false;
+            }
+        });
+        
+        
+	    pathTransition = new PathTransition();
+	    pathTransition.setDuration(Duration.seconds(ANIMATION_DURATION));
+	    pathTransition.setPath(path);
+	    pathTransition.setNode(circle);
+	    pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+	    pathTransition.setCycleCount(1);
+	    pathTransition.playFromStart();
+	    pathTransition.pause();
+	    pathTransition.jumpTo("end");
 
 	    // Save the circle positions on the path
-	    _pathPointList = new ArrayList<>();
+	    pathPointList = new ArrayList<>();
 	    savePositions();
 	
 	
 	    // Mouse presssed handler
-	    _circle.setOnMousePressed(new EventHandler<MouseEvent>() {
+	    circle.setOnMousePressed(new EventHandler<MouseEvent>() {
 	        public void handle(MouseEvent me) {
 	             // Store initial position
-	            _initX = _circle.getTranslateX();
-	            _initY = _circle.getTranslateY();
-	            _dragAnchor = new Point2D(me.getSceneX(), me.getSceneY());                
+	            initX = circle.getTranslateX();
+	            initY = circle.getTranslateY();
+	            dragAnchor = new Point2D(me.getSceneX(), me.getSceneY());                
 	        }
 	    });
 	
 	
 	    // Mouse dragged handler
-	    _circle.setOnMouseDragged(new EventHandler<MouseEvent>() {
+	    circle.setOnMouseDragged(new EventHandler<MouseEvent>() {
 	        public void handle(MouseEvent me) {
-	            double dragX = me.getSceneX() - _dragAnchor.getX();
-	            double dragY = me.getSceneY() - _dragAnchor.getY();
+	            double dragX = me.getSceneX() - dragAnchor.getX();
+	            double dragY = me.getSceneY() - dragAnchor.getY();
 	
 	            // Calculate new position of the circle
-	            double newXPosition = _initX + dragX;
-	            double newYPosition = _initY + dragY;
+	            double newXPosition = initX + dragX;
+	            double newYPosition = initY + dragY;
 	
 	            // Get the nearest index (= second) of the animation
-	            _actIndex = getAnimationIndex(newXPosition, newYPosition);
+	            actIndex = getAnimationIndex(newXPosition, newYPosition);
 	
 	            // Show animation at the given second
-	            _pathTransition.jumpTo(Duration.seconds(_actIndex));                                
+	            pathTransition.jumpTo(Duration.seconds(actIndex));                                
 	
 	            // Get slider index
-	            _sliderIndex.setValue(remap(_actIndex, ANIMATION_DURATION, 0, getSliderMin(), getSliderMax()));
+	            sliderIndex.setValue(remap(actIndex, ANIMATION_DURATION, 0, getSliderMin(), getSliderMax()));
 	            System.out.println(getValue());
 	        }
 	    });
@@ -161,7 +176,7 @@ public class CircularSlider extends AnchorPane {
     public final double getSliderMin(){
 		return sliderMin.getValue();
 	}
-	public final void setSliderMin(int value){
+	public final void setSliderMin(double value){
 		sliderMin.setValue(value);
 	}
 	public final DoubleProperty sliderMinProperty(){
@@ -170,7 +185,7 @@ public class CircularSlider extends AnchorPane {
 	public final double getSliderMax(){
 		return sliderMax.getValue();
 	}
-	public final void setSliderMax(int value){
+	public final void setSliderMax(double value){
 		sliderMax.setValue(value);
 	}
 	public final DoubleProperty sliderMaxProperty(){
@@ -190,7 +205,7 @@ public class CircularSlider extends AnchorPane {
     }
     public final void setCountRevs(boolean value) {
         if(!value) {
-        	_sliderIndex.setValue(_sliderIndex.getValue() - revs.getValue()*sliderMax.getValue());
+        	sliderIndex.setValue(sliderIndex.getValue() - revs.getValue()*sliderMax.getValue());
         	revs.setValue(0);
         }
     	countRevs.setValue(value);
@@ -213,13 +228,13 @@ public class CircularSlider extends AnchorPane {
      */
     private void savePositions() {
 
-        if (_pathPointList == null)
+        if (pathPointList == null)
             return;
 
         for (int i=0; i<=(int)ANIMATION_DURATION; i++) {
-            _pathTransition.jumpTo(Duration.seconds(i));
+            pathTransition.jumpTo(Duration.seconds(i));
 
-            _pathPointList.add(new Point2D(_circle.getTranslateX(), _circle.getTranslateY()));
+            pathPointList.add(new Point2D(circle.getTranslateX(), circle.getTranslateY()));
         }
 
     }
@@ -237,19 +252,19 @@ public class CircularSlider extends AnchorPane {
         int i = 0;
         double dx;
         double dy;
-        double old_dist = Double.MAX_VALUE;
-        double act_dist;
+        double olddist = Double.MAX_VALUE;
+        double actdist;
 
-        for (Point2D pathPos : _pathPointList) {
+        for (Point2D pathPos : pathPointList) {
 
             // Get distance between mouse position and saved position on path
             // with pythagoras
             dx = mousePosX - pathPos.getX();
             dy = mousePosY - pathPos.getY();
-            act_dist = Math.sqrt(dx * dx + dy * dy);
+            actdist = Math.sqrt(dx * dx + dy * dy);
 
-            if (act_dist < old_dist) {
-                old_dist = act_dist;
+            if (actdist < olddist) {
+                olddist = actdist;
                 nearestIndex = i;
             }
 
@@ -273,8 +288,8 @@ public class CircularSlider extends AnchorPane {
         double tmp = (value - from1) / (to1 - from1) * (to2 - from2) + from2;
         //Keep track of revolutions
 	    if(countRevs.getValue()) { 
-        	if((tmp-_sliderIndex.getValue())*(tmp-_sliderIndex.getValue()) > (sliderMax.getValue()-sliderMin.getValue())*(sliderMax.getValue()-sliderMin.getValue())/4) { //new revolution
-        		if(tmp-_sliderIndex.getValue() > (sliderMax.getValue()-sliderMin.getValue())/2) {
+        	if((tmp-sliderIndex.getValue())*(tmp-sliderIndex.getValue()) > (sliderMax.getValue()-sliderMin.getValue())*(sliderMax.getValue()-sliderMin.getValue())/4) { //new revolution
+        		if(tmp-sliderIndex.getValue() > (sliderMax.getValue()-sliderMin.getValue())/2) {
 	        		revs.setValue(revs.getValue() - 1);
 	        	}else {
 	        		revs.setValue(revs.getValue() + 1);
