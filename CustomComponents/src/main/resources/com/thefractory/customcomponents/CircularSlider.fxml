@@ -6,10 +6,10 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.SVGPath?>
 
-<fx:root prefHeight="119.0" prefWidth="121.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root pickOnBounds="false" prefHeight="119.0" prefWidth="121.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <SVGPath fx:id="path" content="M50,50 M50,0 A50,50 1 0,1 50,100 A50,50 1 0,1 50,0 z" fill="#ffffff00" mouseTransparent="true" stroke="BLACK" />
-      <Circle fx:id="_circle" radius="8.0" stroke="BLACK" strokeType="INSIDE">
+      <Circle fx:id="circle" radius="8.0" stroke="BLACK" strokeType="INSIDE">
          <fill>
             <LinearGradient endX="1.0" endY="1.0">
                <stops>
