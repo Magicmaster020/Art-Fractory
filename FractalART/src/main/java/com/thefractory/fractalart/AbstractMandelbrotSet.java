@@ -1,5 +1,4 @@
 package com.thefractory.fractalart;
-import com.thefractory.customcomponents.Gradient;
 import com.thefractory.customcomponents.GradientPicker;
 import com.thefractory.fractalart.utils.ComplexNumber;
 
@@ -7,9 +6,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.fxml.FXML;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;

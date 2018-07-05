@@ -119,7 +119,7 @@
                                     <InfoIcon fx:id="zoomInfo" />
                                  </children>
                               </HBox>
-                              <NumberField fx:id="zoomField" ghostText="Zoom Level" max="1.0E20" min="0.001" prefWidth="120.0" value="1.0" />
+                              <NumberField fx:id="zoomField" ghostText="Zoom Level" max="1.0E20" prefWidth="120.0" value="1.0" />
                            </children>
                         </VBox>
                         <Button fx:id="recenter" mnemonicParsing="false" onAction="#recenter" text="Recenter" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
@@ -152,9 +152,9 @@
                   <SpringSlider fx:id="ySlider" majorTickUnit="0.5" minorTickCount="4" nodeOrientation="RIGHT_TO_LEFT" orientation="VERTICAL" prefWidth="14.0" />
                   <AnchorPane GridPane.columnIndex="1">
                      <children>
-                        <CircularSlider fx:id="angleSlider" layoutX="11.0" layoutY="11.0" svgPath="M70,0 A70,70 0 0 0 70,140 A70,70 0 0 0 70,0 z" translateX="-5.0">
+                        <CircularSlider fx:id="angleSlider" countRevs="false" layoutX="11.0" layoutY="11.0" svgPath="M70,0 A70,70 0 0 0 70,140 A70,70 0 0 0 70,0 z" translateX="-5.0">
                            <children>
-                              <CircularSlider fx:id="zoomSlider" svgPath="M70,20 A50,50 0 0 0 70,120 A50,50 0 0 0 70,20 z" />
+                              <CircularSlider fx:id="zoomSlider" sliderMax="1.0" svgPath="M70,20 A50,50 0 0 0 70,120 A50,50 0 0 0 70,20 z" value="1.0" />
                            </children>
                         </CircularSlider>
                      </children>

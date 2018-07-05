@@ -69,7 +69,7 @@ public class GradientPicker extends StackPane {
 	 */
 	private EnhancedGradient selectedGradient;
 	private boolean customVisible = true;
-	private static String pathToGradients = "C:/Users/Jonas/Documents/savedGradients.txt";
+	private static String pathToGradients = "C:/Users/ivarc/Documents/savedGradients.txt";
 	
 	/**
 	 * The container for all gradientMakers.
