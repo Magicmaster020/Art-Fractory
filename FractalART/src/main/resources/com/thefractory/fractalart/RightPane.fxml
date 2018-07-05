@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.thefractory.customcomponents.DoubleCircularSlider?>
+<?import com.thefractory.customcomponents.CircularSlider?>
 <?import com.thefractory.customcomponents.IconButton?>
 <?import com.thefractory.customcomponents.InfoIcon?>
 <?import com.thefractory.customcomponents.NumberField?>
@@ -152,7 +152,11 @@
                   <SpringSlider fx:id="ySlider" majorTickUnit="0.5" minorTickCount="4" nodeOrientation="RIGHT_TO_LEFT" orientation="VERTICAL" prefWidth="14.0" />
                   <AnchorPane GridPane.columnIndex="1">
                      <children>
-                        <DoubleCircularSlider fx:id="angleandzoomSlider" layoutX="17.0" layoutY="15.0" />
+                        <CircularSlider fx:id="angleSlider" layoutX="11.0" layoutY="11.0" svgPath="M70,0 A70,70 0 0 0 70,140 A70,70 0 0 0 70,0 z" translateX="-5.0">
+                           <children>
+                              <CircularSlider fx:id="zoomSlider" svgPath="M70,20 A50,50 0 0 0 70,120 A50,50 0 0 0 70,20 z" />
+                           </children>
+                        </CircularSlider>
                      </children>
                   </AnchorPane>
                </children>
