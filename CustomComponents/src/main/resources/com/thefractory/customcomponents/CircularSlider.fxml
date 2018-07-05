@@ -1,34 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.LinearGradient?>
 <?import javafx.scene.paint.Stop?>
-<?import javafx.scene.shape.ArcTo?>
 <?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.ClosePath?>
-<?import javafx.scene.shape.MoveTo?>
-<?import javafx.scene.shape.Path?>
+<?import javafx.scene.shape.SVGPath?>
 
 <fx:root prefHeight="119.0" prefWidth="121.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Path fx:id="path" stroke="BLACK" strokeType="INSIDE">
-          <elements>
-              <MoveTo x="60.0" y="60.0" />
-            <MoveTo x="60.0" y="10.0" />
-              <ArcTo radiusX="50.0" radiusY="50.0" x="60.0" y="110.0" />
-            <ArcTo radiusX="50.0" radiusY="50.0" x="60.0" y="10.0" />
-              <ClosePath />
-          </elements>
-          <fill>
-            <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
-               <stops>
-                  <Stop color="#838c94" />
-                  <Stop color="WHITE" offset="1.0" />
-               </stops>
-            </RadialGradient>
-         </fill>
-      </Path>
+      <SVGPath fx:id="path" content="M50,50 M50,0 A50,50 1 0,1 50,100 A50,50 1 0,1 50,0 z" fill="#ffffff00" mouseTransparent="true" stroke="BLACK" />
       <Circle fx:id="_circle" radius="8.0" stroke="BLACK" strokeType="INSIDE">
          <fill>
             <LinearGradient endX="1.0" endY="1.0">
