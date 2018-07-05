@@ -3,17 +3,30 @@ package com.thefractory.fractalart;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
+import com.thefractory.customcomponents.NumberField;
 import com.thefractory.fractalart.test.ArtworkTest;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogEvent;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.CheckBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Window;
+import javafx.util.Callback;
 
 public class Model {
 	
@@ -26,7 +39,7 @@ public class Model {
 	}
 	
 	
-	public void exportAs(Artwork artwork) {
+	public void exportAs(Artwork artwork){
 		
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Export Artwork");
@@ -47,9 +60,71 @@ public class Model {
 				System.out.println("Nu blev det " + newValue.getDescription());
 			}
 		});*/
-		
-		
 		File outputFile = fileChooser.showSaveDialog(ArtworkTest.primaryStage);
+		
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("ResolutionDialog.fxml"));
+		
+		try {
+			DialogPane root = loader.load();
+			root.getButtonTypes().add(ButtonType.OK);
+			Dialog<double[]> dialog = new Dialog<double[]>();
+			
+			Map<String, Object> fxmlNamespace = loader.getNamespace();
+			NumberField dialogWidth = (NumberField) fxmlNamespace.get("dialogWidth");
+			NumberField dialogHeight = (NumberField) fxmlNamespace.get("dialogHeight");
+			CheckBox preRatio = (CheckBox) fxmlNamespace.get("preRatio");
+			
+			
+			
+			
+			preRatio.selectedProperty().addListener(new ChangeListener<Boolean>() {
+				public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+					if(newValue) {
+						dialogHeight.setDisable(true);
+						/*proportionProperty.bind(proportionField.valueProperty());
+						proportionField.setDisable(false);
+						proportionDraggerTop.setVisible(true);
+						proportionDraggerBottom.setVisible(true);*/
+					} else {
+						dialogHeight.setDisable(false);
+						
+						/*proportionProperty.unbind();
+						proportionProperty.setValue(1);
+						proportionField.setDisable(true);
+						proportionDraggerTop.setVisible(false);
+						proportionDraggerBottom.setVisible(false);*/
+					}
+				}
+	        });
+			
+			dialog.setDialogPane(root);
+			dialog.setResultConverter(new Callback<ButtonType,double[]>(){
+				
+				@Override
+				public double[] call(ButtonType param) {
+					System.out.println(param);
+					// TODO Auto-generated method stub
+					return null;
+				}
+			});
+			
+	        dialog.setOnCloseRequest(new EventHandler<DialogEvent>() {
+
+				@Override
+				public void handle(DialogEvent event) {
+					dialog.close();
+				}
+	        	
+	        });
+
+			Optional<double[]> resolution = dialog.showAndWait();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
+		
 		
 		if(outputFile != null) {
 			String name = outputFile.getName();
