@@ -6,8 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.PathTransition;
 import javafx.beans.NamedArg;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +19,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Path;
+import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
 import java.io.IOException;
 
@@ -26,13 +30,16 @@ public class CircularSlider extends AnchorPane {
 
     private final DoubleProperty sliderMin;
     private final DoubleProperty sliderMax;
-    @FXML Path path;
+    private final BooleanProperty countRevs;
+    private final StringProperty svgPath;
+    @FXML private SVGPath path;
     @FXML private Circle _circle;
     
     private final static double ANIMATION_DURATION = 500.0d;
 
     private double _initX;
     private double _initY;
+    private int revs = 0;
     private Point2D _dragAnchor;
 
     private PathTransition _pathTransition;
@@ -42,12 +49,17 @@ public class CircularSlider extends AnchorPane {
     private int _actIndex;
 
     private double _sliderIndex = 0;
+	
     
-    public CircularSlider(@NamedArg(value="sliderMin", defaultValue="360") double sliderMin,
-    		@NamedArg(value="sliderMax", defaultValue="0") double sliderMax) {
+    public CircularSlider(@NamedArg(value="sliderMin", defaultValue="0") double sliderMin,
+    		@NamedArg(value="sliderMax", defaultValue="360") double sliderMax,
+    		@NamedArg(value="path", defaultValue="M50,50 M50,0 A50,50 1 0,0 50,100 A50,50 1 0,0 50,0 z") String svgPath,
+    		@NamedArg(value="countRevs", defaultValue="true") boolean countRevs) {
     	
     	this.sliderMin = new SimpleDoubleProperty(this, "sliderMin", sliderMin);
     	this.sliderMax = new SimpleDoubleProperty(this, "sliderMax", sliderMax);
+    	this.svgPath = new SimpleStringProperty(this, "path", svgPath);
+    	this.countRevs = new SimpleBooleanProperty(this, "countRevs", countRevs);
     	
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CircularSlider.fxml"));
 		fxmlLoader.setRoot(this);
@@ -60,6 +72,7 @@ public class CircularSlider extends AnchorPane {
             throw new RuntimeException(exception);
         }
         
+        path.setContent(svgPath);
 
 	    // Parse the SVG Path with Apache Batik and create a Path
 	    //PathParser parser = new PathParser();
@@ -75,7 +88,7 @@ public class CircularSlider extends AnchorPane {
 	    //_circle = new Circle(8);
 	    //_circle.setFill(Color.GRAY);
 	
-	    // Path Transition
+	    // Path Transition        
 	    _pathTransition = new PathTransition();
 	    _pathTransition.setDuration(Duration.seconds(ANIMATION_DURATION));
 	    _pathTransition.setPath(path);
@@ -120,7 +133,7 @@ public class CircularSlider extends AnchorPane {
 	
 	            // Get slider index
 	            _sliderIndex = remap(_actIndex, ANIMATION_DURATION, 0, getSliderMin(), getSliderMax());
-	            System.out.println(_sliderIndex);
+	            System.out.println(getValue());
 	        }
 	    });
     }
@@ -144,7 +157,28 @@ public class CircularSlider extends AnchorPane {
 	public final DoubleProperty sliderMaxProperty(){
 		return sliderMax;
 	}
-    
+	public final String getSvgPath() {
+        return svgPath.getValue();
+    }
+    public final void setSvgPath(String value) {
+        svgPath.setValue(value);
+    }
+    public final StringProperty svgPathProperty() {
+        return svgPath;
+    }
+	public final boolean getCountRevs() {
+        return countRevs.getValue();
+    }
+    public final void setCountRevs(boolean value) {
+        if(!value) {
+        	_sliderIndex -= revs*sliderMax.getValue();
+        	revs = 0;
+        }
+    	countRevs.setValue(value);
+    }
+    public final BooleanProperty countRevsProperty() {
+        return countRevs;
+    }
     /**
      * Save the position of the circle for every second of the animation in
      * a list.
@@ -208,7 +242,25 @@ public class CircularSlider extends AnchorPane {
      * @return 
      */
     private double remap (int value, double from1, double to1, double from2, double to2) {
-        double tmp = (value - from1) / (to1 - from1) * (to2 - from2) + from2;        
+        double tmp = (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+        //Keep track of revolutions
+	    if(countRevs.getValue()) { 
+        	if((tmp-_sliderIndex)*(tmp-_sliderIndex) > (sliderMax.getValue()-sliderMin.getValue())*(sliderMax.getValue()-sliderMin.getValue())/4) { //new revolution
+        		if(tmp-_sliderIndex > (sliderMax.getValue()-sliderMin.getValue())/2) {
+	        		revs -= 1;
+	        	}else {
+	        		revs += 1;
+	        	}
+	        }
+	    }
         return tmp;
+    }
+    
+    public double getValue() {
+    	return (_sliderIndex + revs*sliderMax.getValue());
+    }
+    
+    public void setAngle(double number) {
+    	_sliderIndex = number;
     }
 }
