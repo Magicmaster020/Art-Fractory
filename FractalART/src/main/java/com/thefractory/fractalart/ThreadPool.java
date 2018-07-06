@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.thefractory.fractalart.utils.EnhancedTask;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 public class ThreadPool {
@@ -20,6 +21,15 @@ public class ThreadPool {
 		for(int i = 0; i < threads.length; i++) {
 			threads[i] = new Thread();
 		}
+		
+//		taskList.addListener(new ListChangeListener<EnhancedTask>() {
+//			@Override
+//			public void onChanged(Change<? extends EnhancedTask> arg0) {
+//				if(taskList.size() != 0) {
+//					
+//				}
+//			}
+//		});
 	}
 	
 	public static ThreadPool getInstance() {
@@ -42,11 +52,8 @@ public class ThreadPool {
 		boolean success = removeTask(task);
 		
 		if(!success) {
-			for(Thread thread : threads) {
-				thread.ca
-			}
+			success = task.cancel();
 		}
-		
 		return success;
 	}
 }

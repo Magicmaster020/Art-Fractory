@@ -50,7 +50,7 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 	
 	@Override
 	public WritableImage getImage(int width, int height) {
-		double xLength = 1/rightPane.zoomField.getValue();
+		double xLength = 1/rightPane.zoomProperty.getValue();
 		double[] center = {rightPane.xField.getValue(), rightPane.yField.getValue()};
 		double angle = -Math.toRadians(rightPane.angleField.getValue());
 		

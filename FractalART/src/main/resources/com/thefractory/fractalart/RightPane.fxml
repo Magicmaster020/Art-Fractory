@@ -131,7 +131,7 @@
                                     <InfoIcon fx:id="resolutionInfo" />
                                  </children>
                               </HBox>
-                              <NumberField fx:id="resolutionField" ghostText="Preview Resolution" intField="true" max="1000.0" min="10.0" prefWidth="120.0" value="100.0" />
+                              <NumberField fx:id="resolutionField" ghostText="Preview Resolution" intField="true" max="1000.0" min="10.0" prefWidth="120.0" value="200.0" />
                            </children>
                         </VBox>
                      </children>

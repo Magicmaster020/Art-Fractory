@@ -92,6 +92,9 @@ public abstract class Artwork extends Tab {
 	
 	public abstract WritableImage getImage(int height, int length);
 	
+	public RightPane getRightPane() {
+		return rightPane;
+	}
 	public void setImage(WritableImage image) {
 		this.image = image;
 	}

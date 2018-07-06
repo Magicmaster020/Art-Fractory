@@ -46,7 +46,7 @@ public class RightPane extends GridPane {
 	@FXML protected NumberField xField;
 	@FXML protected NumberField yField;
 	@FXML protected NumberField angleField;
-	@FXML protected NumberField zoomField;
+	@FXML private NumberField zoomField;
 	@FXML private InfoIcon xInfo;
 	@FXML private InfoIcon yInfo;
 	@FXML private InfoIcon angleInfo;
@@ -61,6 +61,7 @@ public class RightPane extends GridPane {
 	@FXML NumberField resolutionField;
 	
 	protected DoubleProperty proportionProperty;
+	protected DoubleProperty zoomProperty;
 	Panner panner = new Panner();
 	
 	//For Drag Events
@@ -110,24 +111,19 @@ public class RightPane extends GridPane {
 
         
         angleSlider.valueProperty().bindBidirectional(angleField.valueProperty());
-        zoomSlider.valueProperty().addListener(new ChangeListener<Number>() {
+        zoomSlider.valueProperty().bindBidirectional(zoomField.valueProperty());
+        
+        zoomProperty = new SimpleDoubleProperty(Math.pow(2, zoomField.getValue()));
+        zoomProperty.addListener(new ChangeListener<Number>() {
 			@Override
-			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
-				if(!lock) {
-					lock = true;
-					zoomField.setValue(Math.pow(2, arg2.doubleValue()));
-					lock = false;
-				}
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				zoomField.setValue(Math.log(newValue.doubleValue())/Math.log(2));
 			}
         });
         zoomField.valueProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
-				if(!lock) {
-					lock = true;
-					zoomSlider.setValue(Math.log(arg2.doubleValue())/Math.log(2));
-					lock = false;
-				}
+        	@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				zoomProperty.setValue(Math.pow(2, newValue.doubleValue()));
 			}
         });
                       
@@ -164,11 +160,11 @@ public class RightPane extends GridPane {
 								xField.setValue(xField.getValue()
 				                		+ (Math.cos(Math.toRadians(angleField.getValue())) 
 				                				* xSpeed - Math.sin(Math.toRadians(angleField.getValue())) 
-				                				* ySpeed) / zoomField.getValue());
+				                				* ySpeed) / zoomProperty.getValue());
 								yField.setValue(yField.getValue()
 										+ (Math.sin(Math.toRadians(angleField.getValue())) 
 				                				* xSpeed + Math.cos(Math.toRadians(angleField.getValue())) 
-				                				* ySpeed) / zoomField.getValue());
+				                				* ySpeed) / zoomProperty.getValue());
 							});
 						}
 						
@@ -188,6 +184,10 @@ public class RightPane extends GridPane {
 		}
 	}
 	
+	public double getProportions() {
+		return proportionProperty.getValue();
+	}
+	
 	public void setDefaults(double x, double y, double angle, double zoom) {
 		defaultX = x;
 		defaultY = y;
@@ -199,7 +199,7 @@ public class RightPane extends GridPane {
 		xField.setValue(defaultX);
 		yField.setValue(defaultY);
 		angleField.setValue(defaultAngle);
-		zoomField.setValue(defaultZoom);
+		zoomProperty.setValue(defaultZoom);
 	}
 
 	@FXML public void proportionDragStart(MouseEvent event) {
@@ -230,7 +230,7 @@ public class RightPane extends GridPane {
 	}
     
 	@FXML public void pan(MouseEvent event) {
-		double scale = 1.0/zoomField.getValue();
+		double scale = 1.0/zoomProperty.getValue();
 		double angle = Math.toRadians(angleField.getValue());
 		xField.setValue(xField.getValue() 
 				+ Math.cos(angle) * scale * (lastCors[0] - event.getX()/preview.getFitHeight())
@@ -250,12 +250,12 @@ public class RightPane extends GridPane {
     	}
     	
     	xField.setValue(xField.getValue() 
-    			+ Math.cos(angle) * scale * (1 - scale) * (event.getX()/preview.getFitWidth() - 0.5) / zoomField.getValue()
-    			- Math.sin(angle) * scale * (1 - scale) * (0.5 - event.getY()/preview.getFitHeight()) / zoomField.getValue());
+    			+ Math.cos(angle) * scale * (1 - scale) * (event.getX()/preview.getFitWidth() - 0.5) / zoomProperty.getValue()
+    			- Math.sin(angle) * scale * (1 - scale) * (0.5 - event.getY()/preview.getFitHeight()) / zoomProperty.getValue());
     	yField.setValue(yField.getValue() 
-    			+ Math.cos(angle) * scale * (1 - scale) * (0.5 - event.getY()/preview.getFitHeight()) / zoomField.getValue()
-    			+ Math.sin(angle) * scale * (1 - scale) * (event.getX()/preview.getFitWidth() - 0.5) / zoomField.getValue());
-		zoomField.setValue(zoomField.getValue() / scale);
+    			+ Math.cos(angle) * scale * (1 - scale) * (0.5 - event.getY()/preview.getFitHeight()) / zoomProperty.getValue()
+    			+ Math.sin(angle) * scale * (1 - scale) * (event.getX()/preview.getFitWidth() - 0.5) / zoomProperty.getValue());
+    	zoomProperty.setValue(zoomProperty.getValue() / scale);
 	}
 
 	@FXML public void fullScreen() {
