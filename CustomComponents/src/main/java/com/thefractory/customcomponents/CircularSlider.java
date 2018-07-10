@@ -205,7 +205,7 @@ public class CircularSlider extends AnchorPane {
     }
 
     /**
-     * Remaps the given value from one to anoter range
+     * Remaps the given value from one to another range
      * 
      * @param value
      * @param from1
@@ -226,7 +226,11 @@ public class CircularSlider extends AnchorPane {
 	        	}
 	        }
 	    }
-	    return 0.3155137*tmp + 0.005655731*tmp*tmp - 0.00001014731*tmp*tmp*tmp - 7.513743e-10*tmp*tmp*tmp*tmp;
+	    if(getSliderMax() > 100) {
+	    	return 0.3155137*tmp + 0.005655731*tmp*tmp - 0.00001014731*tmp*tmp*tmp - 7.513743e-10*tmp*tmp*tmp*tmp;
+	    }else {
+	    	return tmp;
+	    }
     }
 
     //Getters and setters
