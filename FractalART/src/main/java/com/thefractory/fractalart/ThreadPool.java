@@ -56,15 +56,28 @@ public class ThreadPool {
 	        description.setText(task.getDescription());
 	        bar.progressProperty().bind(task.progressProperty());
 	        
-			Platform.runLater(() -> {
-				container.getChildren().add(this);
-			});
+	        new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(500);
+						if(!future.isCancelled() && !future.isDone()) {
+							Platform.runLater(() -> {
+								container.getChildren().add(EnhancedProgressBar.this);
+							});
+						}
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+	        }).start();
 			
 			//TODO Probably buggy.
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
 					while(!future.isCancelled() && !future.isDone()) {}
+					System.out.println("Closing progressbar.");
 					Platform.runLater(() -> {
 							container.getChildren().remove(EnhancedProgressBar.this);
 					});
