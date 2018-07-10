@@ -111,6 +111,12 @@ public class RightPane extends GridPane {
 
         
         angleSlider.valueProperty().bindBidirectional(angleField.valueProperty());
+        angleField.valueProperty().addListener(new ChangeListener<Number>() {
+        	@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				angleSlider.setIndex(newValue.doubleValue());
+			}
+        });
         zoomSlider.valueProperty().bindBidirectional(zoomField.valueProperty());
         
         zoomProperty = new SimpleDoubleProperty(Math.pow(2, zoomField.getValue()));
@@ -124,6 +130,7 @@ public class RightPane extends GridPane {
         	@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				zoomProperty.setValue(Math.pow(2, newValue.doubleValue()));
+				zoomSlider.setIndex(newValue.doubleValue());
 			}
         });
                       
