@@ -60,6 +60,7 @@ public class ThreadPool {
 				container.getChildren().add(this);
 			});
 			
+			//TODO Probably buggy.
 			new Thread(new Runnable() {
 				@Override
 				public void run() {

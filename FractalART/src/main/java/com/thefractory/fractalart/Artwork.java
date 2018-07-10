@@ -46,7 +46,7 @@ public abstract class Artwork extends Tab {
 				return getImage(width, height, this);
 			}
 		};	
-	}		
+	}
 	
 	public Artwork() {		
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Artwork.fxml"));
@@ -114,6 +114,7 @@ public abstract class Artwork extends Tab {
 	
 	public void updateHighResImage(int resolution) {
 		if(highResFuture != null) {
+			//TODO Doesn't cancel.
 			highResFuture.cancel(true);
 		}
 		
