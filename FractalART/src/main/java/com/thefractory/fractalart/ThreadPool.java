@@ -1,36 +1,25 @@
 package com.thefractory.fractalart;
 
-import java.util.ArrayList;
-
-import com.thefractory.fractalart.utils.EnhancedTask;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import com.thefractory.fractalart.utils.EnhancedCallable;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 
 public class ThreadPool {
 
 	private static ThreadPool threadPool = null;
-	private Thread[] threads = new Thread[4];
+	private static ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+	private static Pane container;
 	
-	ObservableList<EnhancedTask> taskList 
-			= FXCollections.observableArrayList(new ArrayList<EnhancedTask>());
-	
-	private ThreadPool() {
-		
-		for(int i = 0; i < threads.length; i++) {
-			threads[i] = new Thread();
-		}
-		
-//		taskList.addListener(new ListChangeListener<EnhancedTask>() {
-//			@Override
-//			public void onChanged(Change<? extends EnhancedTask> arg0) {
-//				if(taskList.size() != 0) {
-//					
-//				}
-//			}
-//		});
-	}
+	private ThreadPool() {}
 	
 	public static ThreadPool getInstance() {
 		if(threadPool == null) {
@@ -39,21 +28,51 @@ public class ThreadPool {
 		return threadPool;
 	}
 	
-	public void addTask(EnhancedTask task) {
-		taskList.add(task);
-	}
-	
-	public boolean removeTask(EnhancedTask task) {
-		boolean success = taskList.remove(task);
-		return success;
-	}
-	
-	public boolean cancelTask(EnhancedTask task) {
-		boolean success = removeTask(task);
-		
-		if(!success) {
-			success = task.cancel();
+	public <T> Future<T> submit(EnhancedCallable<T> task, boolean showProgressBar){
+		Future<T> future = executor.submit(task); 
+		if(container != null && showProgressBar) {
+			new EnhancedProgressBar(task, future, container);
 		}
-		return success;
+		return future;
+	}
+	
+	private class EnhancedProgressBar extends HBox {
+		
+		@FXML Label description;
+		@FXML ProgressBar bar;
+		
+		private EnhancedProgressBar(EnhancedCallable<?> task, Future<?> future, Pane container) {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("EnhancedProgressbar.fxml"));
+			fxmlLoader.setRoot(this);
+			fxmlLoader.setController(this);
+	        fxmlLoader.setClassLoader(getClass().getClassLoader());
+	        
+	        try {
+	            fxmlLoader.load();
+	        } catch (IOException exception) {
+	            throw new RuntimeException(exception);
+	        }
+	        
+	        description.setText(task.getDescription());
+	        bar.progressProperty().bind(task.progressProperty());
+	        
+			Platform.runLater(() -> {
+				container.getChildren().add(this);
+			});
+			
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					while(!future.isCancelled() && !future.isDone()) {}
+					Platform.runLater(() -> {
+							container.getChildren().remove(EnhancedProgressBar.this);
+					});
+				}
+			}).start();
+		}
+	}
+
+	public void setContainer(Pane container) {
+		ThreadPool.container = container;
 	}
 }

@@ -131,7 +131,13 @@ public class Gradient extends ImageView {
 	 * @return
 	 */
 	public Color getColor(double index) {
-		return palette.getValue().get((int) Math.round(index * (palette.getValue().size() - 1))); 
+		try {
+			return palette.getValue().get((int) Math.round(index * (palette.getValue().size() - 1)));
+		} catch(Exception e) {
+			e.printStackTrace();
+			System.out.println(index);
+			return Color.BLACK;
+		}
 	}
 
 	/**

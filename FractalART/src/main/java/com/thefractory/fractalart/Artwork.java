@@ -1,10 +1,10 @@
 package com.thefractory.fractalart;
 
 import java.io.IOException;
-
+import java.util.concurrent.Future;
 import com.thefractory.customcomponents.NumberField;
+import com.thefractory.fractalart.utils.EnhancedCallable;
 import com.thefractory.fractalart.utils.JavaFXUtils;
-
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -18,26 +18,37 @@ import javafx.scene.Node;
 import javafx.scene.control.SplitPane;
 
 public abstract class Artwork extends Tab {
+
+	protected String DEFAULT_NAME = "New Artwork";
+	protected String name = DEFAULT_NAME;
+	protected static ThreadPool threadPool;
 	
 	protected WritableImage image;
 	private Image fullScreenImage;
-	private int lowResolution = 30;
+	private int lowResolution = 50;
+	private Future<WritableImage> highResFuture;
 	
 	@FXML protected RightPane rightPane;
     @FXML private SplitPane splitPane;
     @FXML private AnchorPane mainAnchorPane;
     @FXML private AnchorPane rightAnchorPane;
     
-    
     protected ChangeListener<Object> updateListener = new ChangeListener<Object>() {
         @Override
         public void changed(ObservableValue<?> o, Object oldVal, Object newVal) {
-            updateImage((int) rightPane.resolutionField.getValue());
+            updateLowResImage();
         }
     };
+    public EnhancedCallable<WritableImage> getImageTask(int width, int height) {
+		return new EnhancedCallable<WritableImage>("Generating " + name) {
+			@Override
+			public WritableImage call() {
+				return getImage(width, height, this);
+			}
+		};	
+	}		
 	
-	public Artwork(String name) {
-		
+	public Artwork() {		
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Artwork.fxml"));
 		fxmlLoader.setController(this);
         fxmlLoader.setClassLoader(getClass().getClassLoader());
@@ -53,6 +64,8 @@ public abstract class Artwork extends Tab {
 		for(Node child : JavaFXUtils.getNodesFromType(rightPane, NumberField.class)) {
 			((NumberField) child).valueProperty().addListener(updateListener);
 		}
+
+		updateHighResImage((int) rightPane.resolutionField.getValue());
 	}
 	
 	protected void setMainPane(StackPane mainPane) {
@@ -79,9 +92,43 @@ public abstract class Artwork extends Tab {
 		rightPane.setImage(this.image);
 	}
 	
-	public void updateImage(int resolution) {
-		setImage(getImage(resolution, resolution));
-		setImage();
+	public void updateLowResImage() {
+		Future<WritableImage> future = threadPool.submit(getImageTask(lowResolution, lowResolution), false);
+		try {
+			setImage(future.get());
+			setImage();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		int resolution = (int) rightPane.resolutionField.getValue();
+		if(resolution > lowResolution) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					updateHighResImage(resolution);					
+				}
+			}).start();
+		}
+	}
+	
+	public void updateHighResImage(int resolution) {
+		if(highResFuture != null) {
+			highResFuture.cancel(true);
+		}
+		
+		EnhancedCallable<WritableImage> task = getImageTask(resolution, resolution);
+		task.setDescription("Updating " + name);
+		highResFuture = threadPool.submit(task, true);
+		try {
+			WritableImage image = highResFuture.get();
+			if(image != null) {
+				setImage(image);
+				setImage();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public abstract void init();
@@ -90,7 +137,7 @@ public abstract class Artwork extends Tab {
 		return image;
 	}
 	
-	public abstract WritableImage getImage(int height, int length);
+	public abstract WritableImage getImage(int height, int length, EnhancedCallable<WritableImage> task);
 	
 	public RightPane getRightPane() {
 		return rightPane;
@@ -109,5 +156,9 @@ public abstract class Artwork extends Tab {
 	}
 	public void setLowResolution(int lowResolution) {
 		this.lowResolution = lowResolution;
+	}
+
+	public static void setThreadPool(ThreadPool threadPool) {
+		Artwork.threadPool = threadPool;
 	}
 }

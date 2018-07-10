@@ -8,14 +8,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.StackPane;
 
 public class SimpleMandelbrotSet extends AbstractMandelbrotSet {
-
-	private static String DEFAULT_NAME = "Simple Mandelbrot Set";	
 	
 	@FXML private StackPane controlPanel;
 	@FXML private GradientPicker gradientPicker;
 	
 	public SimpleMandelbrotSet() {
-		super(DEFAULT_NAME);
+		super();
+		DEFAULT_NAME = "Simple Mandelbrot Set";
+		name = DEFAULT_NAME;
+		this.setText(name);
 		
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SimpleMandelbrotSet.fxml"));
 		fxmlLoader.setController(this);
@@ -35,7 +36,7 @@ public class SimpleMandelbrotSet extends AbstractMandelbrotSet {
 	}
 	
 	@FXML public void update() {
-		updateImage((int) rightPane.resolutionField.getValue());
+		updateLowResImage();
 	}
 
 }

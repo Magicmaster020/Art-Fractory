@@ -2,26 +2,19 @@ package com.thefractory.fractalart;
 
 import java.io.IOException;
 
-import com.thefractory.customcomponents.Gradient;
 import com.thefractory.customcomponents.GradientPicker;
 import com.thefractory.customcomponents.NumberField;
-
+import com.thefractory.fractalart.utils.EnhancedCallable;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-public class HofstadtersButterfly extends Artwork{
+public class HofstadtersButterfly extends Artwork {
 	
-	private static String DEFAULT_NAME = "Simple Hofstadters Butterfly";	
 	
 	@FXML private StackPane controlPanel;
 	@FXML private NumberField latticePoints;
@@ -29,7 +22,11 @@ public class HofstadtersButterfly extends Artwork{
 	
 	
 	public HofstadtersButterfly() {
-		super(DEFAULT_NAME);
+		super();
+		DEFAULT_NAME = "Hofstadter's Butterfly";
+		name = DEFAULT_NAME;
+		this.setText(name);
+		
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("HofstadtersButterfly.fxml"));
 		fxmlLoader.setController(this);
         fxmlLoader.setClassLoader(getClass().getClassLoader());
@@ -48,7 +45,7 @@ public class HofstadtersButterfly extends Artwork{
 	}
 	
 	@Override
-	public WritableImage getImage(int height, int length) {
+	public WritableImage getImage(int height, int length, EnhancedCallable<WritableImage> task) {
 		int q = (int)latticePoints.getValue();
 		//int ResFactor = (int)(resolution / q);
 		//resolution = resolution - resolution % q;
@@ -107,7 +104,7 @@ public class HofstadtersButterfly extends Artwork{
 	
 	@Override
     public void init() {
-		updateImage((int) rightPane.resolutionField.getValue());
+		updateLowResImage();
 		rightPane.setDefaults(0.5, 0, 0, 1);
 		rightPane.reset();
 		setImage();
@@ -115,7 +112,7 @@ public class HofstadtersButterfly extends Artwork{
 	
 	
 	@FXML public void update() {
-		updateImage((int) rightPane.resolutionField.getValue());
+		updateLowResImage();
 	}
 	
 	@FXML public void changeNumberOfLatP(KeyEvent event) {

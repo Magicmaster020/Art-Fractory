@@ -5,12 +5,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
 public class View extends BorderPane {
 	
 	private Model model;
 	
 	@FXML private TabPane tabPane;
+	@FXML private HBox progressBox;
 	
 	public View(Model model) {
 		
@@ -26,6 +28,7 @@ public class View extends BorderPane {
         }
         
 		this.model = model;
+		Model.THREAD_POOL.setContainer(progressBox);
 	}
 	
 	@FXML private void exportAs() {

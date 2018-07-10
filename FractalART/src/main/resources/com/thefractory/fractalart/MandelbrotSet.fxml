@@ -11,7 +11,7 @@
       <VBox spacing="5.0">
          <children>
             <NumberSlider fx:id="iterationSlider" intSlider="true" logarithmic="true" max="1000000.0" min="1.0" tip="Number of iterations of the Mandelbrot equation." title="Iterations" />
-            <NumberSlider fx:id="powerSlider" intSlider="true" tip="Power of the Mandelbrot equation." title="Power" value="2.0" />
+            <NumberSlider fx:id="powerSlider" intSlider="true" min="1.0" tip="Power of the Mandelbrot equation." title="Power" value="2.0" />
             <NumberSlider fx:id="realStartSlider" max="2.0" min="-2.0" tip="The real part of start value of the Mandelbrot Set." title="Start Real Part" value="0.0" />
             <NumberSlider fx:id="imaginaryStartSlider" max="2.0" min="-2.0" tip="The imaginary part of start value of the Mandelbrot Set." title="Start Imaginary Part" value="0.0" />
             <GradientPicker fx:id="gradientPicker" />

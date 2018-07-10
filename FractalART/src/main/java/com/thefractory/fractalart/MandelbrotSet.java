@@ -2,19 +2,14 @@ package com.thefractory.fractalart;
 
 import com.thefractory.customcomponents.GradientPicker;
 import com.thefractory.customcomponents.NumberSlider;
-import com.thefractory.fractalart.utils.ComplexNumber;
-
 import java.io.IOException;
-
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.StackPane;
 
 public class MandelbrotSet extends AbstractMandelbrotSet {
 	
-	private static String DEFAULT_NAME= "Mandelbrot Set";	
+	
 	
 	@FXML private StackPane controlPanel;
 	@FXML private GradientPicker gradientPicker;
@@ -24,7 +19,10 @@ public class MandelbrotSet extends AbstractMandelbrotSet {
 	@FXML private NumberSlider imaginaryStartSlider;
 
 	public MandelbrotSet() {
-		super(DEFAULT_NAME);
+		super();
+		DEFAULT_NAME = "Mandelbrot Set";
+		name = DEFAULT_NAME;
+		this.setText(name);
 		
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MandelbrotSet.fxml"));
 		fxmlLoader.setController(this);
@@ -50,10 +48,6 @@ public class MandelbrotSet extends AbstractMandelbrotSet {
 	}
 	
 	@FXML public void update() {
-		updateImage((int) rightPane.resolutionField.getValue());
-	}
-	
-	@FXML public void export() {
-		Model.getInstance().exportAs(this);
+		updateLowResImage();
 	}
 }

@@ -1,8 +1,9 @@
 package com.thefractory.fractalart;
 
+import com.thefractory.customcomponents.Gradient;
 import com.thefractory.customcomponents.GradientPicker;
 import com.thefractory.fractalart.utils.ComplexNumber;
-
+import com.thefractory.fractalart.utils.EnhancedCallable;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -20,8 +21,8 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 	protected double hej = 50;
 	private GradientPicker gradientPicker;
 	
-	public AbstractMandelbrotSet(String name) {
-		super(name);
+	public AbstractMandelbrotSet() {
+		super();
 		iterations.addListener(updateListener);
 		power.addListener(updateListener);
 		realStart.addListener(updateListener);
@@ -44,12 +45,12 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 		gradientPicker.paletteProperty().addListener(updateListener);
 		rightPane.setDefaults(0, 0, 0, 0.25);
 		rightPane.reset();
-		updateImage((int) rightPane.resolutionField.getValue());
 		setImage();
 	}
 	
 	@Override
-	public WritableImage getImage(int width, int height) {
+	public WritableImage getImage(int width, int height, EnhancedCallable<WritableImage> task) {
+		
 		double xLength = 1/rightPane.zoomProperty.getValue();
 		double[] center = {rightPane.xField.getValue(), rightPane.yField.getValue()};
 		double angle = -Math.toRadians(rightPane.angleField.getValue());
@@ -58,6 +59,8 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 		double[][] iterationsAt = new double[width][height];
 		WritableImage image = new WritableImage(width, height);
 		PixelWriter writer = image.getPixelWriter();
+		
+		
 		for(int i = 0; i < width; i++) {
 			for(int j = 0; j < height; j++) {
 				
@@ -71,18 +74,28 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 					minIterations = tempIt;
 				}
 				iterationsAt[i][j] = tempIt;
+				
+				if(task != null) {
+					if(Thread.interrupted()) {
+						System.out.println("INTERRUPTED!");
+						return null;
+					}
+					task.setProgress((double) (i * height + j + 1) / (height * width));
+				}
 			}
 		}
 		
+		Gradient gradient = gradientPicker.getPalette();
 		for(int i = 0; i < width; i++) {
 			for(int j = 0; j < height; j++) {
-				Color color = gradientPicker.getPalette().getColor((iterationsAt[i][j] - minIterations)/(hej - minIterations));
+				Color color = gradient.getColor((iterationsAt[i][j] - minIterations)/(hej - minIterations));
 				writer.setColor(i, j, color);
 			}
 		}
 		
 		hej = minIterations + iterations.get();
-		return(image);
+		
+		return image;
 	}
 	
 	protected void setGradientPicker(GradientPicker gradientPicker) {
