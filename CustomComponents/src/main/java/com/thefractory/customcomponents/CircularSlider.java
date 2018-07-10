@@ -17,6 +17,7 @@ import javafx.event.EventHandler;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -38,6 +39,7 @@ public class CircularSlider extends AnchorPane {
     @FXML private SVGPath path;
     @FXML private Circle circle;
     
+    private boolean movingMouse = false;
     private boolean lock = false;
     private final static double ANIMATION_DURATION = 500.0d;
     private double initX;
@@ -122,6 +124,7 @@ public class CircularSlider extends AnchorPane {
 	    // Mouse presssed handler
 	    circle.setOnMousePressed(new EventHandler<MouseEvent>() {
 	        public void handle(MouseEvent me) {
+	        	movingMouse = true;
 	             // Store initial position
 	            initX = circle.getTranslateX();
 	            initY = circle.getTranslateY();
@@ -132,6 +135,7 @@ public class CircularSlider extends AnchorPane {
 	    // Mouse dragged handler
 	    circle.setOnMouseDragged(new EventHandler<MouseEvent>() {
 	        public void handle(MouseEvent me) {
+	        	movingMouse = true;
 	            double dragX = me.getSceneX() - dragAnchor.getX();
 	            double dragY = me.getSceneY() - dragAnchor.getY();
 	
@@ -147,7 +151,14 @@ public class CircularSlider extends AnchorPane {
 	
 	            // Get slider index
 	            sliderIndex.setValue(remap(actIndex, ANIMATION_DURATION, 0, getSliderMin(), getSliderMax()));
-	            System.out.println(getValue());
+	            try {
+					Thread.sleep(20);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	            movingMouse = false;
+	            //System.out.println(getValue());
 	        }
 	    });
     }
@@ -167,6 +178,49 @@ public class CircularSlider extends AnchorPane {
             pathPointList.add(new Point2D(circle.getTranslateX(), circle.getTranslateY()));
         }
 
+    }
+    
+    public void setIndex(double index) {
+    	if(movingMouse) {
+    		return;
+    	}
+    	int temprevs;
+    	if(index > 0) {
+    		temprevs = (int)(index - index%getSliderMax());
+        	index = index%getSliderMax();
+    	}else {
+    		temprevs = 0;
+    		while(index < 0) {
+    			index += getSliderMax();
+    			temprevs -= 1;
+    		}
+    	}
+    	
+    	System.out.println("Flytta Knoppen");
+    	System.out.println(temprevs);
+    	System.out.println(index);
+    	Bounds boundsInScene = this.localToScene(this.getBoundsInLocal());
+    	double mindiff = Double.MAX_VALUE;
+    	int newX = 0;
+    	int newY = 0;
+    	//Find the index in the scene which is closest to the slider index
+    	for(int i = 0; i < (int)(boundsInScene.getMaxX() - boundsInScene.getMinX()); i++) {//(int)boundsInScene.getMinX()
+    		for(int j = 0; j < (int)(boundsInScene.getMaxY() - boundsInScene.getMinY()); j++) {
+    			actIndex = getAnimationIndex(i, j);
+    			double diff = Math.abs(index - remap(actIndex, ANIMATION_DURATION, 0, getSliderMin(), getSliderMax()));
+    			if(diff < mindiff) {
+    				mindiff = diff;
+    				newX = i;
+    				newY = j;
+    			}
+    		}
+    	}
+        actIndex = getAnimationIndex(newX, newY);
+        pathTransition.jumpTo(Duration.seconds(actIndex));
+        setValue(index + temprevs*getSliderMax());
+        System.out.println(sliderIndex.doubleValue());
+        System.out.println(revs.doubleValue());
+        revs.setValue(temprevs);
     }
 
     /**
