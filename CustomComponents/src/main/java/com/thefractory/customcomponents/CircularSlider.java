@@ -226,7 +226,7 @@ public class CircularSlider extends AnchorPane {
 	        	}
 	        }
 	    }
-        return tmp;
+	    return 0.3155137*tmp + 0.005655731*tmp*tmp - 0.00001014731*tmp*tmp*tmp - 7.513743e-10*tmp*tmp*tmp*tmp;
     }
 
     //Getters and setters
