@@ -8,15 +8,10 @@ import com.thefractory.fractalart.Grid;
 
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
 import javafx.stage.Stage;
  
 public class GridTest extends Application {
@@ -28,26 +23,26 @@ public class GridTest extends Application {
     @Override
     public void start(Stage primaryStage) {
     	long start = System.nanoTime();
-    	Grid grid = new Grid(6, 6, false, 75, 75, true);
-    	grid.setValueAt(10000, 37, 37);
+    	Grid grid = new Grid(6, 6, false, 101, 101, true);
+    	grid.setValueAt(10000, 50, 50);
     	while(grid.toppleGrid());
     	
     	ImageView imageView = new ImageView();
-    	WritableImage image = grid.getImage(530, 605);
+    	WritableImage image = grid.getImage(502, 502);
     	imageView.setImage(image);
+    	imageView.setFitWidth(500);
+    	imageView.setFitHeight(500);
     	
     	// Display image on screen
         StackPane root = new StackPane();
         root.getChildren().add(imageView);
-        Scene scene = new Scene(root, 530, 605);
+        Scene scene = new Scene(root);
         primaryStage.setTitle("Grid Test");
         primaryStage.setScene(scene);
         primaryStage.show();  	
-    	
         
         
-        
-		File file = new File("C:\\Users\\Jonas\\Pictures\\CanvasImage.png");
+		File file = new File("C:\\Users\\ivarc\\Pictures\\CanvasImage.png");
 		try {
 		    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
 		} catch (Exception s) {

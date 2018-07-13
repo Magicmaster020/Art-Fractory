@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.concurrent.Future;
 import javax.imageio.ImageIO;
 import com.thefractory.fractalart.test.ArtworkTest;
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;

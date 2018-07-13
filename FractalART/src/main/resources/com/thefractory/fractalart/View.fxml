@@ -30,6 +30,7 @@
                             <MenuItem mnemonicParsing="false" onAction="#newMandelbrotSet" text="Mandelbrot Set" />
                               <MenuItem mnemonicParsing="false" onAction="#newSimpleMandelbrotSet" text="Simple Mandelbrot Set" />
                               <MenuItem mnemonicParsing="false" onAction="#newHofstadtersButterfly" text="Hofstadter's Butterfly" />
+                              <MenuItem mnemonicParsing="false" onAction="#newSandPiles" text="Sand Piles" />
                           </items>
                         </Menu>
                   </items>

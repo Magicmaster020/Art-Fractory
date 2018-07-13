@@ -52,6 +52,10 @@ public class View extends BorderPane {
 		newArtwork(new HofstadtersButterfly());
 	}
 	
+	@FXML private void newSandPiles() {
+		newArtwork(new SandPiles());
+	}
+	
 	public TabPane getTabPane() {
 		return tabPane;
 	}

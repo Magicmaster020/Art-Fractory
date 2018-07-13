@@ -196,9 +196,6 @@ public class CircularSlider extends AnchorPane {
     		}
     	}
     	
-    	System.out.println("Flytta Knoppen");
-    	System.out.println(temprevs);
-    	System.out.println(index);
     	Bounds boundsInScene = this.localToScene(this.getBoundsInLocal());
     	double mindiff = Double.MAX_VALUE;
     	int newX = 0;
@@ -218,8 +215,6 @@ public class CircularSlider extends AnchorPane {
         actIndex = getAnimationIndex(newX, newY);
         pathTransition.jumpTo(Duration.seconds(actIndex));
         setValue(index + temprevs*getSliderMax());
-        System.out.println(sliderIndex.doubleValue());
-        System.out.println(revs.doubleValue());
         revs.setValue(temprevs);
     }
 

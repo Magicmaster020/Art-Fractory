@@ -17,6 +17,7 @@ public class MandelbrotSet extends AbstractMandelbrotSet {
 	@FXML private NumberSlider powerSlider;
 	@FXML private NumberSlider realStartSlider;
 	@FXML private NumberSlider imaginaryStartSlider;
+	@FXML private NumberSlider divergeSizeSlider;
 
 	public MandelbrotSet() {
 		super();
@@ -38,13 +39,13 @@ public class MandelbrotSet extends AbstractMandelbrotSet {
         power.bind(powerSlider.valueProperty());
         realStart.bind(realStartSlider.valueProperty());
         imaginaryStart.bind(imaginaryStartSlider.valueProperty());
+        divergeSize.bind(divergeSizeSlider.valueProperty());
         
         setMainPane(controlPanel);
 		setControlPanelPrefWidth(800);
 		setGradientPicker(gradientPicker);
 		
 		init();
-		
 	}
 	
 	@FXML public void update() {

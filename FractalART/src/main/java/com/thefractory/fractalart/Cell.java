@@ -3,58 +3,57 @@ package com.thefractory.fractalart;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 
 public class Cell {
-	private Cell[] neighbors; //list of neighbors
+	private Cell[] neighbours; //list of neighbours
 	private final IntegerProperty value; //grains of sand
-	private final int numberOfNeighbors; //number of neighbors
+	private final int numberOfNeighbours; //number of neighbours
 	private int tempValue; //for simultaneous toppling
-	private final int sideLength = 5;
+	private final int sideLength = 2;
 	private final int toppleHeight;
 	
-	public Cell(int number, int numberOfNeighbors, int toppleHeight, Grid grid) {
-		neighbors = new Cell[numberOfNeighbors];
+	public Cell(int number, int numberOfNeighbours, int toppleHeight, Grid grid) {
+		neighbours = new Cell[numberOfNeighbours];
 		this.value = new SimpleIntegerProperty(this, "value", number);
-		this.numberOfNeighbors = numberOfNeighbors;
+		this.numberOfNeighbours = numberOfNeighbours;
 		this.toppleHeight = toppleHeight;
 		tempValue = 0;
 	}
 	
-	public void addNeighbor(Cell neighbor) {
+	public boolean addNeighbour(Cell neighbour) {
 		boolean added = false;
-		int index = 0;
-		while(!added) {
-			if(neighbors[index] == null) {
-				neighbors[index] = neighbor;
+		for(int i = 0; i < numberOfNeighbours; i++) {
+			if(neighbours[i] == null) {
+				neighbours[i] = neighbour;
 				added = true;
-			}else {
-				index += 1;
+				break;
 			}
 		}
+		return added;
 	}
 	
 	public boolean topple(boolean discardRemainder) {
 		if(getValue() < toppleHeight) {//do not topple
 			return false;
-		}else {
-			if(toppleHeight >= numberOfNeighbors) {//then we can topple
-				int giveNumber = (int)((getValue() - getValue()%numberOfNeighbors)/numberOfNeighbors);
-				for(Cell neighbor:neighbors) {
-					if(neighbor != null) {
-						neighbor.add(giveNumber);
+		} else {
+			if(toppleHeight >= numberOfNeighbours) {//then we can topple
+				int giveNumber = (int) (getValue() - getValue()%numberOfNeighbours)/numberOfNeighbours;
+				for(Cell neighbour : neighbours) {
+					if(neighbour != null) {
+						neighbour.add(giveNumber);
 					}
 				}
 				if(discardRemainder) {
 					setValue(0);
-				}else {			
-					int newValue = (int)(getValue()%numberOfNeighbors);
+				} else {			
+					int newValue = (int) getValue()%numberOfNeighbours;
 					setValue(newValue);
 				}
 				return true;
-			}else {
-				return false;}
+			} else {
+				return false;
 			}
+		}
 	}
 	
 	public void add(int number) {
@@ -67,17 +66,17 @@ public class Cell {
 	}
 	
 	public double[] getShapeX() {
-		double[] xcord = new double[numberOfNeighbors];
-		if(numberOfNeighbors == 4) {
+		double[] xcord = new double[numberOfNeighbours];
+		if(numberOfNeighbours == 4) {
 			xcord[0] = 0;
 			xcord[1] = sideLength;
 			xcord[2] = sideLength;
 			xcord[3] = 0;
-		}else if(numberOfNeighbors == 3) {
+		} else if(numberOfNeighbours == 3) {
 			xcord[0] = sideLength/2;
 			xcord[1] = sideLength;
 			xcord[2] = 0;
-		}else if(numberOfNeighbors == 6) {
+		} else if(numberOfNeighbours == 6) {
 			xcord[0] = sideLength/2;
 			xcord[1] = 3*sideLength/2;
 			xcord[2] = 2*sideLength;
@@ -89,17 +88,17 @@ public class Cell {
 	}
 	
 	public double[] getShapeY() {
-		double[] ycord = new double[numberOfNeighbors];
-		if(numberOfNeighbors == 4) {
+		double[] ycord = new double[numberOfNeighbours];
+		if(numberOfNeighbours == 4) {
 			ycord[0] = 0;
 			ycord[1] = 0;
 			ycord[2] = sideLength;
 			ycord[3] = sideLength;
-		}else if(numberOfNeighbors == 3) {
+		} else if(numberOfNeighbours == 3) {
 			ycord[0] = 0;
 			ycord[1] = sideLength*Math.sin(Math.PI/3);
 			ycord[2] = sideLength*Math.sin(Math.PI/3);
-		}else if(numberOfNeighbors == 6) {
+		} else if(numberOfNeighbours == 6) {
 			ycord[0] = 0;
 			ycord[1] = 0;
 			ycord[2] = sideLength*Math.sin(Math.PI/3);
@@ -110,30 +109,31 @@ public class Cell {
 		return ycord;
 	}
 	
+	//TODO DEPRECATED
 	public Color getColor() {
-		Color col = Color.BLACK;
+		Color col = Color.web("#000000");
 		if(getValue() == 1) {
-			col = Color.BLUE;
+			col = Color.web("#555555");
 		}else if(getValue() == 2) {
-			col = Color.GREEN;
+			col = Color.web("#aaaaaa");
 		}else if(getValue() == 3) {
-			col = Color.RED;
+			col = Color.web("#ffffff");
 		}else if(getValue() == 4) {
-			col = Color.BROWN;
+			col = Color.web("#ffffff");
 		}else if(getValue() == 5) {
-			col = Color.CYAN;
+			col = Color.web("ffffff");
 		}else if(getValue() > 5) {
-			col = Color.YELLOW;
+			col = Color.web("#ffffff");
 		}
 		return col;
 	}
 	
 	public long[] getOffsetLength() {
-		if(numberOfNeighbors == 4) {
+		if(numberOfNeighbours == 4) {
 			return new long[]{sideLength, sideLength};
-		}else if(numberOfNeighbors == 3) {
+		} else if(numberOfNeighbours == 3) {
 			return new long[]{sideLength/2, (long) (sideLength*Math.cos(Math.PI/6))};
-		}else {//=6
+		} else {//=6
 			return new long[] {(long) (3*sideLength/2), (long) (2*sideLength*Math.sin(Math.PI/3))};
 		}
 	}

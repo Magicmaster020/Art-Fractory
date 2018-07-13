@@ -1,10 +1,14 @@
 package com.thefractory.fractalart;
 
 import java.io.IOException;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
 import com.thefractory.fractalart.utils.EnhancedCallable;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,7 +33,7 @@ public class ThreadPool {
 	}
 	
 	public <T> Future<T> submit(EnhancedCallable<T> task, boolean showProgressBar){
-		Future<T> future = executor.submit(task); 
+		Future<T> future = executor.submit(task);
 		if(container != null && showProgressBar) {
 			new EnhancedProgressBar(task, future, container);
 		}
@@ -42,6 +46,32 @@ public class ThreadPool {
 		@FXML ProgressBar bar;
 		
 		private EnhancedProgressBar(EnhancedCallable<?> task, Future<?> future, Pane container) {
+			//TODO Probably buggy.
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(500);
+				        if(!future.isCancelled() && !future.isDone()) {
+							loadBar(task, future, container);
+				        }
+					} catch(Exception e) {}
+					
+					try {
+						future.get();
+					} catch (InterruptedException | ExecutionException | CancellationException e) {
+						//Do nothing.
+					} finally {
+						future.cancel(true);
+						Platform.runLater(() -> {
+							container.getChildren().remove(EnhancedProgressBar.this);
+						});
+					}
+				}
+			}).start();
+		}
+		
+		private void loadBar(EnhancedCallable<?> task, Future<?> future, Pane container) {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("EnhancedProgressbar.fxml"));
 			fxmlLoader.setRoot(this);
 			fxmlLoader.setController(this);
@@ -56,33 +86,9 @@ public class ThreadPool {
 	        description.setText(task.getDescription());
 	        bar.progressProperty().bind(task.progressProperty());
 	        
-	        new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(500);
-						if(!future.isCancelled() && !future.isDone()) {
-							Platform.runLater(() -> {
-								container.getChildren().add(EnhancedProgressBar.this);
-							});
-						}
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-	        }).start();
-			
-			//TODO Probably buggy.
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					while(!future.isCancelled() && !future.isDone()) {}
-					System.out.println("Closing progressbar.");
-					Platform.runLater(() -> {
-							container.getChildren().remove(EnhancedProgressBar.this);
-					});
-				}
-			}).start();
+			Platform.runLater(() -> {
+				container.getChildren().add(EnhancedProgressBar.this);
+			});
 		}
 	}
 

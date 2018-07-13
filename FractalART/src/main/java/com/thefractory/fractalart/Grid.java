@@ -1,24 +1,15 @@
 package com.thefractory.fractalart;
 
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import com.thefractory.fractalart.utils.EnhancedCallable;
-
 import javafx.scene.canvas.*;
-import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 
 public class Grid {
-	private int numberOfNeighbors;
+	private int numberOfNeighbours;
 	private boolean discardRemainder;
 	private Dimension dim;
 	private Cell[][] cells;
@@ -26,63 +17,63 @@ public class Grid {
 	private boolean seqorsim; //if true - sequential toppling, if false - simultaneous toppling
 	
 	
-	public Grid(int numberOfNeighbors, int toppleHeight, boolean discardRemainder, int gridSizeX, int gridSizeY, boolean seqorsim) {
-		this.numberOfNeighbors = numberOfNeighbors;
+	public Grid(int numberOfNeighbours, int toppleHeight, boolean discardRemainder, int gridSizeX, int gridSizeY, boolean seqorsim) {
+		this.numberOfNeighbours = numberOfNeighbours;
 		this.toppleHeight = toppleHeight;
 		this.discardRemainder = discardRemainder;
 		dim = new Dimension(gridSizeX, gridSizeY);
 		cells = new Cell[gridSizeX][gridSizeY];
-		generateCells(numberOfNeighbors);	
+		generateCells(numberOfNeighbours);	
 		this.seqorsim = seqorsim;
 	}
 	
 	
-	private void generateCells(int numNeighbors) {
+	private void generateCells(int numNeighbours) {
 		 for(int i = 0; i < dim.getWidth(); i++) {
 			 for(int j = 0; j < dim.getHeight(); j++) {
-				 cells[i][j] = new Cell(0, numNeighbors, toppleHeight, this);
+				 cells[i][j] = new Cell(0, numNeighbours, toppleHeight, this);
 			 }
 		 }
-		 generateNeighbors(numNeighbors);
+		 generateNeighbours(numNeighbours);
 	}
 	
-	private void generateNeighbors(int numNeighbors) {
-		if(numNeighbors == 4) {
+	private void generateNeighbours(int numNeighbours) {
+		if(numNeighbours == 4) {
 			for(int i = 0; i < dim.getWidth(); i++) {
 				 for(int j = 0; j < dim.getHeight(); j++) {
-					 if(j > 0) {cells[i][j].addNeighbor(cells[i][j-1]);}
-					 if(i > 0) {cells[i][j].addNeighbor(cells[i-1][j]);}
-					 if(i + 1 < dim.getWidth()) {cells[i][j].addNeighbor(cells[i+1][j]);}
-					 if(j + 1 < dim.getHeight()) {cells[i][j].addNeighbor(cells[i][j+1]);}
+					 if(j > 0) {cells[i][j].addNeighbour(cells[i][j-1]);}
+					 if(i > 0) {cells[i][j].addNeighbour(cells[i-1][j]);}
+					 if(i + 1 < dim.getWidth()) {cells[i][j].addNeighbour(cells[i+1][j]);}
+					 if(j + 1 < dim.getHeight()) {cells[i][j].addNeighbour(cells[i][j+1]);}
 				 }
 			 }
-		}else if(numNeighbors == 3) {
+		}else if(numNeighbours == 3) {
 			for(int i = 0; i < dim.getWidth(); i++) {
 				 for(int j = 0; j < dim.getHeight(); j++) {
-					 if((i + j)%2 == 0) {//neighbor downward
-						 if(j + 1 < dim.getHeight()) {cells[i][j].addNeighbor(cells[i][j+1]);}
-					 }else {//neighbor upward
-						 if(j > 0) {cells[i][j].addNeighbor(cells[i][j-1]);}
+					 if((i + j)%2 == 0) {//neighbour downward
+						 if(j + 1 < dim.getHeight()) {cells[i][j].addNeighbour(cells[i][j+1]);}
+					 }else {//neighbour upward
+						 if(j > 0) {cells[i][j].addNeighbour(cells[i][j-1]);}
 					 }
-					 if(i > 0) {cells[i][j].addNeighbor(cells[i-1][j]);}
-					 if(i + 1 < dim.getWidth()) {cells[i][j].addNeighbor(cells[i+1][j]);}
+					 if(i > 0) {cells[i][j].addNeighbour(cells[i-1][j]);}
+					 if(i + 1 < dim.getWidth()) {cells[i][j].addNeighbour(cells[i+1][j]);}
 				 }
 			 }
-		}else if(numNeighbors == 6) {
+		}else if(numNeighbours == 6) {
 			for(int i = 0; i < dim.getWidth(); i++) {
 				 for(int j = 0; j < dim.getHeight(); j++) {
-					 if(i > 0) {cells[i][j].addNeighbor(cells[i-1][j]);}
-					 if(i + 1 < dim.getWidth()) {cells[i][j].addNeighbor(cells[i+1][j]);}
+					 if(i > 0) {cells[i][j].addNeighbour(cells[i-1][j]);}
+					 if(i + 1 < dim.getWidth()) {cells[i][j].addNeighbour(cells[i+1][j]);}
 					 if(i%2!=0) {
-						 if(j > 0) {cells[i][j].addNeighbor(cells[i][j-1]);}
-						 if(i > 0 && j + 1 < dim.getHeight()) {cells[i][j].addNeighbor(cells[i-1][j+1]);}
-						 if(j + 1 < dim.getHeight()) {cells[i][j].addNeighbor(cells[i][j+1]);}
-						 if(i + 1 < dim.getWidth() && j + 1 < dim.getHeight()) {cells[i][j].addNeighbor(cells[i+1][j+1]);}
+						 if(j > 0) {cells[i][j].addNeighbour(cells[i][j-1]);}
+						 if(i > 0 && j + 1 < dim.getHeight()) {cells[i][j].addNeighbour(cells[i-1][j+1]);}
+						 if(j + 1 < dim.getHeight()) {cells[i][j].addNeighbour(cells[i][j+1]);}
+						 if(i + 1 < dim.getWidth() && j + 1 < dim.getHeight()) {cells[i][j].addNeighbour(cells[i+1][j+1]);}
 					 }else {
-						 if(j + 1 < dim.getHeight()) {cells[i][j].addNeighbor(cells[i][j+1]);}
-						 if(i > 0 && j > 0) {cells[i][j].addNeighbor(cells[i-1][j-1]);}
-						 if(j > 0) {cells[i][j].addNeighbor(cells[i][j-1]);}
-						 if(i + 1 < dim.getWidth() && j > 0) {cells[i][j].addNeighbor(cells[i+1][j-1]);}
+						 if(j + 1 < dim.getHeight()) {cells[i][j].addNeighbour(cells[i][j+1]);}
+						 if(i > 0 && j > 0) {cells[i][j].addNeighbour(cells[i-1][j-1]);}
+						 if(j > 0) {cells[i][j].addNeighbour(cells[i][j-1]);}
+						 if(i + 1 < dim.getWidth() && j > 0) {cells[i][j].addNeighbour(cells[i+1][j-1]);}
 					 }		 
 				 }
 			 }
@@ -115,6 +106,7 @@ public class Grid {
 				 }
 			}
 		}
+		System.out.println(maxHeight);
 		if(maxHeight >= toppleHeight) {
 			for(Cell cell:toppleList) {
 				cell.topple(discardRemainder);
@@ -193,21 +185,21 @@ public class Grid {
 	
 	private void drawShape(GraphicsContext gc, Cell cell, int offX, int offY) {
 		gc.setFill(cell.getColor());
-		double[] xcord = new double[numberOfNeighbors];
-		double[] ycord = new double[numberOfNeighbors];
-		if(numberOfNeighbors == 4) {
-			for(int i = 0; i < numberOfNeighbors; i++) {
+		double[] xcord = new double[numberOfNeighbours];
+		double[] ycord = new double[numberOfNeighbours];
+		if(numberOfNeighbours == 4) {
+			for(int i = 0; i < numberOfNeighbours; i++) {
 				xcord[i] = cell.getShapeX()[i] + offX*cell.getOffsetLength()[0];
 			}
-			for(int i = 0; i < numberOfNeighbors; i++) {
+			for(int i = 0; i < numberOfNeighbours; i++) {
 				ycord[i] = cell.getShapeY()[i] + offY*cell.getOffsetLength()[1];
 			}
-			gc.fillPolygon(xcord, ycord, numberOfNeighbors);
-		}else if(numberOfNeighbors == 3) {
-			for(int i = 0; i < numberOfNeighbors; i++) {
+			gc.fillPolygon(xcord, ycord, numberOfNeighbours);
+		}else if(numberOfNeighbours == 3) {
+			for(int i = 0; i < numberOfNeighbours; i++) {
 				xcord[i] = cell.getShapeX()[i] + offX*cell.getOffsetLength()[0];
 			}
-			for(int i = 0; i < numberOfNeighbors; i++) {
+			for(int i = 0; i < numberOfNeighbours; i++) {
 				ycord[i] = cell.getShapeY()[i] + offY*cell.getOffsetLength()[1];
 			}
 			if((offX + offY)%2!=0) {//Flip triangle
@@ -215,19 +207,19 @@ public class Grid {
 				ycord[1] -= cell.getSideLength()*Math.sin(Math.PI/3);
 				ycord[2] -= cell.getSideLength()*Math.sin(Math.PI/3);
 			}
-			gc.fillPolygon(xcord, ycord, numberOfNeighbors);
-		}else if(numberOfNeighbors == 6) {
-			for(int i = 0; i < numberOfNeighbors; i++) {
+			gc.fillPolygon(xcord, ycord, numberOfNeighbours);
+		}else if(numberOfNeighbours == 6) {
+			for(int i = 0; i < numberOfNeighbours; i++) {
 				xcord[i] = cell.getShapeX()[i] + offX*cell.getOffsetLength()[0];
 			}
-			for(int i = 0; i < numberOfNeighbors; i++) {
+			for(int i = 0; i < numberOfNeighbours; i++) {
 				if(offX%2 == 0) {//Every other column should also be translated a bit down
 					ycord[i] = cell.getShapeY()[i] + offY*cell.getOffsetLength()[1];
 				}else {
 					ycord[i] = cell.getShapeY()[i] + offY*cell.getOffsetLength()[1] + cell.getSideLength()*Math.sin(Math.PI/3);
 				}
 			}
-			gc.fillPolygon(xcord, ycord, numberOfNeighbors);
+			gc.fillPolygon(xcord, ycord, numberOfNeighbours);
 		}
 		
 	}

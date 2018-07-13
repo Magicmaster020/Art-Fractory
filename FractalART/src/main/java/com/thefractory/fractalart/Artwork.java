@@ -1,6 +1,8 @@
 package com.thefractory.fractalart;
 
 import java.io.IOException;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import com.thefractory.customcomponents.NumberField;
 import com.thefractory.fractalart.utils.EnhancedCallable;
@@ -64,8 +66,6 @@ public abstract class Artwork extends Tab {
 		for(Node child : JavaFXUtils.getNodesFromType(rightPane, NumberField.class)) {
 			((NumberField) child).valueProperty().addListener(updateListener);
 		}
-
-		updateHighResImage((int) rightPane.resolutionField.getValue());
 	}
 	
 	protected void setMainPane(StackPane mainPane) {
@@ -88,15 +88,10 @@ public abstract class Artwork extends Tab {
 		return null;
 	}
 	
-	protected void setImage() {
-		rightPane.setImage(this.image);
-	}
-	
 	public void updateLowResImage() {
-		Future<WritableImage> future = threadPool.submit(getImageTask(lowResolution, lowResolution), false);
 		try {
-			setImage(future.get());
-			setImage();
+			setImage(threadPool.submit(getImageTask(lowResolution, lowResolution), false).get());
+			System.out.println("Low res Future completed.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -106,29 +101,34 @@ public abstract class Artwork extends Tab {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					updateHighResImage(resolution);					
+					try {
+						System.out.println("Running 1: " + !(highResFuture.isCancelled() | highResFuture.isDone()));
+						System.out.println("Cancelling: " + highResFuture.cancel(true));
+						updateHighResImage(resolution);
+					} catch(NullPointerException e) {
+						updateHighResImage(resolution);
+					}					
 				}
 			}).start();
 		}
 	}
 	
-	public void updateHighResImage(int resolution) {
-		if(highResFuture != null) {
-			//TODO Doesn't cancel.
-			highResFuture.cancel(true);
-		}
-		
+	public synchronized void updateHighResImage(int resolution) {
 		EnhancedCallable<WritableImage> task = getImageTask(resolution, resolution);
-		task.setDescription("Updating " + name);
+		task.setDescription("Generating " + name);
+		if(highResFuture != null) {
+			System.out.println("Running 2: " + !(highResFuture.isCancelled() | highResFuture.isDone()));
+		}
 		highResFuture = threadPool.submit(task, true);
+		
 		try {
 			WritableImage image = highResFuture.get();
 			if(image != null) {
 				setImage(image);
-				setImage();
+				System.out.println("High res Future completed.");
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (ExecutionException | InterruptedException | CancellationException e) {
+			//Do nothing.
 		}
 	}
 	
@@ -145,6 +145,7 @@ public abstract class Artwork extends Tab {
 	}
 	public void setImage(WritableImage image) {
 		this.image = image;
+		rightPane.setImage(this.image);
 	}
 	public Image getFullScreenImage() {
 		return fullScreenImage;
@@ -158,7 +159,6 @@ public abstract class Artwork extends Tab {
 	public void setLowResolution(int lowResolution) {
 		this.lowResolution = lowResolution;
 	}
-
 	public static void setThreadPool(ThreadPool threadPool) {
 		Artwork.threadPool = threadPool;
 	}

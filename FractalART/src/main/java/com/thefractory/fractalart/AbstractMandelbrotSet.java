@@ -18,6 +18,7 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 	protected IntegerProperty power = new SimpleIntegerProperty(2);
 	protected DoubleProperty realStart = new SimpleDoubleProperty(0.0);
 	protected DoubleProperty imaginaryStart = new SimpleDoubleProperty(0.0);
+	protected DoubleProperty divergeSize = new SimpleDoubleProperty(2.0);
 	protected double hej = 50;
 	private GradientPicker gradientPicker;
 	
@@ -27,6 +28,7 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 		power.addListener(updateListener);
 		realStart.addListener(updateListener);
 		imaginaryStart.addListener(updateListener);
+		divergeSize.addListener(updateListener);
 	}
 	
 	private int iterate(ComplexNumber c) {
@@ -34,18 +36,18 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 		int i = 0;
 		for(; i < hej; i++) {
 			z = ComplexNumber.add(ComplexNumber.pow(z, power.get()), c);
-			if(Math.pow(z.getRe(), 2) + Math.pow(z.getIm(), 2) > 4) {
+			if(Math.sqrt(Math.pow(z.getRe(), 2) + Math.pow(z.getIm(), 2)) > divergeSize.get()) {
 				break;
 			}
 		}
 		return i;
 	}
+	
 	@Override
     public void init() {
 		gradientPicker.paletteProperty().addListener(updateListener);
 		rightPane.setDefaults(0, 0, 0, 0.25);
 		rightPane.reset();
-		setImage();
 	}
 	
 	@Override
@@ -75,8 +77,9 @@ public abstract class AbstractMandelbrotSet extends Artwork {
 				}
 				iterationsAt[i][j] = tempIt;
 				
+
 				if(task != null) {
-					if(Thread.interrupted()) {
+					if(Thread.currentThread().isInterrupted()) {
 						System.out.println("INTERRUPTED!");
 						return null;
 					}

@@ -8,6 +8,7 @@ import javafx.beans.property.ReadOnlyDoubleWrapper;
 public abstract class EnhancedCallable<T> implements Callable<T> {
 	
 	private String description = "No description set.";
+	private boolean cancelled = false;
 	private final ReadOnlyDoubleWrapper progress = new ReadOnlyDoubleWrapper();
 
 	public EnhancedCallable() {
@@ -26,6 +27,14 @@ public abstract class EnhancedCallable<T> implements Callable<T> {
 		this.description = description;
 	}
 
+	public void cancel() {
+		cancelled = true;
+	}
+	
+	public boolean isCancelled() {
+		return cancelled;
+	}
+	
 	public ReadOnlyDoubleProperty progressProperty() {
         return progress.getReadOnlyProperty() ;
     }
