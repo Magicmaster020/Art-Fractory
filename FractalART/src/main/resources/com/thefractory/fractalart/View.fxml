@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -27,8 +27,16 @@
                         <MenuItem mnemonicParsing="false" text="Open Recent" />
                         <Menu mnemonicParsing="false" text="New Artwork">
                           <items>
-                            <MenuItem mnemonicParsing="false" onAction="#newMandelbrotSet" text="Mandelbrot Set" />
-                              <MenuItem mnemonicParsing="false" onAction="#newSimpleMandelbrotSet" text="Simple Mandelbrot Set" />
+                              <Menu mnemonicParsing="false" text="Complex Iteartor">
+                                <items>
+                                  <MenuItem mnemonicParsing="false" onAction="#newMandelbrotSet" text="Mandelbrot Set" />
+                                    <MenuItem mnemonicParsing="false" onAction="#newBurningShip" text="Burning Ship Fractal" />
+                                    <MenuItem mnemonicParsing="false" onAction="#newSimpleMandelbrotSet" text="Simple Mandelbrot Set" />
+                                    <MenuItem mnemonicParsing="false" onAction="#newBuffalo" text="Buffalo Fractal" />
+                                    <MenuItem mnemonicParsing="false" onAction="#newCeltic" text="Celtic Fractal" />
+                                    <MenuItem mnemonicParsing="false" onAction="#newTricorn" text="Tricorn Fractal" />
+                                </items>
+                              </Menu>
                               <MenuItem mnemonicParsing="false" onAction="#newHofstadtersButterfly" text="Hofstadter's Butterfly" />
                               <MenuItem mnemonicParsing="false" onAction="#newSandPiles" text="Sand Piles" />
                           </items>

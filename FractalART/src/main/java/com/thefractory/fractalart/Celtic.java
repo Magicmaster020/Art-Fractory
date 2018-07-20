@@ -1,13 +1,23 @@
 package com.thefractory.fractalart;
 
+import java.io.IOException;
+
 import com.thefractory.customcomponents.GradientPicker;
 import com.thefractory.customcomponents.NumberSlider;
-import java.io.IOException;
+import com.thefractory.fractalart.utils.ComplexNumber;
+
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.StackPane;
 
-public class MandelbrotSet extends AbstractMandelbrotSet {
+public class Celtic extends ComplexIterator {
+	protected IntegerProperty power = new SimpleIntegerProperty(2);
+	protected DoubleProperty realStart = new SimpleDoubleProperty(0.0);
+	protected DoubleProperty imaginaryStart = new SimpleDoubleProperty(0.0);
 	
 	@FXML private StackPane controlPanel;
 	@FXML private GradientPicker gradientPicker;
@@ -17,13 +27,13 @@ public class MandelbrotSet extends AbstractMandelbrotSet {
 	@FXML private NumberSlider imaginaryStartSlider;
 	@FXML private NumberSlider divergeSizeSlider;
 
-	public MandelbrotSet() {
+	public Celtic() {
 		super();
-		DEFAULT_NAME = "Mandelbrot Set";
+		DEFAULT_NAME = "Celtic Fractal";
 		name = DEFAULT_NAME;
 		this.setText(name);
 		
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MandelbrotSet.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Celtic.fxml"));
 		fxmlLoader.setController(this);
         fxmlLoader.setClassLoader(getClass().getClassLoader());
         
@@ -44,5 +54,19 @@ public class MandelbrotSet extends AbstractMandelbrotSet {
 		setGradientPicker(gradientPicker);
 		
 		init();
+	}
+	
+	@Override
+	protected int iterate(ComplexNumber c) {
+		ComplexNumber z = new ComplexNumber(realStart.get(), imaginaryStart.get());
+		int i = 0;
+		for(; i < hej; i++) {
+			ComplexNumber temp = ComplexNumber.pow(z, power.get()); 
+			z = ComplexNumber.add(new ComplexNumber(Math.abs(temp.getRe()), temp.getIm()), c);
+			if(z.getAbs() > divergeSize.get()) {
+				break;
+			}
+		}
+		return i;
 	}
 }

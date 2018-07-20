@@ -312,6 +312,14 @@ public class ComplexNumber
         return Math.atan2(imaginary,real);
     }
     /**
+     * The argument/phase of the current complex number.
+     * @return arg(z) - the argument of current complex number
+     */
+     public double getAbs()
+     {
+         return Math.sqrt(Math.pow(this.getRe(), 2) + Math.pow(this.getIm(), 2));
+     }
+    /**
     * Parses the <code>String</code> as a <code>ComplexNumber</code> of type x+yi.
     * @param s the input complex number as string
     * @return a <code>ComplexNumber</code> which is represented by the string.

@@ -29,8 +29,7 @@ public abstract class Artwork extends Tab {
 	
 	protected WritableImage image;
 	private Image fullScreenImage;
-	private int lowResolution = 10;
-	private Future<WritableImage> highResFuture;
+	private int lowResolution = 50;
 	
 	@FXML protected RightPane rightPane;
     @FXML private SplitPane splitPane;
@@ -101,7 +100,6 @@ public abstract class Artwork extends Tab {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				if(newValue.intValue() > number) {
-					//System.out.println(number + " Listener");
 					cancel();						
 				}
 			}				
@@ -127,14 +125,12 @@ public abstract class Artwork extends Tab {
 						future = threadPool.submit(task, true);
 						if(isCancelled()) {//If cancelled before construction but after check cancel again.
 							cancel();
-							//System.out.println(number + " Extra cancel");
 						}
 						
 						try {
 							WritableImage image = future.get();
 							if(image != null) {
 								setImage(image);
-								//System.out.println(number + " High res Future completed: " + image);
 							}
 						} catch (ExecutionException | InterruptedException | CancellationException e) {
 							//Do nothing.
@@ -152,18 +148,14 @@ public abstract class Artwork extends Tab {
 		private void cancel() {
 			cancelled = true;
 			try {
-				//System.out.println(number + " Done: " + future.isDone() + ", Cancelled: " + future.isCancelled());
 				if(!future.isDone() && !future.isCancelled()) {//If Future is still active.
-					//System.out.println(number + " Cancelling: " + future.cancel(true));
 					future.cancel(true);
 				}
 				
 				if(future.isDone() || future.isCancelled()) {//If Future is not active anymore.
 					numberOfUpdaters.removeListener(listener);
-					//System.out.println(number + " Removing");
 				}
 			} catch(NullPointerException e) {//If the Future is not yet initialised.
-				//System.out.println(number + " Exception");
 				numberOfUpdaters.removeListener(listener);
 			}
 		}
