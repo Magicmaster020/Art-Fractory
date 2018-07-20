@@ -56,6 +56,22 @@ public class View extends BorderPane {
 		newArtwork(new SandPiles());
 	}
 	
+	@FXML private void newBurningShip() {
+		newArtwork(new BurningShip());
+	}
+	
+	@FXML private void newCeltic() {
+		newArtwork(new Celtic());
+	}
+	
+	@FXML private void newBuffalo() {
+		newArtwork(new Buffalo());
+	}
+	
+	@FXML private void newTricorn() {
+		newArtwork(new Tricorn());
+	}
+	
 	public TabPane getTabPane() {
 		return tabPane;
 	}

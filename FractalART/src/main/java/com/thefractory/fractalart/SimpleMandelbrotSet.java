@@ -34,9 +34,4 @@ public class SimpleMandelbrotSet extends AbstractMandelbrotSet {
 		
 		init();
 	}
-	
-	@FXML public void update() {
-		updateLowResImage();
-	}
-
 }
