@@ -12,6 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -27,7 +29,7 @@ public abstract class Artwork extends Tab {
 	
 	protected WritableImage image;
 	private Image fullScreenImage;
-	private int lowResolution = 50;
+	private int lowResolution = 10;
 	private Future<WritableImage> highResFuture;
 	
 	@FXML protected RightPane rightPane;
@@ -35,10 +37,12 @@ public abstract class Artwork extends Tab {
     @FXML private AnchorPane mainAnchorPane;
     @FXML private AnchorPane rightAnchorPane;
     
+    private IntegerProperty numberOfUpdaters = new SimpleIntegerProperty(0);
+
     protected ChangeListener<Object> updateListener = new ChangeListener<Object>() {
         @Override
         public void changed(ObservableValue<?> o, Object oldVal, Object newVal) {
-            updateLowResImage();
+            new UpdateHandler();
         }
     };
     public EnhancedCallable<WritableImage> getImageTask(int width, int height) {
@@ -50,7 +54,7 @@ public abstract class Artwork extends Tab {
 		};	
 	}
 	
-	public Artwork() {		
+	public Artwork() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Artwork.fxml"));
 		fxmlLoader.setController(this);
         fxmlLoader.setClassLoader(getClass().getClassLoader());
@@ -88,50 +92,95 @@ public abstract class Artwork extends Tab {
 		return null;
 	}
 	
+	private class UpdateHandler {
+		
+		private boolean cancelled = false;
+		private int number;
+		private Future<WritableImage> future;
+		private ChangeListener<Number> listener = new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				if(newValue.intValue() > number) {
+					//System.out.println(number + " Listener");
+					cancel();						
+				}
+			}				
+		}; 
+		
+		private UpdateHandler() {
+			number = numberOfUpdaters.get() + 1;
+			numberOfUpdaters.set(number);
+			numberOfUpdaters.addListener(listener);	
+			if(number < numberOfUpdaters.get()) {//If the number was increased before the listener was applied.
+				cancel();
+			}
+			
+			updateLowResImage();
+
+			int resolution = (int) rightPane.resolutionField.getValue();
+			if(resolution > lowResolution && !isCancelled()) {
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						EnhancedCallable<WritableImage> task = getImageTask(resolution, resolution);
+						task.setDescription("Generating " + name);
+						future = threadPool.submit(task, true);
+						if(isCancelled()) {//If cancelled before construction but after check cancel again.
+							cancel();
+							//System.out.println(number + " Extra cancel");
+						}
+						
+						try {
+							WritableImage image = future.get();
+							if(image != null) {
+								setImage(image);
+								//System.out.println(number + " High res Future completed: " + image);
+							}
+						} catch (ExecutionException | InterruptedException | CancellationException e) {
+							//Do nothing.
+						} finally {//When we are done cancel to make sure the listener is removed.
+							cancel();
+						}
+					}
+				}).start();
+			}
+		}
+		
+		/**
+		 * Cancels the future or prevents it from starting. Can be called several times without problems.
+		 */
+		private void cancel() {
+			cancelled = true;
+			try {
+				//System.out.println(number + " Done: " + future.isDone() + ", Cancelled: " + future.isCancelled());
+				if(!future.isDone() && !future.isCancelled()) {//If Future is still active.
+					//System.out.println(number + " Cancelling: " + future.cancel(true));
+					future.cancel(true);
+				}
+				
+				if(future.isDone() || future.isCancelled()) {//If Future is not active anymore.
+					numberOfUpdaters.removeListener(listener);
+					//System.out.println(number + " Removing");
+				}
+			} catch(NullPointerException e) {//If the Future is not yet initialised.
+				//System.out.println(number + " Exception");
+				numberOfUpdaters.removeListener(listener);
+			}
+		}
+		private boolean isCancelled() {
+			return cancelled;
+		}	
+	}
+	
 	public void updateLowResImage() {
 		try {
 			setImage(threadPool.submit(getImageTask(lowResolution, lowResolution), false).get());
-			System.out.println("Low res Future completed.");
+			//System.out.println("Low res Future completed.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		int resolution = (int) rightPane.resolutionField.getValue();
-		if(resolution > lowResolution) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						System.out.println("Running 1: " + !(highResFuture.isCancelled() | highResFuture.isDone()));
-						System.out.println("Cancelling: " + highResFuture.cancel(true));
-						updateHighResImage(resolution);
-					} catch(NullPointerException e) {
-						updateHighResImage(resolution);
-					}					
-				}
-			}).start();
-		}
 	}
-	
-	public synchronized void updateHighResImage(int resolution) {
-		EnhancedCallable<WritableImage> task = getImageTask(resolution, resolution);
-		task.setDescription("Generating " + name);
-		if(highResFuture != null) {
-			System.out.println("Running 2: " + !(highResFuture.isCancelled() | highResFuture.isDone()));
-		}
-		highResFuture = threadPool.submit(task, true);
 		
-		try {
-			WritableImage image = highResFuture.get();
-			if(image != null) {
-				setImage(image);
-				System.out.println("High res Future completed.");
-			}
-		} catch (ExecutionException | InterruptedException | CancellationException e) {
-			//Do nothing.
-		}
-	}
-	
 	public abstract void init();
 	
 	public WritableImage getImage() {
@@ -143,7 +192,7 @@ public abstract class Artwork extends Tab {
 	public RightPane getRightPane() {
 		return rightPane;
 	}
-	public void setImage(WritableImage image) {
+	public synchronized void setImage(WritableImage image) {
 		this.image = image;
 		rightPane.setImage(this.image);
 	}
