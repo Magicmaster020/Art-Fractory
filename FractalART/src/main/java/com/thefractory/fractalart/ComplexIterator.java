@@ -1,7 +1,10 @@
 package com.thefractory.fractalart;
 
+import java.io.IOException;
+
 import com.thefractory.customcomponents.Gradient;
 import com.thefractory.customcomponents.GradientPicker;
+import com.thefractory.customcomponents.NumberSlider;
 import com.thefractory.fractalart.utils.ComplexNumber;
 import com.thefractory.fractalart.utils.EnhancedCallable;
 
@@ -10,17 +13,60 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 public abstract class ComplexIterator extends Artwork {
 
 	protected IntegerProperty iterations = new SimpleIntegerProperty(50);
+	protected DoubleProperty realStart = new SimpleDoubleProperty(0.0);
+	protected DoubleProperty imaginaryStart = new SimpleDoubleProperty(0.0);
 	protected DoubleProperty divergeSize = new SimpleDoubleProperty(2.0);
 	protected double hej = 50;
-	protected GradientPicker gradientPicker;
 
+	@FXML protected StackPane controlPanel;
+	@FXML protected GradientPicker gradientPicker;
+	@FXML protected NumberSlider iterationSlider;
+	@FXML protected NumberSlider realStartSlider;
+	@FXML protected NumberSlider imaginaryStartSlider;
+	@FXML protected NumberSlider divergeSizeSlider;
+	
+	protected ComplexIterator(String fxml) {
+		super();
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
+		fxmlLoader.setController(this);
+        fxmlLoader.setClassLoader(getClass().getClassLoader());
+        
+        try {
+            fxmlLoader.load();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+
+        iterations.bind(iterationSlider.valueProperty());
+        realStart.bind(realStartSlider.valueProperty());
+        imaginaryStart.bind(imaginaryStartSlider.valueProperty());
+        divergeSize.bind(divergeSizeSlider.valueProperty());
+        
+        setMainPane(controlPanel);
+		setControlPanelPrefWidth(800);
+		setGradientPicker(gradientPicker);
+
+		iterations.addListener(updateListener);
+		realStart.addListener(updateListener);
+		imaginaryStart.addListener(updateListener);
+		divergeSize.addListener(updateListener);
+		
+		init();
+	}
+	
+	protected ComplexIterator() {
+		this("ComplexIterator.fxml");
+	}
+	
 	protected abstract int iterate(ComplexNumber c);
 		
 	@Override
@@ -75,6 +121,7 @@ public abstract class ComplexIterator extends Artwork {
 	
 	@Override
 	public void init() {
+		rightPane.setDefaults(0, 0, 0, 0.25);
 		gradientPicker.paletteProperty().addListener(updateListener);
 		rightPane.reset();
 	}

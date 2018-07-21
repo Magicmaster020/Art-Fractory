@@ -1,24 +1,16 @@
 package com.thefractory.fractalart;
 
 import com.thefractory.fractalart.utils.ComplexNumber;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public abstract class AbstractMandelbrotSet extends ComplexIterator {
 
 	protected IntegerProperty power = new SimpleIntegerProperty(2);
-	protected DoubleProperty realStart = new SimpleDoubleProperty(0.0);
-	protected DoubleProperty imaginaryStart = new SimpleDoubleProperty(0.0);
 	
-	public AbstractMandelbrotSet() {
-		super();
-		iterations.addListener(updateListener);
+	public AbstractMandelbrotSet(String fxml) {
+		super(fxml);
 		power.addListener(updateListener);
-		realStart.addListener(updateListener);
-		imaginaryStart.addListener(updateListener);
-		divergeSize.addListener(updateListener);
 	}
 	
 	@Override
@@ -32,11 +24,5 @@ public abstract class AbstractMandelbrotSet extends ComplexIterator {
 			}
 		}
 		return i;
-	}
-	
-	@Override
-    public void init() {
-		rightPane.setDefaults(0, 0, 0, 0.25);
-		super.init();
 	}
 }

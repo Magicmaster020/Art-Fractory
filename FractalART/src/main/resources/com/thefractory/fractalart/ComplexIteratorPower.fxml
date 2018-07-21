@@ -14,7 +14,7 @@
             <NumberSlider fx:id="powerSlider" intSlider="true" min="1.0" tip="Power of the Mandelbrot equation." title="Power" value="2.0" />
             <NumberSlider fx:id="realStartSlider" max="2.0" min="-2.0" tip="The real part of start value of the Mandelbrot Set." title="Start Real Part" value="0.0" />
             <NumberSlider fx:id="imaginaryStartSlider" max="2.0" min="-2.0" tip="The imaginary part of start value of the Mandelbrot Set." title="Start Imaginary Part" value="0.0" />
-            <NumberSlider fx:id="divergeSizeSlider" disable="true" tip="The absolute value at which the numbers are deemed divergent." title="Diverge Size" value="2.0" />
+            <NumberSlider fx:id="divergeSizeSlider" tip="The absolute value at which the numbers are deemed divergent." title="Diverge Size" value="2.0" />
             <GradientPicker fx:id="gradientPicker" />
          </children>
       </VBox>
