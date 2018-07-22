@@ -46,10 +46,14 @@ public abstract class ComplexIterator extends Artwork {
             throw new RuntimeException(exception);
         }
 
-        iterations.bind(iterationSlider.valueProperty());
-        realStart.bind(realStartSlider.valueProperty());
-        imaginaryStart.bind(imaginaryStartSlider.valueProperty());
-        divergeSize.bind(divergeSizeSlider.valueProperty());
+        try {
+            iterations.bind(iterationSlider.valueProperty());
+            realStart.bind(realStartSlider.valueProperty());
+            imaginaryStart.bind(imaginaryStartSlider.valueProperty());
+            divergeSize.bind(divergeSizeSlider.valueProperty());
+        } catch(NullPointerException e) {
+        	System.out.println("No sliders.");
+        }
         
         setMainPane(controlPanel);
 		setControlPanelPrefWidth(800);

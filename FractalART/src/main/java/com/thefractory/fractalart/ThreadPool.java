@@ -42,10 +42,13 @@ public class ThreadPool {
 	
 	private class EnhancedProgressBar extends HBox {
 		
-		@FXML Label description;
-		@FXML ProgressBar bar;
-		
+		@FXML private Label description;
+		@FXML private ProgressBar bar;
+		private Future<?> future;
+
 		private EnhancedProgressBar(EnhancedCallable<?> task, Future<?> future, Pane container) {
+			this.future = future;
+			
 			//TODO Probably buggy.
 			new Thread(new Runnable() {
 				@Override
@@ -89,6 +92,10 @@ public class ThreadPool {
 			Platform.runLater(() -> {
 				container.getChildren().add(EnhancedProgressBar.this);
 			});
+		}
+	
+		@FXML private void cancel() {
+			future.cancel(true);
 		}
 	}
 
