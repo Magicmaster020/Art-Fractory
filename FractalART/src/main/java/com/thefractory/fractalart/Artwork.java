@@ -23,8 +23,12 @@ import javafx.scene.control.SplitPane;
 
 public abstract class Artwork extends Tab {
 
-	protected String DEFAULT_NAME = "New Artwork";
-	protected String name = DEFAULT_NAME;
+	public static String defaultName = "New Artwork";
+	public String name = defaultName;
+	public static String description = "No description set.";
+	public static Image firstImage = new Image("file:src/main/resources/com/thefractory/fractalart/MandelbrotFirstImage.tif");
+	public static Image secondImage = new Image("file:src/main/resources/com/thefractory/fractalart/MandelbrotSecondImage.tif");
+
 	protected static ThreadPool threadPool;
 	
 	protected WritableImage image;

@@ -7,6 +7,7 @@ import com.thefractory.customcomponents.NumberField;
 import com.thefractory.fractalart.utils.EnhancedCallable;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
@@ -14,7 +15,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 public class HofstadtersButterfly extends Artwork {
-	
+
+	public static String defaultName = "Hofstadter's Butterfly";
+	public static String description = "Hofstadter's Butterfly Super description.";
+	public static Image firstImage = new Image("file:src/main/resources/com/thefractory/fractalart/HofstadterFirstImage.tif");
+	public static Image secondImage = new Image("file:src/main/resources/com/thefractory/fractalart/HofstadterSecondImage.tif");
 	
 	@FXML private StackPane controlPanel;
 	@FXML private NumberField latticePoints;
@@ -23,8 +28,7 @@ public class HofstadtersButterfly extends Artwork {
 	
 	public HofstadtersButterfly() {
 		super();
-		DEFAULT_NAME = "Hofstadter's Butterfly";
-		name = DEFAULT_NAME;
+		name = defaultName;
 		this.setText(name);
 		
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("HofstadtersButterfly.fxml"));

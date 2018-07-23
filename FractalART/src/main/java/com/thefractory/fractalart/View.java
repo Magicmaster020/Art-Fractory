@@ -40,36 +40,12 @@ public class View extends BorderPane {
 		tabPane.getSelectionModel().select(artwork);
 	}
 	
-	@FXML private void newSimpleMandelbrotSet() {
-		newArtwork(new SimpleMandelbrotSet());
-	}
-	
-	@FXML private void newMandelbrotSet() {
-		newArtwork(new MandelbrotSet());
-	}
-	
-	@FXML private void newHofstadtersButterfly() {
-		newArtwork(new HofstadtersButterfly());
-	}
-	
-	@FXML private void newSandPiles() {
-		newArtwork(new SandPiles());
-	}
-	
-	@FXML private void newBurningShip() {
-		newArtwork(new BurningShip());
-	}
-	
-	@FXML private void newCeltic() {
-		newArtwork(new Celtic());
-	}
-	
-	@FXML private void newBuffalo() {
-		newArtwork(new Buffalo());
-	}
-	
-	@FXML private void newTricorn() {
-		newArtwork(new Tricorn());
+	@FXML public void newArtworkDialog() {
+		NewArtworkDialog dialog = new NewArtworkDialog(FractalART.primaryStage);
+		Artwork artwork = dialog.getInstance(); 
+		if(artwork != null) {
+			newArtwork(artwork);
+		}
 	}
 	
 	public TabPane getTabPane() {

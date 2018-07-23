@@ -5,15 +5,21 @@ import com.thefractory.fractalart.utils.ComplexNumber;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
 
 public class Celtic extends ComplexIterator {
+
+	public static String defaultName = "Celtic Fractal";
+	public static String description = "Celtic Super description.";
+	public static Image firstImage = new Image("file:src/main/resources/com/thefractory/fractalart/CelticFirstImage.tif");
+	public static Image secondImage = new Image("file:src/main/resources/com/thefractory/fractalart/CelticSecondImage.tif");
+	
 	protected IntegerProperty power = new SimpleIntegerProperty(2);
 	@FXML private NumberSlider powerSlider;
 
 	public Celtic() {
 		super("ComplexIteratorPower.fxml");
-		DEFAULT_NAME = "Celtic Fractal";
-		name = DEFAULT_NAME;
+		name = defaultName;
 		this.setText(name);
 		
         power.bind(powerSlider.valueProperty());

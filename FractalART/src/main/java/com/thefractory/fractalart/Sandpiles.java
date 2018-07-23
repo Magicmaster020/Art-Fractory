@@ -9,11 +9,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
+import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.StackPane;
 
-public class SandPiles extends Artwork {
+public class Sandpiles extends Artwork {
 
+	public static String defaultName = "Sandpiles";
+	public static String description = "Sandpiles Super description.";
+//	public static Image firstImage = new Image("file:src/main/resources/com/thefractory/fractalart/MandelbrotFirstImage.tif");
+//	public static Image secondImage = new Image("file:src/main/resources/com/thefractory/fractalart/MandelbrotSecondImage.tif");
+	
 	@FXML private StackPane controlPanel;
 	@FXML private RadioButton triangular;
 	@FXML private RadioButton square; 
@@ -24,10 +30,9 @@ public class SandPiles extends Artwork {
 	@FXML private NumberSlider gridSizeSlider;
 	@FXML private GradientPicker gradientPicker;
 	
-	public SandPiles() {
+	public Sandpiles() {
 		super();
-		DEFAULT_NAME = "Sand Piles";
-		name = DEFAULT_NAME;
+		name = defaultName;
 		this.setText(name);
 		
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SandPiles.fxml"));

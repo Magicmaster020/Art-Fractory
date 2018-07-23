@@ -5,16 +5,21 @@ import com.thefractory.fractalart.utils.ComplexNumber;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
 
 public class Tricorn extends ComplexIterator {
 
+	public static String defaultName = "Tricorn Fractal";
+	public static String description = "Tricorn fractal Super description.";
+	public static Image firstImage = new Image("file:src/main/resources/com/thefractory/fractalart/TricornFirstImage.tif");
+	public static Image secondImage = new Image("file:src/main/resources/com/thefractory/fractalart/TricornSecondImage.tif");
+	
 	protected IntegerProperty power = new SimpleIntegerProperty(2);
 	@FXML private NumberSlider powerSlider;
 
 	public Tricorn() {
 		super("ComplexIteratorPower.fxml");
-		DEFAULT_NAME = "Tricorn Fractal";
-		name = DEFAULT_NAME;
+		name = defaultName;
 		this.setText(name);
 		
         power.bind(powerSlider.valueProperty());

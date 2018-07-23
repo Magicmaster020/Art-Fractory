@@ -8,8 +8,12 @@ import javafx.stage.WindowEvent;
 
 public class FractalART extends Application {
 
+	public static Stage primaryStage;
+	
 	@Override
     public void start(Stage primaryStage) throws Exception {
+		FractalART.primaryStage = primaryStage;
+		
 		Model m = Model.getInstance();
 		View v = new View(m);
 		@SuppressWarnings("unused")

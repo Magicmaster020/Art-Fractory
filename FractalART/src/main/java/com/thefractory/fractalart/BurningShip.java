@@ -5,16 +5,21 @@ import com.thefractory.fractalart.utils.ComplexNumber;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
 
 public class BurningShip extends ComplexIterator {
 
+	public static String defaultName = "Burning Ship Fractal";
+	public static String description = "Burning Ship Super description.";
+	public static Image firstImage = new Image("file:src/main/resources/com/thefractory/fractalart/BurningShipFirstImage.tif");
+	public static Image secondImage = new Image("file:src/main/resources/com/thefractory/fractalart/BurningShipSecondImage.tif");
+	
 	protected IntegerProperty power = new SimpleIntegerProperty(2);
 	@FXML private NumberSlider powerSlider;
 
 	public BurningShip() {
 		super("ComplexIteratorPower.fxml");
-		DEFAULT_NAME = "Burning Ship Fractal";
-		name = DEFAULT_NAME;
+		name = defaultName;
 		this.setText(name);
 		
         power.bind(powerSlider.valueProperty());

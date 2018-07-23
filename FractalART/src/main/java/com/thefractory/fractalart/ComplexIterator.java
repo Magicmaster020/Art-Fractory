@@ -21,6 +21,9 @@ import javafx.scene.paint.Color;
 
 public abstract class ComplexIterator extends Artwork {
 
+	public static String defaultName = "Complex Iterator";
+	public static String description = "Complex Iterator Super description.";
+	
 	protected IntegerProperty iterations = new SimpleIntegerProperty(50);
 	protected DoubleProperty realStart = new SimpleDoubleProperty(0.0);
 	protected DoubleProperty imaginaryStart = new SimpleDoubleProperty(0.0);

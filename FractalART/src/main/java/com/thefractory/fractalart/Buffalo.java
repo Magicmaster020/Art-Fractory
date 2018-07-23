@@ -5,16 +5,21 @@ import com.thefractory.fractalart.utils.ComplexNumber;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
 
 public class Buffalo extends ComplexIterator {
 
+	public static String defaultName = "Buffalo Fractal";
+	public static String description = "Buffalo Fractal Super description.";
+	public static Image firstImage = new Image("file:src/main/resources/com/thefractory/fractalart/BuffaloFirstImage.tif");
+	public static Image secondImage = new Image("file:src/main/resources/com/thefractory/fractalart/BuffaloSecondImage.tif");
+	
 	protected IntegerProperty power = new SimpleIntegerProperty(2);
 	@FXML private NumberSlider powerSlider;
 
 	public Buffalo() {
 		super("ComplexIteratorPower.fxml");
-		DEFAULT_NAME = "Buffalo Fractal";
-		name = DEFAULT_NAME;
+		name = defaultName;
 		this.setText(name);
 		
         power.bind(powerSlider.valueProperty());
