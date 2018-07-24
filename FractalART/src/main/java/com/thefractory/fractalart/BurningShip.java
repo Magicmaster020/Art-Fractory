@@ -10,7 +10,9 @@ import javafx.scene.image.Image;
 public class BurningShip extends ComplexIterator {
 
 	public static String defaultName = "Burning Ship Fractal";
-	public static String description = "Burning Ship Super description.";
+	public static String description = "The Burning Ship Fractal is a variation on the classic Mandelbrot Set. " + 
+			"The idea is the same but it uses a different iterative equation. It gets its name from the similarities "
+			+ "with a sinking ship at sea. One of the best examples of this can be found in the large ship on the negative real axis.";
 	public static Image firstImage = new Image("file:src/main/resources/com/thefractory/fractalart/BurningShipFirstImage.tif");
 	public static Image secondImage = new Image("file:src/main/resources/com/thefractory/fractalart/BurningShipSecondImage.tif");
 	

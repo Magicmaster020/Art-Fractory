@@ -17,7 +17,8 @@ import javafx.scene.paint.Color;
 public class HofstadtersButterfly extends Artwork {
 
 	public static String defaultName = "Hofstadter's Butterfly";
-	public static String description = "Hofstadter's Butterfly Super description.";
+	public static String description = "Hofstadter's Butterfly depicts the allowed "
+			+ "energy levels of an electron in a square lattice of atoms.";
 	public static Image firstImage = new Image("file:src/main/resources/com/thefractory/fractalart/HofstadterFirstImage.tif");
 	public static Image secondImage = new Image("file:src/main/resources/com/thefractory/fractalart/HofstadterSecondImage.tif");
 	

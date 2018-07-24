@@ -9,14 +9,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
-import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.StackPane;
 
 public class Sandpiles extends Artwork {
 
 	public static String defaultName = "Sandpiles";
-	public static String description = "Sandpiles Super description.";
+	public static String description = "The Sandpiles make an abelian group who happen to create "
+			+ "beautiful tile patterns when coloured properly.";
 //	public static Image firstImage = new Image("file:src/main/resources/com/thefractory/fractalart/MandelbrotFirstImage.tif");
 //	public static Image secondImage = new Image("file:src/main/resources/com/thefractory/fractalart/MandelbrotSecondImage.tif");
 	

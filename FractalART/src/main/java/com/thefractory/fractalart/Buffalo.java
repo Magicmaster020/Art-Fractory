@@ -10,7 +10,8 @@ import javafx.scene.image.Image;
 public class Buffalo extends ComplexIterator {
 
 	public static String defaultName = "Buffalo Fractal";
-	public static String description = "Buffalo Fractal Super description.";
+	public static String description = "The Buffalo Fractal is a variation on the classic Mandelbrot Set. "
+			+ "The idea is the same but it uses a different iterative equation.";
 	public static Image firstImage = new Image("file:src/main/resources/com/thefractory/fractalart/BuffaloFirstImage.tif");
 	public static Image secondImage = new Image("file:src/main/resources/com/thefractory/fractalart/BuffaloSecondImage.tif");
 	

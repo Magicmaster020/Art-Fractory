@@ -22,7 +22,9 @@ import javafx.scene.paint.Color;
 public abstract class ComplexIterator extends Artwork {
 
 	public static String defaultName = "Complex Iterator";
-	public static String description = "Complex Iterator Super description.";
+	public static String description = "The Complex Iterator Fractals make a collection of very famous fractals. "
+			+ "Among these, the most famous is the Mandelbrot Set. However, many other fractals based on the "
+			+ "same ideas have also been explored.";
 	
 	protected IntegerProperty iterations = new SimpleIntegerProperty(50);
 	protected DoubleProperty realStart = new SimpleDoubleProperty(0.0);

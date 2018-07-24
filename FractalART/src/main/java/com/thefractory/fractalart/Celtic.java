@@ -10,7 +10,9 @@ import javafx.scene.image.Image;
 public class Celtic extends ComplexIterator {
 
 	public static String defaultName = "Celtic Fractal";
-	public static String description = "Celtic Super description.";
+	public static String description = "The Celtic Fractal is a variation on the classic Mandelbrot Set. "
+			+ "The idea is the same but it uses a different iterative equation. It gets its name from the "
+			+ "occurance of patterns that resemble traditional celtic shapes.";
 	public static Image firstImage = new Image("file:src/main/resources/com/thefractory/fractalart/CelticFirstImage.tif");
 	public static Image secondImage = new Image("file:src/main/resources/com/thefractory/fractalart/CelticSecondImage.tif");
 	

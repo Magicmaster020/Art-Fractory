@@ -10,7 +10,8 @@ import javafx.scene.image.Image;
 public class Tricorn extends ComplexIterator {
 
 	public static String defaultName = "Tricorn Fractal";
-	public static String description = "Tricorn fractal Super description.";
+	public static String description = "The Tricorn Fractal is a variation of the "
+			+ "Mandelbrot Set that makes use of conjugation in each step.";
 	public static Image firstImage = new Image("file:src/main/resources/com/thefractory/fractalart/TricornFirstImage.tif");
 	public static Image secondImage = new Image("file:src/main/resources/com/thefractory/fractalart/TricornSecondImage.tif");
 	
