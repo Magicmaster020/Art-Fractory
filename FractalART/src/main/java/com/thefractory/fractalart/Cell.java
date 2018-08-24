@@ -111,17 +111,17 @@ public class Cell {
 	
 	//TODO DEPRECATED
 	public Color getColor() {
-		Color col = Color.web("#000000");
+		Color col = Color.web("#ffffff");
 		if(getValue() == 1) {
-			col = Color.web("#555555");
+			col = Color.web("#f7bbe2");
 		}else if(getValue() == 2) {
-			col = Color.web("#aaaaaa");
+			col = Color.web("#000000");
 		}else if(getValue() == 3) {
-			col = Color.web("#ffffff");
+			col = Color.web("#eaffea");
 		}else if(getValue() == 4) {
-			col = Color.web("#ffffff");
+			col = Color.web("#ce147d");
 		}else if(getValue() == 5) {
-			col = Color.web("ffffff");
+			col = Color.web("#bf1e79");
 		}else if(getValue() > 5) {
 			col = Color.web("#ffffff");
 		}

@@ -78,7 +78,7 @@ public class Grid {
 				 }
 			 }
 		}else {
-			System.out.println("The specified grid is not periodic");
+//			System.out.println("The specified grid is not periodic");
 		}
 	}
 	
@@ -106,7 +106,7 @@ public class Grid {
 				 }
 			}
 		}
-		System.out.println(maxHeight);
+//		System.out.println(maxHeight);
 		if(maxHeight >= toppleHeight) {
 			for(Cell cell:toppleList) {
 				cell.topple(discardRemainder);

@@ -37,7 +37,7 @@ import javafx.scene.paint.Color;
 public class GradientPicker extends StackPane {
 	
 	/**
-	 * Keeps track of the open {@GradientMakers}.
+	 * Keeps track of the open {@code GradientMaker}s.
 	 */
 	ArrayList<EnhancedGradientMaker> observableGradientMakerList = new ArrayList<EnhancedGradientMaker>();
 	ObservableList<EnhancedGradientMaker> gradientMakerList 
@@ -87,10 +87,6 @@ public class GradientPicker extends StackPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        
-
-		
-        
 
         //Reads in all default gradients.
         try {
@@ -459,4 +455,5 @@ public class GradientPicker extends StackPane {
 	public ObjectProperty<Gradient> paletteProperty() {
 		return palette;
 	}
-}
+	
+	}

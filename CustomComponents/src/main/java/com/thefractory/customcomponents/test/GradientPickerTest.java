@@ -1,12 +1,15 @@
 package com.thefractory.customcomponents.test;
 
 import java.io.IOException;
+
+import com.thefractory.customcomponents.CustomGradient;
 import com.thefractory.customcomponents.GradientPicker;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class GradientPickerTest extends Application {
@@ -25,16 +28,18 @@ public class GradientPickerTest extends Application {
 				box.getChildren().addAll(gradientPicker, gradientPicker.getPalette());
 			}
 		});
+		CustomGradient custom = new CustomGradient();
+		box.getChildren().add(custom);
 		
 		Scene scene = new Scene(box);
 		
 	    primaryStage.setTitle("GradientMaker Test");
 	    primaryStage.setScene(scene);
 	    primaryStage.show();
+	    custom.drawArrows();
 	}
 
 	public static void main(String[] args) {
 		launch(args);
 	}
 }
-

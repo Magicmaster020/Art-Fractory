@@ -23,12 +23,12 @@ public class GridTest extends Application {
     @Override
     public void start(Stage primaryStage) {
     	long start = System.nanoTime();
-    	Grid grid = new Grid(6, 6, false, 101, 101, true);
-    	grid.setValueAt(10000, 50, 50);
+    	Grid grid = new Grid(6, 6, false, 81, 81, true);
+    	grid.setValueAt(10000, 40, 40);
     	while(grid.toppleGrid());
     	
     	ImageView imageView = new ImageView();
-    	WritableImage image = grid.getImage(502, 502);
+    	WritableImage image = grid.getImage(250, 250);
     	imageView.setImage(image);
     	imageView.setFitWidth(500);
     	imageView.setFitHeight(500);
