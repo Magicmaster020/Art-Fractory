@@ -5,10 +5,10 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.shape.SVGPath?>
 
-<fx:root alignment="CENTER" fillWidth="false" type="VBox" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root alignment="CENTER" fillWidth="false" pickOnBounds="false" type="VBox" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <SVGPath fx:id="triangle" content="M 8 0 L 16 10 L 0 10 Z" fill="#c7c7c7" stroke="#ececec" strokeMiterLimit="0.0" strokeWidth="0.0" />
-      <StackPane fx:id="colorContainer">
+      <StackPane fx:id="colorContainer" pickOnBounds="false">
          <children>
             <Rectangle fx:id="square" fill="#c7c7c7" height="16.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="16.0" />
             <Rectangle fx:id="color" fill="DODGERBLUE" height="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="10.0" />

@@ -8,15 +8,17 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
@@ -33,16 +35,16 @@ public class CustomGradient extends VBox {
 	= FXCollections.observableArrayList(new ArrayList<GradientMaker>());
 	private final ObjectProperty<Gradient> palette = new SimpleObjectProperty<Gradient>();
 
+	private static int totalDepth = 1000;	
+	private static int width = 518;
+	double drag = 0;
 	
 	@FXML Gradient gradient;
-	@FXML AnchorPane opacityArrowContainer;
 	@FXML AnchorPane colorArrowContainer;
 	
-	@FXML NumberField locationField;
+	@FXML NumberField positionField;
 	@FXML ColorPicker firstColorPicker;
-	@FXML ColorPicker secondColorPicker;
 	@FXML IconButton removeSelectedArrow;
-	@FXML CheckBox splitColorArrow;
 	
 	public CustomGradient(ArrayList<ColorArrow> colorArrows) {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CustomGradient.fxml"));
@@ -56,8 +58,8 @@ public class CustomGradient extends VBox {
             throw new RuntimeException(exception);
         }
         
+        colorArrowContainer.prefWidthProperty().bind(gradient.fitWidthProperty());
         colorArrowContainer.maxWidthProperty().bind(gradient.fitWidthProperty());
-        opacityArrowContainer.maxWidthProperty().bind(gradient.fitWidthProperty());
         
         colorArrowList.addListener(new ListChangeListener() {
 			@Override
@@ -73,14 +75,16 @@ public class CustomGradient extends VBox {
 			}
     	});
         
-        colorArrowList.addAll(colorArrows);
-        colorArrowList.add(new SplitColorArrow(Color.BLUE, Color.GREEN, 0.5));
+        for(ColorArrow arrow : colorArrows) {
+        	newColorArrow(arrow);
+        }
         
         for(ColorArrow arrow : colorArrowList) {
-        	arrow.setOnMousePressed(new EventHandler<MouseEvent>() {
+        	arrow.setOnMouseClicked(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent event) {
 					select(arrow);
+					event.consume();
 				}
         	});
         }
@@ -93,10 +97,8 @@ public class CustomGradient extends VBox {
 	}
 	
 	public void drawArrows() {
-		colorArrowContainer.getChildren().clear();
 		for(ColorArrow arrow : colorArrowList) {
-        	colorArrowContainer.getChildren().add(arrow);
-        	AnchorPane.setLeftAnchor(arrow, arrow.position.get() * colorArrowContainer.getWidth());
+        	AnchorPane.setLeftAnchor(arrow, arrow.position.get() * width);
         }
 	}
 	
@@ -104,15 +106,24 @@ public class CustomGradient extends VBox {
 		ArrayList<ColorArrow> arrows = new ArrayList<ColorArrow>(colorArrowList);
 		arrows.sort(null);
 		gradientMakerList.clear();
+		
+		gradientMakerList.add(new GradientMaker((Color) arrows.get(0).color.getFill(), 
+				(Color) arrows.get(0).color.getFill(), 
+				(int) Math.round(totalDepth* (arrows.get(0).position.doubleValue() 
+						- 0)), "Linear"));
+		
 		for(int i = 0; i < arrows.size() - 1; i++) {
-			if(arrows.get(i) instanceof SplitColorArrow) {
-				gradientMakerList.add(new GradientMaker((Color) ((SplitColorArrow) arrows.get(i)).secondColor.getFill(), 
-						(Color) arrows.get(i + 1).color.getFill(), 50, "Linear"));
-			} else {
-				gradientMakerList.add(new GradientMaker((Color) arrows.get(i).color.getFill(), 
-						(Color) arrows.get(i + 1).color.getFill(), 50, "Linear"));
-			}
+			gradientMakerList.add(new GradientMaker((Color) arrows.get(i).color.getFill(), 
+					(Color) arrows.get(i + 1).color.getFill(), 
+					(int) Math.round(totalDepth * (arrows.get(i + 1).position.doubleValue() 
+							- arrows.get(i).position.doubleValue())), "Linear"));
 		}
+		
+		gradientMakerList.add(new GradientMaker((Color) arrows.get(arrows.size() - 1).color.getFill(), 
+				(Color) arrows.get(arrows.size() - 1).color.getFill(), 
+				(int) Math.round(totalDepth * (1 
+						- arrows.get(arrows.size() - 1).position.doubleValue())), "Linear"));
+		updatePalette();
 	}
 	
 	public void updatePalette(){
@@ -131,39 +142,74 @@ public class CustomGradient extends VBox {
 				arrow.square.setFill(Color.web("#c7c7c7"));
 				
 				try {
-					arrow.position.unbind();
+					arrow.position.unbindBidirectional(positionField.valueProperty());
 					arrow.color.fillProperty().unbind();
-					if(thisArrow instanceof SplitColorArrow) {
-						((SplitColorArrow) thisArrow).secondColor.fillProperty().unbind();
-					}
 				} catch(Exception e) {
 					System.out.println("Unsuccessful unbinding.");
 				}
-				
 				arrow.selected = false;
 			}	
 		}
 		
 		thisArrow.triangle.setFill(Color.BLACK);
 		thisArrow.square.setFill(Color.BLACK);
-		thisArrow.position.bindBidirectional(locationField.valueProperty());
+		
+		positionField.setValue(thisArrow.position.doubleValue());
+		thisArrow.position.bindBidirectional(positionField.valueProperty());
+		
+		firstColorPicker.setValue((Color) thisArrow.color.getFill());
 		thisArrow.color.fillProperty().bind(firstColorPicker.valueProperty());
-		if(thisArrow instanceof SplitColorArrow) {
-			((SplitColorArrow) thisArrow).secondColor.fillProperty().bind(secondColorPicker.valueProperty());
-			splitColorArrow.setSelected(true);
-		} else {
-			splitColorArrow.setSelected(false);
-		}
 		
 		thisArrow.selected = true;
 	}
 	
-	@FXML public void newOpacityArrow() {
+	public void newColorArrow(ColorArrow arrow) {
+		arrow.color.fillProperty().addListener(new ChangeListener<Object>() {
+			@Override
+			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+				calculateGradientMakers();
+			}
+		});
+		arrow.position.addListener(new ChangeListener<Object>() {
+			@Override
+			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+				drawArrows();
+				calculateGradientMakers();
+			}
+		});
 		
+		arrow.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				select(arrow);
+				drag = event.getSceneX();
+				event.consume();
+			}
+		});
+		arrow.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				double x = event.getSceneX();
+				System.out.println("x: " + x + " drag: " + drag);
+				arrow.position.set(arrow.position.doubleValue() + ((double) x - drag)/width);
+			
+				drag = x;
+			}
+		});
+		
+		colorArrowList.add(arrow);
+    	colorArrowContainer.getChildren().add(arrow);
+		select(arrow);
+	}
+	
+	public void newColorArrow(double position) {
+		ColorArrow arrow = new ColorArrow();
+		arrow.position.set(position);
+		newColorArrow(arrow);
 	}
 	
 	@FXML public void newColorArrow() {
-		
+		newColorArrow(0.5);
 	}
 	
 	@FXML public void reverse() {
@@ -181,7 +227,7 @@ public class CustomGradient extends VBox {
 		@FXML StackPane colorContainer;
 		@FXML SVGPath triangle;
 		@FXML Rectangle square;
-		
+				
 		public ColorArrow(Color c, Double pos) {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ColorArrow.fxml"));
 	        fxmlLoader.setController(this);
@@ -213,20 +259,4 @@ public class CustomGradient extends VBox {
 		}
 	}
 	
-	public static class SplitColorArrow extends ColorArrow {
-		@FXML SVGPath secondColor = new SVGPath();
-		
-		public SplitColorArrow(Color c, Color c2, double pos) {
-			super(c, pos);
-	        secondColor.setContent("M 13 3 L 13 13 L 3 13 Z");
-	        secondColor.setFill(c2);
-	        
-	        colorContainer.getChildren().add(secondColor);
-		}
-		
-		public SplitColorArrow() {
-			this(Color.BLACK, Color.WHITE, 0);
-		}
-	}
-
 }
