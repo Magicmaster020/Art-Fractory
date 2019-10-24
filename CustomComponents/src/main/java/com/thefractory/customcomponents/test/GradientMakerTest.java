@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import com.thefractory.customcomponents.Gradient;
-import com.thefractory.customcomponents.GradientMaker;
+import com.thefractory.customcomponents.GradientMakerInterface;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -19,7 +19,7 @@ public class GradientMakerTest extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		
-		GradientMaker gradientMaker = new GradientMaker();
+		GradientMakerInterface gradientMaker = new GradientMakerInterface();
 		Gradient gradient = new Gradient();
 		VBox box = new VBox();
 		box.getChildren().addAll(gradientMaker, gradient);
@@ -28,7 +28,7 @@ public class GradientMakerTest extends Application {
 			@Override
 			public void changed(ObservableValue<? extends ArrayList<Color>> arg0, ArrayList<Color> arg1,
 					ArrayList<Color> arg2) {
-				ArrayList<GradientMaker> gradientMakerList = new ArrayList<GradientMaker>();
+				ArrayList<GradientMakerInterface> gradientMakerList = new ArrayList<GradientMakerInterface>();
 				gradientMakerList.add(gradientMaker);
 				gradient.setGradientMakerList(gradientMakerList);
 			}

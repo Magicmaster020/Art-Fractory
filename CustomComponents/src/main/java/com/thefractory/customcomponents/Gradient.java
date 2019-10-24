@@ -33,7 +33,7 @@ public class Gradient extends ImageView {
 	/**
 	 * The set of {@code GradientMaker}s that generated this {@code Gradient}.
 	 */
-	ObservableList<GradientMaker> gradientMakerList;   
+	ObservableList<GradientMakerInterface> gradientMakerList;   
 	/**     
 	 * The {@code Image} in which the gradient is drawn.
      */
@@ -48,7 +48,7 @@ public class Gradient extends ImageView {
 	 * Makes a {@code Gradient} based on the given list of {@code GradientMaker}s.
 	 * @param gradientMakers
 	 */
-	public Gradient(ArrayList<GradientMaker> gradientMakers){
+	public Gradient(ArrayList<GradientMakerInterface> gradientMakers){
 		this.palette = new SimpleObjectProperty<ArrayList<Color>>();
 		this.gradientMakerList = FXCollections.observableArrayList(gradientMakers); 
         setup();
@@ -119,7 +119,7 @@ public class Gradient extends ImageView {
 	 */
 	public void updatePalette() {
 		ArrayList<Color> palette = new ArrayList<Color>();
-		for(GradientMaker gradientMaker : gradientMakerList) {
+		for(GradientMakerInterface gradientMaker : gradientMakerList) {
 			palette.addAll(gradientMaker.getPalette());
 		}
 		this.palette.set(palette);
@@ -135,7 +135,7 @@ public class Gradient extends ImageView {
 			return palette.getValue().get((int) Math.round(index * (palette.getValue().size() - 1)));
 		} catch(Exception e) {
 			e.printStackTrace();
-			System.out.println(index);
+			System.out.println(((int) Math.round(index * (palette.getValue().size() - 1))) + " -> " + index);
 			return Color.BLACK;
 		}
 	}
@@ -143,11 +143,11 @@ public class Gradient extends ImageView {
 	/**
 	 * Gets the list of {@code GradientMakers}.
 	 */
-	public ObservableList<GradientMaker> getGradientMakerList(){
+	public ObservableList<GradientMakerInterface> getGradientMakerList(){
 		return gradientMakerList;
 	}
 
-	public void setGradientMakerList(ArrayList<GradientMaker> gradientMakerList) {
+	public void setGradientMakerList(ArrayList<GradientMakerInterface> gradientMakerList) {
 		this.gradientMakerList.clear();
 		this.gradientMakerList.addAll(gradientMakerList);
 	}
@@ -164,8 +164,8 @@ public class Gradient extends ImageView {
 	 * Returns a clone of this {@code Gradient}.
 	 */
 	public Gradient clone() {
-		ArrayList<GradientMaker> gradientMakers = new ArrayList<GradientMaker>();
-		for(GradientMaker gradientMaker : gradientMakerList) {
+		ArrayList<GradientMakerInterface> gradientMakers = new ArrayList<GradientMakerInterface>();
+		for(GradientMakerInterface gradientMaker : gradientMakerList) {
 			gradientMakers.add(gradientMaker);
 		}
 		return new Gradient(gradientMakers);

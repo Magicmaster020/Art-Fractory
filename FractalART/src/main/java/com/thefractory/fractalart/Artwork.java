@@ -171,7 +171,6 @@ public abstract class Artwork extends Tab {
 	public void updateLowResImage() {
 		try {
 			setImage(threadPool.submit(getImageTask(lowResolution, lowResolution), false).get());
-			//System.out.println("Low res Future completed.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

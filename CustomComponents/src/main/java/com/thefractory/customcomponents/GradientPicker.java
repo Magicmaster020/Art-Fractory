@@ -60,14 +60,15 @@ public class GradientPicker extends StackPane {
 	/**
 	 * The container for all gradientMakers.
 	 */
-	@FXML private VBox gradientMakerBox;
-	@FXML private IconButton addNewGradientMaker; 
+//	@FXML private VBox gradientMakerBox;
+//	@FXML private IconButton addNewGradientMaker; 
 	/**
 	 * The display for the custom {@code Gradient}.
 	 */
-	@FXML private Gradient customGradient;
+//	@FXML private Gradient customGradient;
 	@FXML private HBox customPane;
-	@FXML private VBox innerCustomPane;
+	@FXML private StackPane customStackPane;
+	private CustomGradient innerCustomPane = new ArrowGradient();
 	/**
 	 * The container for all saved {@code Gradient}s.
 	 */
@@ -116,7 +117,10 @@ public class GradientPicker extends StackPane {
                updatePalette();
 			}
         });
-        Platform.runLater(() -> {toggleCustomPane();});
+        Platform.runLater(() -> {
+        	customStackPane.getChildren().add(innerCustomPane);
+        	toggleCustomPane();
+        });
 	}
 	
 	/**
@@ -140,9 +144,9 @@ public class GradientPicker extends StackPane {
 			for(String line : lines) {
 				String[] args = line.split(", ");
 				
-				ArrayList<GradientMaker> gradientMakerList = new ArrayList<GradientMaker>();
+				ArrayList<GradientMakerInterface> gradientMakerList = new ArrayList<GradientMakerInterface>();
 		        for(int i = 0; i < args.length; i+=4) {
-		        	GradientMaker gradientMaker = new GradientMaker(
+		        	GradientMakerInterface gradientMaker = new GradientMakerInterface(
 		        			Color.color(Double.parseDouble(args[i].split(" ")[0]),
 				            		Double.parseDouble(args[i].split(" ")[1]),
 				            		Double.parseDouble(args[i].split(" ")[2])),
@@ -179,7 +183,7 @@ public class GradientPicker extends StackPane {
 			setup(defaultGradient);
 		}
 		
-		private EnhancedGradient(ArrayList<GradientMaker> gradientMakers, boolean defaultGradient) {
+		private EnhancedGradient(ArrayList<GradientMakerInterface> gradientMakers, boolean defaultGradient) {
 			this.gradient = new Gradient(gradientMakers);
 			setup(defaultGradient);
 		}
@@ -222,29 +226,29 @@ public class GradientPicker extends StackPane {
 	 */
 	private class EnhancedGradientMaker {
 		
-		private GradientMaker gradientMaker;
+		private GradientMakerInterface gradientMaker;
 		private HBox box = new HBox();
 		//private DragIcon drag;
 		private IconButton remove = new IconButton("close");
 		
 		private EnhancedGradientMaker() {
-			this.gradientMaker = new GradientMaker();
+			this.gradientMaker = new GradientMakerInterface();
 			setup();
 		}
 		
 		private EnhancedGradientMaker(EnhancedGradientMaker enhancedGradientMaker) {
-			this.gradientMaker = new GradientMaker(enhancedGradientMaker.gradientMaker);
+			this.gradientMaker = new GradientMakerInterface(enhancedGradientMaker.gradientMaker);
 			setup();
 		}
 		
-		private EnhancedGradientMaker(GradientMaker gradientMaker) {
-			this.gradientMaker = new GradientMaker(gradientMaker.getStart(),
+		private EnhancedGradientMaker(GradientMakerInterface gradientMaker) {
+			this.gradientMaker = new GradientMakerInterface(gradientMaker.getStart(),
 					gradientMaker.getStop(), gradientMaker.getDepth(), gradientMaker.getFunction());
 			setup();
 		}
 		
 		private void setup() {
-			remove.setOnAction(event -> {removeGradientMaker(this);});
+//			remove.setOnAction(event -> {removeGradientMaker(this);});
 			box.getChildren().addAll(gradientMaker, remove);
 			gradientMaker.paletteProperty().addListener(new ChangeListener<Object>() {
 	            public void changed(ObservableValue<?> o, Object oldVal, Object newVal) {
@@ -258,22 +262,22 @@ public class GradientPicker extends StackPane {
 	 * Adds a new {@code EnhancedGradientMaker} to the current set of {@code EnhancedGradientMaker}s. 
 	 * @param enhancedGradientMaker
 	 */
-	private void addGradientMaker(EnhancedGradientMaker enhancedGradientMaker) {
-		gradientMakerList.add(enhancedGradientMaker);
-		gradientMakerBox.getChildren().add(enhancedGradientMaker.box);
-		if(gradientMakerList.size() == 1) {
-			gradientMakerList.get(0).remove.setDisable(true);
-		} else if(gradientMakerList.size() == 2) {
-			gradientMakerList.get(0).remove.setDisable(false);
-		}
-	}
+//	private void addGradientMaker(EnhancedGradientMaker enhancedGradientMaker) {
+//		gradientMakerList.add(enhancedGradientMaker);
+//		gradientMakerBox.getChildren().add(enhancedGradientMaker.box);
+//		if(gradientMakerList.size() == 1) {
+//			gradientMakerList.get(0).remove.setDisable(true);
+//		} else if(gradientMakerList.size() == 2) {
+//			gradientMakerList.get(0).remove.setDisable(false);
+//		}
+//	}
 	
 	/**
 	 * Adds a new {@code EnhancedGradientMaker} on button press.
 	 */
-	@FXML public void addNewGradientMaker(){
-		addGradientMaker(new EnhancedGradientMaker(gradientMakerList.get(gradientMakerList.size() - 1)));
-	}
+//	@FXML public void addNewGradientMaker(){
+//		addGradientMaker(new EnhancedGradientMaker(gradientMakerList.get(gradientMakerList.size() - 1)));
+//	}
 	
 	/**
 	 * Toggles the position of the pane for making custom {@code Gradient}s.
@@ -288,19 +292,41 @@ public class GradientPicker extends StackPane {
 			
 			if(selectedGradient != null) {
 				gradientMakerList.clear();
-				gradientMakerBox.getChildren().clear();
-				ArrayList<GradientMaker> gradientMakers = new ArrayList<GradientMaker>();
-				for(GradientMaker gradientMaker : selectedGradient.gradient.getGradientMakerList()) {
+				ArrayList<GradientMakerInterface> gradientMakers = new ArrayList<GradientMakerInterface>();
+				for(GradientMakerInterface gradientMaker : selectedGradient.gradient.getGradientMakerList()) {
 					EnhancedGradientMaker enhancedGradientMaker = new EnhancedGradientMaker(gradientMaker);
-					addGradientMaker(enhancedGradientMaker);
 					gradientMakers.add(gradientMaker);
 				}
 				selectGradient(null);
-	        	palette.set(customGradient.clone());
+	        	palette.bind(innerCustomPane.palette);
 			}
-        	customGradient.setFitWidth(innerCustomPane.getWidth());
+			innerCustomPane.palette.getValue().setFitWidth(innerCustomPane.getWidth());
 		}
 	}
+	
+//	@FXML public void toggleCustomPane() {
+//		if(customVisible) {
+//			customVisible = false;
+//			customPane.setTranslateX(-innerCustomPane.getWidth());
+//		} else {
+//			customVisible = true;
+//			customPane.setTranslateX(0);
+//			
+//			if(selectedGradient != null) {
+//				gradientMakerList.clear();
+//				gradientMakerBox.getChildren().clear();
+//				ArrayList<GradientMaker> gradientMakers = new ArrayList<GradientMaker>();
+//				for(GradientMaker gradientMaker : selectedGradient.gradient.getGradientMakerList()) {
+//					EnhancedGradientMaker enhancedGradientMaker = new EnhancedGradientMaker(gradientMaker);
+//					addGradientMaker(enhancedGradientMaker);
+//					gradientMakers.add(gradientMaker);
+//				}
+//				selectGradient(null);
+//	        	palette.set(customGradient.clone());
+//			}
+//        	customGradient.setFitWidth(innerCustomPane.getWidth());
+//		}
+//	}
 
 	/**
 	 * Saves the current custom {@code Gradient} to a file.
@@ -311,7 +337,7 @@ public class GradientPicker extends StackPane {
 				
 		boolean successful = false;
 		String lineToAdd = "";
-		for(GradientMaker gradientMaker: customGradient.gradientMakerList) {
+		for(GradientMakerInterface gradientMaker: innerCustomPane.palette.getValue().gradientMakerList) {
 			lineToAdd += gradientMaker.getStart().getRed() + " "
 					+ gradientMaker.getStart().getGreen() + " "
 					+ gradientMaker.getStart().getBlue() + ", "
@@ -327,7 +353,7 @@ public class GradientPicker extends StackPane {
 			Writer writer = new BufferedWriter(new FileWriter(pathToGradients, true));
 			writer.append(lineToAdd);
 			writer.close();
-		    addGradient(customGradient.clone(), false);
+		    addGradient(innerCustomPane.palette.getValue().clone(), false);
 		    successful = true;
 		} catch (IOException e) {
 		    e.printStackTrace();
@@ -339,24 +365,24 @@ public class GradientPicker extends StackPane {
 	 * Removes a {@code GradientMaker} from the current custom panel.
 	 * @param EnhancedGradientMaker
 	 */
-	private void removeGradientMaker(EnhancedGradientMaker EnhancedGradientMaker) {
-		gradientMakerList.remove(EnhancedGradientMaker);
-		gradientMakerBox.getChildren().remove(EnhancedGradientMaker.box);
-		if(gradientMakerList.size() == 1) {
-			gradientMakerList.get(0).remove.setDisable(true);
-		}
-	}
-	
+//	private void removeGradientMaker(EnhancedGradientMaker EnhancedGradientMaker) {
+//		gradientMakerList.remove(EnhancedGradientMaker);
+//		gradientMakerBox.getChildren().remove(EnhancedGradientMaker.box);
+//		if(gradientMakerList.size() == 1) {
+//			gradientMakerList.get(0).remove.setDisable(true);
+//		}
+//	}
+//	
 	/**
 	 * Makes a new {@code Color} list for the custom {@code Gradient}.
 	 */
 	public void updatePalette(){
-		ArrayList<GradientMaker> gradientMakerList = new ArrayList<GradientMaker>();		
+		ArrayList<GradientMakerInterface> gradientMakerList = new ArrayList<GradientMakerInterface>();		
 		for(EnhancedGradientMaker enhancedGradientMaker : this.gradientMakerList) {
         	gradientMakerList.add(enhancedGradientMaker.gradientMaker);
 		}
 		this.palette.set(new Gradient(gradientMakerList));
-        customGradient.setGradientMakerList(gradientMakerList);
+		innerCustomPane.palette.getValue().setGradientMakerList(gradientMakerList);
 	}
 	
 	/**
@@ -365,8 +391,8 @@ public class GradientPicker extends StackPane {
 	 */
 	
 	public void addGradient(Gradient gradient, Boolean defaultGradient) {
-		ArrayList<GradientMaker> gradientMakers = new ArrayList<GradientMaker>();
-		for(GradientMaker gradientMaker : gradient.getGradientMakerList()) {
+		ArrayList<GradientMakerInterface> gradientMakers = new ArrayList<GradientMakerInterface>();
+		for(GradientMakerInterface gradientMaker : gradient.getGradientMakerList()) {
 			gradientMakers.add(gradientMaker);
 		}
 		EnhancedGradient enhancedGradient = new EnhancedGradient(gradientMakers, defaultGradient);
@@ -387,7 +413,7 @@ public class GradientPicker extends StackPane {
 				BufferedReader reader = new BufferedReader(new FileReader(file));
 
 				String lineToRemove = "";
-				for(GradientMaker gradientMaker: enhancedGradient.gradient.gradientMakerList) {
+				for(GradientMakerInterface gradientMaker: enhancedGradient.gradient.gradientMakerList) {
 					lineToRemove += gradientMaker.getStart().getRed() + " "
 							+ gradientMaker.getStart().getGreen() + " "
 							+ gradientMaker.getStart().getBlue() + ", "
@@ -456,4 +482,4 @@ public class GradientPicker extends StackPane {
 		return palette;
 	}
 	
-	}
+}

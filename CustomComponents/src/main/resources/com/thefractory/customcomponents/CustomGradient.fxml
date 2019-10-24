@@ -27,7 +27,7 @@
                </children>
             </HBox>
             <ColorPicker fx:id="firstColorPicker" />
-            <IconButton fx:id="removeSelectedArrow" iconLocation="close" onAction="#removeSelectedArrow" />
+            <IconButton fx:id="removeSelectedArrow" disable="true" iconLocation="close" onAction="#removeSelectedArrow" />
          </children>
       </HBox>
       <HBox spacing="5.0">

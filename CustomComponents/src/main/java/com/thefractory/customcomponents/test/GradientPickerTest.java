@@ -2,7 +2,7 @@ package com.thefractory.customcomponents.test;
 
 import java.io.IOException;
 
-import com.thefractory.customcomponents.CustomGradient;
+import com.thefractory.customcomponents.ArrowGradient;
 import com.thefractory.customcomponents.GradientPicker;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -27,7 +27,7 @@ public class GradientPickerTest extends Application {
 				box.getChildren().addAll(gradientPicker, gradientPicker.getPalette());
 			}
 		});
-		CustomGradient custom = new CustomGradient();
+		ArrowGradient custom = new ArrowGradient();
 		box.getChildren().add(custom);
 		
 		Scene scene = new Scene(box);
